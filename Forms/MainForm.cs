@@ -1,5 +1,5 @@
 using FVMI_INSPECTION.Controls;
-using FVMI_INSPECTION.DAL;
+using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.Forms;
 using System.Windows.Forms;
 

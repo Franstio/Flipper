@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
-using FVMI_INSPECTION.DAL;
+using FVMI_INSPECTION.Repositories;
+using FVMI_INSPECTION.Interfaces;
 using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Models.ViewData;
+using FVMI_INSPECTION.Presenter;
 using FVMI_INSPECTION.TCP;
 using FVMI_INSPECTION.Utilities;
 using System;
@@ -17,14 +19,17 @@ using System.Windows.Forms;
 
 namespace FVMI_INSPECTION.Controls
 {
-    public partial class DashboardControl : UserControl
+    public partial class DashboardControl : UserControl, DashboardMVP.View
     {
         private string modelName;
         private DateTime startTime;
-        private MasterModel model;
-        private FVMITCPProcess dashboardProcess;
+        private DashboardPresenter presenter;
         private FileLib lib = new FileLib();
         private ModelRepository repo = new ModelRepository();
+        public string SerialNumber { get => textBox1.Text; set => Invoke(delegate { textBox1.Text = value; }); }
+        public string StatusRun { get => statusLabel.Text; set => Invoke(delegate { statusLabel.Text = value; }); }
+        public int CampPoint { get => int.Parse(campointLabel.Text); set => Invoke(delegate { campointLabel.Text = value.ToString(); }); }
+
         public DashboardControl()
         {
             InitializeComponent();
@@ -40,31 +45,19 @@ namespace FVMI_INSPECTION.Controls
         protected override void OnControlRemoved(ControlEventArgs e)
         {
             base.OnControlRemoved(e);
-            dashboardProcess.cTokenSource.Cancel();
-            dashboardProcess.Disconnect();
+            presenter.Dispose();
         }
 
 
         private async void DashboardControl_Load(object sender, EventArgs e)
         {
-            var list = await repo.GetModel(modelName);
-            if (list.Count < 1)
+            var p = await DashboardPresenter.Build(this, modelName, lib, repo);
+            if (p is null)
                 return;
-            model = list.First();
-            campointLabel.Text = model.CameraPoint.ToString();
-            dashboardProcess = new FVMITCPProcess(model, lib);
             textBox1.Invoke(delegate
             {
                 textBox1.Enabled = true;
 
-            });
-            dashboardProcess.eventUpdate += updateEvent;
-        }
-        protected void updateEvent(string status)
-        {
-            Invoke(delegate
-            {
-                statusLabel.Text = status;
             });
         }
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -88,7 +81,7 @@ namespace FVMI_INSPECTION.Controls
                 //await ReadCsv();
                 //              await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Bottom);
                 //await ReadCsv();
-                await dashboardProcess.RunProcess();
+                await presenter.RunProcess();
                 Invoke(delegate
                 {
                     textBox1.Enabled = true;
@@ -110,33 +103,7 @@ namespace FVMI_INSPECTION.Controls
                 processTimeLabel.Text = $"Process Time: {elapsed.Hours.ToString("00")}:{elapsed.Minutes.ToString("00")}:{elapsed.Seconds.ToString("00")}";
             }));
         }
-        private async Task<ProcessRecordModel?> ReadCsv()
-        {
-            ProcessRecordModel? mdl = null;
-            var files  = await lib.GetFiles(lib.CSVPath);
-            if (files.Length < 1) return null;
-            using (var stream = new FileStream(Path.Combine(lib.CSVPath, files[0]), FileMode.Open))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    string? text= await reader.ReadLineAsync();
-                    if (text is null) return null;
-                    string[] data = text.Split(',');
-                    mdl = new ProcessRecordModel(data);
-                    while (await reader.ReadLineAsync() is not null)
-                    {
-                        data = text.Split(",");
-                        if (data.Length < 4)
-                            continue;
-                        int[] details = new int[4];
-                        for (int i = 0; i < details.Length; i++)
-                            details[i] = int.Parse(data[i]);
-                        mdl.Data.Add(details);
-                    }
-                }
-            }
-            return mdl;
-        }
+        
         private void timer1_Tick(object sender, EventArgs e)
         {
             Task.Run(new Action(() =>

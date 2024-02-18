@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using FVMI_INSPECTION.Models;
 using System.Reflection;
 
-namespace FVMI_INSPECTION.DAL
+namespace FVMI_INSPECTION.Repositories
 {
     public class ModelRepository
     {

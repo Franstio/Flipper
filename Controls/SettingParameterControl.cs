@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.ComponentModel.Design;
 using FVMI_INSPECTION.Models;
-using FVMI_INSPECTION.DAL;
+using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.TCP;
 using FVMI_INSPECTION.Utilities;
 
