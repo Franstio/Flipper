@@ -16,109 +16,69 @@ using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.TCP;
 using FVMI_INSPECTION.Utilities;
+using FVMI_INSPECTION.Interfaces;
+using FVMI_INSPECTION.Presenter;
 
 namespace FVMI_INSPECTION.Controls
 {
-    public partial class SettingParameterControl : UserControl
+    public partial class SettingParameterControl : UserControl, SettingParameterMVP.IView
     {
-
-        private MasterModel currentModel = new MasterModel();
+        private string _ModelName = string.Empty;
         private bool isNew = false;
         private readonly ModelRepository repository = new ModelRepository();
         private FVMITCPProcess? process = null;
         private readonly FileLib lib = new FileLib();
+
+        public string ModelName
+        {
+            get => _ModelName; set
+            {
+                _ModelName = value;
+                runningModel.Invoke(delegate { runningModel.Text = $"Model: {value}"; });
+            }
+        }
+        public int CameraPoint { get => int.Parse(camPoint.Value.ToString()); set => Invoke(delegate { camPoint.Value = value; }); }
+        public int TopCamExecution { get => int.Parse(camExecBoxTop.Text); set => Invoke(delegate { camExecBoxTop.Text = value.ToString(); }); }
+        public int BottomExecution { get => int.Parse(camExecBoxBottom.Text); set => Invoke(delegate { camExecBoxBottom.Text = value.ToString(); }); }
+        public Image TopImage { get => pictureBox1.Image; set => Invoke(delegate { pictureBox1.Image = value; }); }
+        public Image BottomImage { get => pictureBox2.Image; set => Invoke(delegate { pictureBox2.Image = value; }); }
+        public string UploadFilePath { get => uploadFileDialog.FileName;  }
+        public string UploadFileName { get => uploadFileDialog.SafeFileName; }
+        public SettingParameterMVP.IPresenter presenter;
         public SettingParameterControl(string ModelName)
         {
             InitializeComponent();
-            currentModel.Model = ModelName;
+            this._ModelName = ModelName;
             runningModel.Text = $"Model: {ModelName}";
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            DetailModel model = new DetailModel()
-            {
-                Area = string.Empty,
-                CameraExecution = int.Parse(camExecBoxTop.Text.Trim()),
-                Model = currentModel.Model,
-                Type = "Top",
-                Image = string.Empty
-            };
-            if (isNew)
-                await CreateModelMaster();
-            await setDetail(model, "Top");
-            
-        }
-        public async Task CreateModelMaster()
-        {
-
-            currentModel.CameraPoint = int.Parse(camPoint.Value.ToString());
-            await repository.InsertModel(currentModel);
-            isNew = false;
+            await presenter.SetTopCamExec();
         }
         private async void button3_Click(object sender, EventArgs e)
         {
-            DetailModel model = new DetailModel()
-            {
-                Area = string.Empty,
-                CameraExecution = int.Parse(camExecBoxBottom.Text.Trim()),
-                Model = currentModel.Model,
-                Type = "Bottom",
-                Image = string.Empty
-            };
-            if (isNew)
-                await CreateModelMaster();
-            await setDetail(model,"Bottom");
-        }
-        private async Task setDetail(DetailModel model,string type)
-        {
-            var find = currentModel.Details.Where(x => x.Type == model.Type).Any();
-            if (find)
-                await repository.UpdateModel(model, currentModel.Model,type);
-            else
-                await repository.InsertModel(model);
-            await LoadCurrentModel();
-            var result = await process!.GetNgImage(type);
-            if (type == "Top")
-                pictureBox1.Image = result;
-            else if (type == "Bottom")
-                pictureBox2.Image = result;
+            await presenter.SetBottomCamExec();
         }
         private async void SettingParameterControl_Load(object sender, EventArgs e)
         {
             isNew = true;
-            await LoadCurrentModel();
+            presenter = await SettingParameterPresenter.Build(_ModelName, this);
         }
-        private async Task LoadCurrentModel()
-        {
-            var list = await repository.GetModel(currentModel.Model);
-            if (list.Count < 1)
-                return;
-            currentModel = list.First();
-            process = new FVMITCPProcess(currentModel, lib);
-            camPoint.Value = currentModel.CameraPoint;
-            var top = currentModel.Details.Where(x => x.Type == "Top").FirstOrDefault();
-            var bottom = currentModel.Details.Where(x => x.Type == "Bottom").FirstOrDefault();
-            if (top is not null)
-            {
-                //areaBoxTop.Text = top.Area;
-                camExecBoxTop.Text = top.CameraExecution.ToString();
-            }
-            if (bottom is not null)
-            {
-                //areaBoxBottom.Text = bottom.Area;
-                camExecBoxBottom.Text = bottom.CameraExecution.ToString();
-            }
-            isNew = false;
-        }
+
         private async void button14_Click(object sender, EventArgs e)
         {
-            currentModel.CameraPoint = int.Parse(camPoint.Value.ToString());
-            if (isNew)
-                await repository.InsertModel(currentModel);
-            else
-                await repository.UpdateModel(currentModel,currentModel.Model);
-            await LoadCurrentModel();
+            await presenter.SetCamPoint();
+        }
+
+        private async void uploadEvent(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            btn.Invoke(delegate { btn.Enabled = false; });
+            var dialog = uploadFileDialog.ShowDialog();
+            if (dialog == DialogResult.OK)
+                await presenter.UploadImage(btn.Tag!.ToString()!);
+            btn.Invoke(delegate { btn.Enabled = true; });
         }
     }
 }

@@ -84,7 +84,7 @@ namespace FVMI_INSPECTION.TCP
             int tryCount = 0;
             do
             {
-
+                tryCount = tryCount + 1;
                 try
                 {
                     Debug.WriteLineIf(log, $"Writing {cmd} Command, Count: {tryCount + 1}");
@@ -95,10 +95,6 @@ namespace FVMI_INSPECTION.TCP
                 catch (Exception ex)
                 {
                     Debug.WriteLineIf(log, $"Error Writing {cmd} Command, Count: {tryCount + 1} : {ex.Message} {ex.InnerException?.Message}");
-                }
-                finally
-                {
-                    tryCount++;
                 }
             }
             while ((result.ToUpper().Contains("E1") || string.IsNullOrEmpty(result)) && tryCount < 10);

@@ -41,11 +41,14 @@
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)">L52Xc2qyPiNA1l17gPloyiLGvmELedNN2X+p0JG7Dbe1TQAgLtXihProA+4Z9Y0C2b+yLxsW+TZ+3hhL8Bi/Ww==</Value>
     </Setting>
-    <Setting Name="LogTcp" Type="System.Boolean" Scope="User">
+    <Setting Name="TcpLog" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="GeneralDelay" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="CSVPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\User\OneDrive\Desktop\Vision Result\xg\result</Value>
     </Setting>
   </Settings>
 </SettingsFile>

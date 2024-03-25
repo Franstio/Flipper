@@ -49,6 +49,14 @@ namespace FVMI_INSPECTION.Repositories
             }).ToList() ;
             return result;
         }
+        public async Task WriteLog(List<RecordModel> Log)
+        {
+            using (var _con = await GetConn())
+            {
+                string Query = $"Insert Into Tbl_ModelRecord(Model,Area,Type,ActualImage,DateRecord,Judgement,Reason,Serial) Values(@Model,@Area,@Type,@ActualImage,@DateRecorded,@Judgement,@Reason,@Serial);";
+                await _con.ExecuteAsync(Query, Log);
+            }
+        }
         public async Task<IEnumerable<DetailModel>> GetDetail(string model, string type)
         {
             IEnumerable<DetailModel> details = new List<DetailModel>();
@@ -70,6 +78,7 @@ namespace FVMI_INSPECTION.Repositories
             }
             return result;
         }
+
         public async Task InsertModel(MasterModel model)
         {
             using (var _con = await GetConn())

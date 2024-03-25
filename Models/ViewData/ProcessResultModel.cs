@@ -10,5 +10,7 @@ namespace FVMI_INSPECTION.Models.ViewData
     {
         public bool ResultJudgement { get; set; } = false;
         public Image? Image { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public string? ImagePath { get; set; }
     }
 }

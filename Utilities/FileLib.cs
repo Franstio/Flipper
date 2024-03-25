@@ -94,9 +94,9 @@ namespace FVMI_INSPECTION.Utilities
                 Debug.WriteLine($"ERROR: {ex.Message},PATH:{imagePath},TO:{savepath})");
             }
         }
-        public string[] GetFolders(string search = "")
+        public string[] GetFolders(string search = "",string additional="")
         {
-            string fullpath = _filePath;
+            string fullpath = Path.Combine(_filePath , additional);
             if (!Directory.Exists(fullpath))
             {
                 MessageBox.Show($"Directory {fullpath} is not exists", "Directory Not Found");
@@ -122,7 +122,7 @@ namespace FVMI_INSPECTION.Utilities
             }
             while (files.Length < 1 && trycount <= 10)
             {
-                await Task.Delay(100);
+                await Task.Delay(3000);
                 files = Directory.GetFiles(path);
                 Debug.WriteLineIf(files.Length < 1, $"Retry fetching image on: {path}, count: {trycount+1}");
                 trycount += 1;
@@ -141,7 +141,7 @@ namespace FVMI_INSPECTION.Utilities
                     MessageBox.Show($"No Folder with prefix {foldername} Found", "Error");
                     return string.Empty;
                 }
-                string latestDir = Path.Combine(folders[0], "CAM1");
+                string latestDir = folders[0];
                 string[] img = await GetFiles(latestDir);
                 if (img.Length < 1)
                     return string.Empty;
@@ -150,6 +150,32 @@ namespace FVMI_INSPECTION.Utilities
                 return file.Name;
             }
             catch(Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                return string.Empty;
+            }
+        }
+        public async Task<string> GetNGImgPath(bool isTop,int CameraDelay = 100)
+        {
+            try
+            {
+                await Task.Delay(CameraDelay);
+                string foldername = $"{DateTime.Now.ToString("yyMMdd")}";
+                string[] folders = GetFolders(foldername,isTop ? "bot": "top");
+                if (folders.Length < 1)
+                {
+                    MessageBox.Show($"No Folder with prefix {foldername} Found", "Error");
+                    return string.Empty;
+                }
+                string latestDir = folders[0];
+                string[] img = await GetFiles(latestDir);
+                if (img.Length < 1)
+                    return string.Empty;
+                FileInfo file = new FileInfo(img[0]);
+                SaveImage(file.FullName, file.Name, true);
+                return file.Name;
+            }
+            catch (Exception ex)
             {
                 Trace.TraceError(ex.Message);
                 return string.Empty;

@@ -183,12 +183,12 @@ namespace FVMI_INSPECTION.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool LogTcp {
+        public bool TcpLog {
             get {
-                return ((bool)(this["LogTcp"]));
+                return ((bool)(this["TcpLog"]));
             }
             set {
-                this["LogTcp"] = value;
+                this["TcpLog"] = value;
             }
         }
         
@@ -201,6 +201,18 @@ namespace FVMI_INSPECTION.Properties {
             }
             set {
                 this["GeneralDelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\User\\OneDrive\\Desktop\\Vision Result\\xg\\result")]
+        public string CSVPath {
+            get {
+                return ((string)(this["CSVPath"]));
+            }
+            set {
+                this["CSVPath"] = value;
             }
         }
     }

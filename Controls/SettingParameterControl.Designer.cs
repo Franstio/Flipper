@@ -40,6 +40,8 @@
             camExecBoxBottom = new TextBox();
             label7 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
+            button5 = new Button();
+            button4 = new Button();
             pictureBox2 = new PictureBox();
             label2 = new Label();
             label1 = new Label();
@@ -54,6 +56,7 @@
             timeLabel = new Label();
             runningModel = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
+            uploadFileDialog = new OpenFileDialog();
             groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)camPoint).BeginInit();
             groupBox2.SuspendLayout();
@@ -110,7 +113,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(6, 50);
+            label5.Location = new Point(5, 45);
             label5.Name = "label5";
             label5.Size = new Size(103, 15);
             label5.TabIndex = 2;
@@ -178,17 +181,46 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(button5, 0, 2);
+            tableLayoutPanel2.Controls.Add(button4, 0, 2);
             tableLayoutPanel2.Controls.Add(pictureBox2, 1, 1);
             tableLayoutPanel2.Controls.Add(label2, 1, 0);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
             tableLayoutPanel2.Controls.Add(pictureBox1, 0, 1);
             tableLayoutPanel2.Location = new Point(11, 221);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowCount = 3;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel2.Size = new Size(946, 367);
             tableLayoutPanel2.TabIndex = 35;
+            // 
+            // button5
+            // 
+            button5.Dock = DockStyle.Fill;
+            button5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button5.Location = new Point(3, 332);
+            button5.Name = "button5";
+            button5.Size = new Size(467, 32);
+            button5.TabIndex = 40;
+            button5.Tag = "Top";
+            button5.Text = "Upload";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += uploadEvent;
+            // 
+            // button4
+            // 
+            button4.Dock = DockStyle.Fill;
+            button4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button4.Location = new Point(476, 332);
+            button4.Name = "button4";
+            button4.Size = new Size(467, 32);
+            button4.TabIndex = 39;
+            button4.Tag = "Bottom";
+            button4.Text = "Upload";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += uploadEvent;
             // 
             // pictureBox2
             // 
@@ -196,7 +228,7 @@
             pictureBox2.Dock = DockStyle.Fill;
             pictureBox2.Location = new Point(476, 39);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(467, 325);
+            pictureBox2.Size = new Size(467, 287);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 38;
             pictureBox2.TabStop = false;
@@ -233,7 +265,7 @@
             pictureBox1.Dock = DockStyle.Fill;
             pictureBox1.Location = new Point(3, 39);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(467, 325);
+            pictureBox1.Size = new Size(467, 287);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 37;
             pictureBox1.TabStop = false;
@@ -351,6 +383,10 @@
             // 
             timer1.Enabled = true;
             // 
+            // uploadFileDialog
+            // 
+            uploadFileDialog.FileName = "openFileDialog1";
+            // 
             // SettingParameterControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -409,5 +445,8 @@
         private TextBox camExecBoxBottom;
         private Label label7;
         private Button button1;
+        private Button button5;
+        private Button button4;
+        private OpenFileDialog uploadFileDialog;
     }
 }
