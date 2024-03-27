@@ -85,9 +85,11 @@ namespace FVMI_INSPECTION.Utilities
             try
             {
                 if (File.Exists(savepath))
-                    File.Delete(savepath);
-                var img = Image.FromFile(imagePath);
-                img.Save(savepath);
+                    return ;
+                using (var img = Image.FromFile(imagePath))
+                {
+                    img.Save(savepath);
+                }
             }
             catch(Exception ex)
             {
@@ -157,12 +159,13 @@ namespace FVMI_INSPECTION.Utilities
         }
         public async Task<string> GetNGImgPath(bool isTop,int CameraDelay = 100)
         {
+            int count = 0;
             try
             {
                 await Task.Delay(CameraDelay);
                 string foldername = $"{DateTime.Now.ToString("yyMMdd")}";
                 string[] folders = GetFolders(foldername,isTop ? "bot": "top");
-                if (folders.Length < 1)
+                        if (folders.Length < 1)
                 {
                     MessageBox.Show($"No Folder with prefix {foldername} Found", "Error");
                     return string.Empty;

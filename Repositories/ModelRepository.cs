@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using FVMI_INSPECTION.Models;
 using System.Reflection;
+using System.Diagnostics.Eventing.Reader;
 
 namespace FVMI_INSPECTION.Repositories
 {
@@ -67,6 +68,21 @@ namespace FVMI_INSPECTION.Repositories
             }
             return details;
         }
+        public async Task<bool> ValidateLog(string serial, string model)
+        {
+            using (var _con = await GetConn())
+            {
+                string query = "Select Count(*) as c From Tbl_ModelRecord Where model=@Model and Serial=@Serial;";
+                var res = await _con.ExecuteReaderAsync(query, new {Model=model,Serial=serial});
+                if (await res.ReadAsync())
+                {
+                    int c = int.Parse(res[0]?.ToString() ??"0");
+                    return c == 0;
+                }
+                else
+                    return false;
+            }
+        }
         public async Task<List<MasterModel>> GetModel()
         {
             List<MasterModel> result = new List<MasterModel>();
@@ -113,6 +129,39 @@ namespace FVMI_INSPECTION.Repositories
             {
                 string Query = $"Update {DetailModelName} Set Model=@Model,Image=@Image,Type=@Type,CameraExecution=@CameraExecution,Area=@Area where Model=@oldModelName and Type=@oldType";
                 await _con.ExecuteAsync(Query, new { Model = model.Model, Image= model.Image,Type=model.Type,CameraExecution=model.CameraExecution,Area=model.Area, oldModelName = oldModelName ,oldType=oldType});
+            }
+        }
+        public async Task DeletePosition(string model)
+        {
+            using (var conn = await GetConn())
+            {
+                string query = "Delete Tbl_Model where model=@model";
+                await conn.ExecuteAsync(query, new { model = model });
+            }
+        }
+        public async Task FullCopyPosition(string oldModelName, string newModelName)
+        {
+            string[] queries = new string[]
+                {
+
+                    "Insert Into tbl_Model(Model,CameraPoint) Select @newModelName,CameraPoint From TBl_Model where model=@oldModelName;",
+                    "Insert Into Tbl_ModelDetail(Model,Image,Type,CameraExecution,Area) Select @newModelName,Image,Type,CameraExecution,Area From TBl_ModelDetail where model=@oldModelName",
+                };
+            using (var conn = await GetConn())
+            {
+                using (var transact = await conn.BeginTransactionAsync())
+                {
+
+                    int res = await conn.ExecuteAsync(queries[0], new { oldModelName = oldModelName, newModelName = newModelName }, transaction: transact);
+                    if (res < 1)
+                    {
+                        await transact.RollbackAsync();
+                        return;
+                    }
+                    for (int i = 1; i < queries.Length; i++)
+                        await conn.ExecuteAsync(queries[i], new { oldModelName = oldModelName, newModelName = newModelName }, transaction: transact);
+                    await transact.CommitAsync();
+                }
             }
         }
     }

@@ -78,7 +78,7 @@ namespace FVMI_INSPECTION.Presenter
             string[] data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
             res = await process.WriteCommand("MR004", 0);
             eventUpdate("Writing Record");
-            await Task.Delay(500);
+            await Task.Delay(1200);
             var record = await ReadCsv();
             if (record is null)
                     throw new Exception("Record Error");
@@ -129,6 +129,7 @@ namespace FVMI_INSPECTION.Presenter
             string res;
 //            string[] a = await process.PushCommand("MR300", 500, "0", "1", "0");
             bool result = await process.TriggerCam("MR1000","MR1001");
+            await Task.Delay(1000);
             Image? img = result ? GetLocalImage("Top") : await process.GetNgImage("Top");
 
             string? imgPath = result ? GetLocalImagePath("Top") : await process.GetNgImagePath("Top");
@@ -167,7 +168,8 @@ namespace FVMI_INSPECTION.Presenter
             bool result = await process.TriggerCam("MR1000", "MR1001",false);
 
             data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
-            await Task.Delay(500);
+            await Task.Delay(1000);
+
             Image? img = result ? GetLocalImage("Bottom") : await process.GetNgImage("Bottom");
             //            string[] check = await PushCommand("MR400", "0", "1");
 

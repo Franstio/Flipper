@@ -64,6 +64,7 @@ namespace FVMI_INSPECTION.Controls
         {
             isNew = true;
             presenter = await SettingParameterPresenter.Build(_ModelName, this);
+            await presenter.LoadCurrentModel();
         }
 
         private async void button14_Click(object sender, EventArgs e)

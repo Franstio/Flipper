@@ -98,6 +98,7 @@ namespace FVMI_INSPECTION.Controls
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             tableLayoutPanel11 = new TableLayoutPanel();
+            button1 = new Button();
             groupBox1.SuspendLayout();
             panel6.SuspendLayout();
             panel3.SuspendLayout();
@@ -339,7 +340,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox3.Location = new Point(8, 8);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 2, 3, 2);
-            groupBox3.Size = new Size(307, 253);
+            groupBox3.Size = new Size(307, 227);
             groupBox3.TabIndex = 4;
             groupBox3.TabStop = false;
             groupBox3.Text = "Top Inspection List:";
@@ -360,7 +361,7 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridView.ReadOnly = true;
             inspectionListGridView.RowHeadersWidth = 51;
             inspectionListGridView.RowTemplate.Height = 29;
-            inspectionListGridView.Size = new Size(301, 227);
+            inspectionListGridView.Size = new Size(301, 201);
             inspectionListGridView.TabIndex = 0;
             inspectionListGridView.Tag = "TOP";
             inspectionListGridView.CellDoubleClick += ShowNgPopup;
@@ -879,15 +880,17 @@ namespace FVMI_INSPECTION.Controls
             // 
             tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(button1, 0, 2);
             tableLayoutPanel1.Controls.Add(groupBox9, 0, 1);
             tableLayoutPanel1.Controls.Add(groupBox3, 0, 0);
             tableLayoutPanel1.Location = new Point(902, 104);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.Padding = new Padding(5);
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel1.Size = new Size(323, 529);
             tableLayoutPanel1.TabIndex = 25;
             // 
@@ -896,10 +899,10 @@ namespace FVMI_INSPECTION.Controls
             groupBox9.Controls.Add(bottomInspectionGridView);
             groupBox9.Dock = DockStyle.Fill;
             groupBox9.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            groupBox9.Location = new Point(8, 267);
+            groupBox9.Location = new Point(8, 241);
             groupBox9.Name = "groupBox9";
             groupBox9.Padding = new Padding(3, 2, 3, 2);
-            groupBox9.Size = new Size(307, 254);
+            groupBox9.Size = new Size(307, 227);
             groupBox9.TabIndex = 5;
             groupBox9.TabStop = false;
             groupBox9.Text = "Bottom Inspection List:";
@@ -920,7 +923,7 @@ namespace FVMI_INSPECTION.Controls
             bottomInspectionGridView.ReadOnly = true;
             bottomInspectionGridView.RowHeadersWidth = 51;
             bottomInspectionGridView.RowTemplate.Height = 29;
-            bottomInspectionGridView.Size = new Size(301, 228);
+            bottomInspectionGridView.Size = new Size(301, 201);
             bottomInspectionGridView.TabIndex = 0;
             bottomInspectionGridView.Tag = "BOTTOM";
             bottomInspectionGridView.CellDoubleClick += ShowNgPopup;
@@ -951,6 +954,17 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel11.Size = new Size(638, 618);
             tableLayoutPanel11.TabIndex = 26;
+            // 
+            // button1
+            // 
+            button1.Dock = DockStyle.Fill;
+            button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            button1.Location = new Point(8, 474);
+            button1.Name = "button1";
+            button1.Size = new Size(307, 47);
+            button1.TabIndex = 6;
+            button1.Text = "Reset";
+            button1.UseVisualStyleBackColor = true;
             // 
             // DashboardControl
             // 
@@ -1087,5 +1101,6 @@ namespace FVMI_INSPECTION.Controls
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private TableLayoutPanel tableLayoutPanel11;
+        private Button button1;
     }
 }

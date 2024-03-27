@@ -63,6 +63,7 @@ namespace FVMI_INSPECTION.TCP
             string res = string.Empty;
             //            string[] check= await PushCommand("MR400", 100,"0", "1");
             string path = await lib.GetNGImgPath(type.ToLower() == "top", CameraDelay);
+            await Task.Delay(500);
             return lib.ReadImage(path, false);
         }
 

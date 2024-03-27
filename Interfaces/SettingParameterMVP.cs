@@ -25,6 +25,7 @@ namespace FVMI_INSPECTION.Interfaces
             public Task SetTopCamExec();
             public Task SetBottomCamExec();
             public Task UploadImage(string Type);
+            Task LoadCurrentModel();
         }
     }
 }

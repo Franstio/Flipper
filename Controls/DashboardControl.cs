@@ -35,6 +35,7 @@ namespace FVMI_INSPECTION.Controls
 
             set
             {
+                if (IsHandleCreated)
                 groupBox8.Invoke(delegate
                 {
                     quantityLabel.Text = $"Count: {value.Count}";
@@ -44,22 +45,43 @@ namespace FVMI_INSPECTION.Controls
                 _cvm = value;
             }
         }
-        public string SerialNumber { get => textBox1.Text; set => Invoke(delegate { textBox1.Text = value; }); }
-        public string StatusRun { get => statusLabel.Text; set => Invoke(delegate { statusLabel.Text = value; }); }
-        public string FinalJudge { get => finalJudgeLabel.Text; set => Invoke(delegate {
-            Color clr = Color.Black;
-            if (value == "PASS")
-                clr = Color.LimeGreen;
-            else if (value == "NG" || value=="FAIL")
-                clr = Color.DarkRed;
-            finalJudgeLabel.ForeColor = clr;
-            finalJudgeLabel.Text = value; 
-        }); }
+        public string SerialNumber { get => textBox1.Text; set
+            {
+                if (IsHandleCreated)
+                    Invoke(delegate { textBox1.Text = value; });
+            }
+        }
+        public string StatusRun
+        {
+            get => statusLabel.Text; set
+            {
+                if (IsHandleCreated)
+                    Invoke(delegate { statusLabel.Text = value; });
+            }
+        }
+        public string FinalJudge
+        {
+            get => finalJudgeLabel.Text; set
+            {
+                if (IsHandleCreated)
+                Invoke(delegate
+                {
+                    Color clr = Color.Black;
+                    if (value == "PASS")
+                        clr = Color.LimeGreen;
+                    else if (value == "NG" || value == "FAIL")
+                        clr = Color.DarkRed;
+                    finalJudgeLabel.ForeColor = clr;
+                    finalJudgeLabel.Text = value;
+                });
+            }
+        }
         public string TopDecision
         {
             get => topDecisionLabel.Text;
             set
             {
+                if (IsHandleCreated)
                 Invoke(delegate
                 {
                     topDecisionLabel.Text = value;
@@ -77,23 +99,24 @@ namespace FVMI_INSPECTION.Controls
             get => bottomDecisionLabel.Text;
             set
             {
-                Invoke(delegate
-                {
-                    bottomDecisionLabel.Text = value;
-                    Color clr = Color.Black;
-                    if (value == "PASS")
-                        clr = Color.LimeGreen;
-                    else if (value == "FAIL")
-                        clr = Color.DarkRed;
-                    bottomDecisionLabel.ForeColor = clr;
-                });
+                if (IsHandleCreated)
+                    Invoke(delegate
+                    {
+                        bottomDecisionLabel.Text = value;
+                        Color clr = Color.Black;
+                        if (value == "PASS")
+                            clr = Color.LimeGreen;
+                        else if (value == "FAIL")
+                            clr = Color.DarkRed;
+                        bottomDecisionLabel.ForeColor = clr;
+                    });
             }
         }
-        public int CampPoint { get => int.Parse(campointLabel.Text); set => Invoke(delegate { campointLabel.Text = value.ToString(); }); }
-        public Image? TopParameterImage { get => parameterTop.Image; set => Invoke(delegate { parameterTop.Image = value; }); }
-        public Image? BottomParameterImage { get => parameterBottom.Image; set => Invoke(delegate { parameterBottom.Image = value; }); }
-        public Image? TopActualImage { get => actualTop.Image; set => Invoke(delegate { actualTop.Image = value; }); }
-        public Image? BottomActualImage { get => actualBottom.Image; set => Invoke(delegate { actualBottom.Image = value; }); }
+        public int CampPoint { get => int.Parse(campointLabel.Text); set {if (IsHandleCreated) Invoke(delegate { campointLabel.Text = value.ToString(); }); } }
+        public Image? TopParameterImage { get => parameterTop.Image; set { if (IsHandleCreated) Invoke(delegate { parameterTop.Image = value; }); } }
+        public Image? BottomParameterImage { get => parameterBottom.Image; set { if (IsHandleCreated) Invoke(delegate { parameterBottom.Image = value; }); } }
+        public Image? TopActualImage { get => actualTop.Image; set { if (IsHandleCreated) Invoke(delegate { actualTop.Image = value; }); } }
+        public Image? BottomActualImage { get => actualBottom.Image; set { if (actualBottom.IsHandleCreated) Invoke(delegate { actualBottom.Image = value; }); } }
         private List<RecordModel> records = new List<RecordModel>();
         private List<ProcessRecordModel> _topRecord = new List<ProcessRecordModel>(), _bottomRecord = new List<ProcessRecordModel>();
         public List<ProcessRecordModel> TopRecord
@@ -166,6 +189,12 @@ namespace FVMI_INSPECTION.Controls
         {
             if (e.KeyCode != Keys.Enter)
                 return;
+            /*bool isValid = await repo.ValidateLog(SerialNumber, modelName);
+            if (!isValid)
+            {
+                MessageBox.Show($"Serial Number {SerialNumber} already used for {modelName}");
+                return;
+            }*/
             if (records.Count > 0)
                 await presenter.WriteLog(records);
             scanLabel.Text = textBox1.Text;

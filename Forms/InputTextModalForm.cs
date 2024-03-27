@@ -24,6 +24,11 @@ namespace FVMI_INSPECTION.Forms
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(textInputBox.Text)|| string.IsNullOrWhiteSpace(textInputBox.Text))
+            {
+                MessageBox.Show("Data Can't be Empty", "Input Invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             Result = textInputBox.Text;
             this.DialogResult = DialogResult.OK;
             this.Close();

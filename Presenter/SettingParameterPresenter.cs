@@ -27,6 +27,7 @@ namespace FVMI_INSPECTION.Presenter
             ModelRepository _repo = new ModelRepository();
             var list = await _repo.GetModel(model);
             var mdl = new MasterModel();
+            mdl.Model = model;
             var _lib = new FileLib();
             var process = new FVMITCPProcess(mdl, _lib);
             if (list.Count < 1)
@@ -106,14 +107,16 @@ namespace FVMI_INSPECTION.Presenter
             view = _view;
             SetupView();
         }
-        private async Task LoadCurrentModel()
+        public async Task LoadCurrentModel()
         {
+            string modelName = model.Model;
             var list = await repo.GetModel(model.Model);
             isNew = false;
             if (list.Count < 1)
             {
                 isNew = true;
                 model = new MasterModel();
+                model.Model = modelName;
                 process.Model = model;
                 return;
             }
@@ -142,14 +145,14 @@ namespace FVMI_INSPECTION.Presenter
             if (find)
                 await repo.UpdateModel(detail, model.Model, type);
             else
-                await repo.InsertModel(model);
+                await repo.InsertModel(detail);
             await LoadCurrentModel();
-            await process.SetupCamExecution();
+/*            await process.SetupCamExecution();
             var result = await process!.GetNgImage(type);
             if (type == "Top" && result is not null)
                 view.TopImage = result;
             else if (type == "Bottom" && result is not null)
-                view.BottomImage= result;
+                view.BottomImage= result;*/
         }
 
         public async Task UploadImage(string Type)

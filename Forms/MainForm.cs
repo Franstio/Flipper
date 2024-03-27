@@ -66,5 +66,17 @@ namespace FVMI_INSPECTION
             frm.Dock = DockStyle.Fill;
             panel1.Controls.Add(frm);
         }
+
+        private void copyProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyProgramForm form = new CopyProgramForm();
+            form.ShowDialog(this);
+        }
+
+        private void deleteProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteProgramForm frm = new DeleteProgramForm();
+            frm.ShowDialog(this);
+        }
     }
 }

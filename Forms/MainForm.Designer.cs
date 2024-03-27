@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            Models.ViewData.CountViewModel countViewModel1 = new Models.ViewData.CountViewModel();
             menuStrip1 = new MenuStrip();
             optionToolStripMenuItem = new ToolStripMenuItem();
             changeModelToolStripMenuItem = new ToolStripMenuItem();
             settingParameterToolStripMenuItem = new ToolStripMenuItem();
             newModelParameterToolStripMenuItem = new ToolStripMenuItem();
             modifyParameterToolStripMenuItem = new ToolStripMenuItem();
+            copyProgramToolStripMenuItem = new ToolStripMenuItem();
+            deleteProgramToolStripMenuItem = new ToolStripMenuItem();
             configurationToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
@@ -71,7 +75,7 @@
             // 
             // settingParameterToolStripMenuItem
             // 
-            settingParameterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newModelParameterToolStripMenuItem, modifyParameterToolStripMenuItem });
+            settingParameterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newModelParameterToolStripMenuItem, modifyParameterToolStripMenuItem, copyProgramToolStripMenuItem, deleteProgramToolStripMenuItem });
             settingParameterToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             settingParameterToolStripMenuItem.Name = "settingParameterToolStripMenuItem";
             settingParameterToolStripMenuItem.Size = new Size(180, 22);
@@ -92,6 +96,20 @@
             modifyParameterToolStripMenuItem.Size = new Size(192, 22);
             modifyParameterToolStripMenuItem.Text = "Modify Parameter";
             modifyParameterToolStripMenuItem.Click += modifyParameterToolStripMenuItem_Click;
+            // 
+            // copyProgramToolStripMenuItem
+            // 
+            copyProgramToolStripMenuItem.Name = "copyProgramToolStripMenuItem";
+            copyProgramToolStripMenuItem.Size = new Size(192, 22);
+            copyProgramToolStripMenuItem.Text = "Copy Program";
+            copyProgramToolStripMenuItem.Click += copyProgramToolStripMenuItem_Click;
+            // 
+            // deleteProgramToolStripMenuItem
+            // 
+            deleteProgramToolStripMenuItem.Name = "deleteProgramToolStripMenuItem";
+            deleteProgramToolStripMenuItem.Size = new Size(192, 22);
+            deleteProgramToolStripMenuItem.Text = "Delete Program";
+            deleteProgramToolStripMenuItem.Click += deleteProgramToolStripMenuItem_Click;
             // 
             // configurationToolStripMenuItem
             // 
@@ -119,12 +137,26 @@
             // 
             // dashboardControl1
             // 
+            dashboardControl1.BottomActualImage = null;
+            dashboardControl1.BottomDecision = "";
+            dashboardControl1.BottomParameterImage = null;
+            countViewModel1.Count = 0;
+            countViewModel1.Fail = 0;
+            countViewModel1.Pass = 0;
+            countViewModel1.Yield = new decimal(new int[] { 0, 0, 0, 0 });
+            dashboardControl1.countViewModel = countViewModel1;
             dashboardControl1.Dock = DockStyle.Fill;
+            dashboardControl1.FinalJudge = "";
             dashboardControl1.Location = new Point(0, 0);
             dashboardControl1.Margin = new Padding(3, 2, 3, 2);
             dashboardControl1.Name = "dashboardControl1";
+            dashboardControl1.SerialNumber = "";
             dashboardControl1.Size = new Size(800, 426);
+            dashboardControl1.StatusRun = "log1123445.txt";
             dashboardControl1.TabIndex = 0;
+            dashboardControl1.TopActualImage = null;
+            dashboardControl1.TopDecision = "";
+            dashboardControl1.TopParameterImage = null;
             // 
             // MainForm
             // 
@@ -154,5 +186,7 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private Panel panel1;
         private Controls.DashboardControl dashboardControl1;
+        private ToolStripMenuItem copyProgramToolStripMenuItem;
+        private ToolStripMenuItem deleteProgramToolStripMenuItem;
     }
 }

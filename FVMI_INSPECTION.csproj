@@ -19,6 +19,12 @@
     <Compile Update="Controls\SettingParameterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\CopyProgramForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\DeleteProgramForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\InputModalForm.cs">
       <SubType>Form</SubType>
     </Compile>

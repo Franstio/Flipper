@@ -11,7 +11,7 @@ namespace FVMI_INSPECTION.Models
     {
         [ExplicitKey]
         public string Model { get; set; } = string.Empty;
-        public int CameraPoint { get; set; } = -1;
+        public int CameraPoint { get; set; } = 0;
         public ICollection<DetailModel> Details { get; set; }  =new List<DetailModel>();
         public MasterModel()
         {
