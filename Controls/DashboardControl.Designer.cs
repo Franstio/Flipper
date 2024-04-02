@@ -93,12 +93,12 @@ namespace FVMI_INSPECTION.Controls
             parameterTop = new PictureBox();
             panel8 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
+            button1 = new Button();
             groupBox9 = new GroupBox();
             bottomInspectionGridView = new DataGridView();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             tableLayoutPanel11 = new TableLayoutPanel();
-            button1 = new Button();
             groupBox1.SuspendLayout();
             panel6.SuspendLayout();
             panel3.SuspendLayout();
@@ -894,6 +894,18 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel1.Size = new Size(323, 529);
             tableLayoutPanel1.TabIndex = 25;
             // 
+            // button1
+            // 
+            button1.Dock = DockStyle.Fill;
+            button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            button1.Location = new Point(8, 474);
+            button1.Name = "button1";
+            button1.Size = new Size(307, 47);
+            button1.TabIndex = 6;
+            button1.Text = "Reset";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // groupBox9
             // 
             groupBox9.Controls.Add(bottomInspectionGridView);
@@ -954,17 +966,6 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel11.Size = new Size(638, 618);
             tableLayoutPanel11.TabIndex = 26;
-            // 
-            // button1
-            // 
-            button1.Dock = DockStyle.Fill;
-            button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            button1.Location = new Point(8, 474);
-            button1.Name = "button1";
-            button1.Size = new Size(307, 47);
-            button1.TabIndex = 6;
-            button1.Text = "Reset";
-            button1.UseVisualStyleBackColor = true;
             // 
             // DashboardControl
             // 

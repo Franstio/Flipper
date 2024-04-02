@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FVMI_INSPECTION.Forms;
+using Microsoft.VisualBasic;
 
 namespace FVMI_INSPECTION.Controls
 {
@@ -36,16 +37,18 @@ namespace FVMI_INSPECTION.Controls
             set
             {
                 if (IsHandleCreated)
-                groupBox8.Invoke(delegate
-                {
-                    quantityLabel.Text = $"Count: {value.Count}";
-                    failCountLabel.Text = $"Fail: {value.Fail}";
-                    yieldLabel.Text = $"Yield: {(((decimal)value.Pass / (decimal)value.Count) * 100)}%";
-                });
+                    groupBox8.Invoke(delegate
+                    {
+                        quantityLabel.Text = $"Count: {value.Count}";
+                        failCountLabel.Text = $"Fail: {value.Fail}";
+                        yieldLabel.Text = $"Yield: {(((decimal)value.Pass / (decimal)value.Count) * 100)}%";
+                    });
                 _cvm = value;
             }
         }
-        public string SerialNumber { get => textBox1.Text; set
+        public string SerialNumber
+        {
+            get => textBox1.Text; set
             {
                 if (IsHandleCreated)
                     Invoke(delegate { textBox1.Text = value; });
@@ -64,16 +67,16 @@ namespace FVMI_INSPECTION.Controls
             get => finalJudgeLabel.Text; set
             {
                 if (IsHandleCreated)
-                Invoke(delegate
-                {
-                    Color clr = Color.Black;
-                    if (value == "PASS")
-                        clr = Color.LimeGreen;
-                    else if (value == "NG" || value == "FAIL")
-                        clr = Color.DarkRed;
-                    finalJudgeLabel.ForeColor = clr;
-                    finalJudgeLabel.Text = value;
-                });
+                    Invoke(delegate
+                    {
+                        Color clr = Color.Black;
+                        if (value == "PASS")
+                            clr = Color.LimeGreen;
+                        else if (value == "NG" || value == "FAIL")
+                            clr = Color.DarkRed;
+                        finalJudgeLabel.ForeColor = clr;
+                        finalJudgeLabel.Text = value;
+                    });
             }
         }
         public string TopDecision
@@ -82,16 +85,16 @@ namespace FVMI_INSPECTION.Controls
             set
             {
                 if (IsHandleCreated)
-                Invoke(delegate
-                {
-                    topDecisionLabel.Text = value;
-                    Color clr = Color.Black;
-                    if (value == "PASS")
-                        clr = Color.LimeGreen;
-                    else if (value == "FAIL")
-                        clr = Color.DarkRed;
-                    topDecisionLabel.ForeColor = clr;
-                });
+                    Invoke(delegate
+                    {
+                        topDecisionLabel.Text = value;
+                        Color clr = Color.Black;
+                        if (value == "PASS")
+                            clr = Color.LimeGreen;
+                        else if (value == "FAIL")
+                            clr = Color.DarkRed;
+                        topDecisionLabel.ForeColor = clr;
+                    });
             }
         }
         public string BottomDecision
@@ -112,7 +115,7 @@ namespace FVMI_INSPECTION.Controls
                     });
             }
         }
-        public int CampPoint { get => int.Parse(campointLabel.Text); set {if (IsHandleCreated) Invoke(delegate { campointLabel.Text = value.ToString(); }); } }
+        public int CampPoint { get => int.Parse(campointLabel.Text); set { if (IsHandleCreated) Invoke(delegate { campointLabel.Text = value.ToString(); }); } }
         public Image? TopParameterImage { get => parameterTop.Image; set { if (IsHandleCreated) Invoke(delegate { parameterTop.Image = value; }); } }
         public Image? BottomParameterImage { get => parameterBottom.Image; set { if (IsHandleCreated) Invoke(delegate { parameterBottom.Image = value; }); } }
         public Image? TopActualImage { get => actualTop.Image; set { if (IsHandleCreated) Invoke(delegate { actualTop.Image = value; }); } }
@@ -140,7 +143,7 @@ namespace FVMI_INSPECTION.Controls
         {
             get => _bottomRecord; set
             {
-                _bottomRecord= value;
+                _bottomRecord = value;
                 bottomInspectionGridView.Invoke(delegate
                 {
                     bottomInspectionGridView.Rows.Clear();
@@ -214,8 +217,8 @@ namespace FVMI_INSPECTION.Controls
                 //              await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Bottom);
                 //await ReadCsv();
                 data = await presenter.RunProcess();
-                
-                records = presenter.GenerateRecordModel(data[0], TopRecord.ToArray(), modelName,SerialNumber);
+
+                records = presenter.GenerateRecordModel(data[0], TopRecord.ToArray(), modelName, SerialNumber);
                 records.AddRange(presenter.GenerateRecordModel(data[1], BottomRecord.ToArray(), modelName, SerialNumber));
                 Invoke(delegate
                 {
@@ -291,7 +294,7 @@ namespace FVMI_INSPECTION.Controls
                     TopDecision = "FAIL";
                 else
                     BottomDecision = "FAIL";
-                
+
             }
             else if (!isPrevPass && records[index].Judgement == "PASS")
             {
@@ -303,7 +306,7 @@ namespace FVMI_INSPECTION.Controls
                         TopDecision = "PASS";
                     else
                         BottomDecision = "PASS";
-                    
+
                 }
             }
             if (records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL"))
@@ -338,6 +341,15 @@ namespace FVMI_INSPECTION.Controls
         {
             if (records.Count > 0)
                 await presenter.WriteLog(records);
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            button1.Invoke(delegate { button1.Enabled = false; });
+
+            await presenter.ResetProcess();
+
+            button1.Invoke(delegate { button1.Enabled = true; });
         }
     }
 }

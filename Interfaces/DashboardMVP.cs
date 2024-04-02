@@ -33,7 +33,7 @@ namespace FVMI_INSPECTION.Interfaces
             Task<List<ProcessRecordModel>[]?> ReadCsv();
             Task WriteLog(List<RecordModel> records);
             List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName,string serial);
-
+            Task ResetProcess();
         }
     }
 }

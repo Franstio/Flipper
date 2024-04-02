@@ -163,7 +163,7 @@ namespace FVMI_INSPECTION.Presenter
 
             var result = await repo.GetDetail(view.ModelName, TAG);
             bool isExist = result.Count() > 0;
-            lib.SaveImage(view.UploadFilePath, view.UploadFileName);
+            await lib.SaveImage(view.UploadFilePath, view.UploadFileName);
             DetailModel detail = new DetailModel()
             {
                 Area = isExist ? result.First().Area : string.Empty,

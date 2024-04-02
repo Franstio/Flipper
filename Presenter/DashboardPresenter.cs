@@ -47,6 +47,20 @@ namespace FVMI_INSPECTION.Presenter
             await presenter.LoadCampoint();
             return presenter;
         }
+        public async Task ResetProcess()
+        {
+            await process.PushCommand("MR2000", 50, "1", "0");
+            cTokenSource.Cancel();
+            cTokenSource.Dispose();
+            cTokenSource = new CancellationTokenSource();
+            view.StatusRun = "Cancelled...";
+            view.SerialNumber = string.Empty;
+            view.FinalJudge = string.Empty;
+            view.TopRecord = new List<ProcessRecordModel>();
+            view.BottomRecord = new List<ProcessRecordModel>();
+            view.TopDecision = "-";
+            view.BottomDecision = "-";
+        }
         private DashboardPresenter( DashboardMVP.IView view,MasterModel model,FileLib fileLib,ModelRepository repo)
         {
             this.view = view;
@@ -126,7 +140,6 @@ namespace FVMI_INSPECTION.Presenter
             eventUpdate("Waiting for start Button (Top)");
             data = await process.MonitorCommand("MR8000", "1", cTokenSource.Token);
             eventUpdate("Running....");
-            string res;
 //            string[] a = await process.PushCommand("MR300", 500, "0", "1", "0");
             bool result = await process.TriggerCam("MR1000","MR1001");
             await Task.Delay(1000);
@@ -168,7 +181,7 @@ namespace FVMI_INSPECTION.Presenter
             bool result = await process.TriggerCam("MR1000", "MR1001",false);
 
             data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             Image? img = result ? GetLocalImage("Bottom") : await process.GetNgImage("Bottom");
             //            string[] check = await PushCommand("MR400", "0", "1");

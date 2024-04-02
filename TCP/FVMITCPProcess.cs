@@ -80,12 +80,12 @@ namespace FVMI_INSPECTION.TCP
         public async Task<bool> GetResult(string positiveCmd, string negativeCmd)
         {
             string[] data;
-            Task<string[]>[] tasks = new Task<string[]>[] { MonitorCommand(positiveCmd, "1", cTokenSource.Token), MonitorCommand(negativeCmd, "1", cTokenSource.Token) };
+            CancellationTokenSource src = new();
+            Task<string[]>[] tasks = new Task<string[]>[] { MonitorCommand(positiveCmd, "1", src.Token), MonitorCommand(negativeCmd, "1", src.Token) };
             var result = await Task.WhenAny<string[]>(tasks);
             data = await result;
-            cTokenSource.Cancel();
-            cTokenSource.Dispose();
-            cTokenSource = new CancellationTokenSource();
+            src.Cancel();
+            src.Dispose();
             if (data[0] == positiveCmd && data[1] == "1") return true;
             if (data[0] == negativeCmd && data[1] == "1") return false;
 

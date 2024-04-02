@@ -74,7 +74,7 @@ namespace FVMI_INSPECTION.Utilities
                 return null;
             }
         }
-        public void SaveImage(string imagePath,string name,bool ng=false, string? manualPath = null)
+        public async Task SaveImage(string imagePath,string name,bool ng=false, string? manualPath = null)
         {
             if (!File.Exists(imagePath))
             {
@@ -82,19 +82,27 @@ namespace FVMI_INSPECTION.Utilities
                 return;
             }
             string savepath = Path.Combine(manualPath is null ? (ng ? _ngSavePath : _savePath) : manualPath,name);
-            try
+            int tryCount = 0;
+            do
             {
-                if (File.Exists(savepath))
-                    return ;
-                using (var img = Image.FromFile(imagePath))
+                try
                 {
-                    img.Save(savepath);
+                    if (File.Exists(savepath))
+                        return;
+                    using (var img = Image.FromFile(imagePath))
+                    {
+                        img.Save(savepath);
+                        tryCount = -1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"ERROR: {ex.Message},PATH:{imagePath},TO:{savepath})");
+                    tryCount = tryCount + 1;
+                    await Task.Delay(500);
                 }
             }
-            catch(Exception ex)
-            {
-                Debug.WriteLine($"ERROR: {ex.Message},PATH:{imagePath},TO:{savepath})");
-            }
+            while (tryCount > -1 && tryCount < 100);
         }
         public string[] GetFolders(string search = "",string additional="")
         {
@@ -148,7 +156,7 @@ namespace FVMI_INSPECTION.Utilities
                 if (img.Length < 1)
                     return string.Empty;
                 FileInfo file = new FileInfo(img[0]);
-                SaveImage(file.FullName, file.Name, true);
+                await SaveImage(file.FullName, file.Name, true);
                 return file.Name;
             }
             catch(Exception ex)
@@ -175,7 +183,7 @@ namespace FVMI_INSPECTION.Utilities
                 if (img.Length < 1)
                     return string.Empty;
                 FileInfo file = new FileInfo(img[0]);
-                SaveImage(file.FullName, file.Name, true);
+                await SaveImage(file.FullName, file.Name, true);
                 return file.Name;
             }
             catch (Exception ex)
