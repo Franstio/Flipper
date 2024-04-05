@@ -32,6 +32,12 @@ namespace FVMI_INSPECTION.Forms
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            var check = await db.GetModel(newModelNameBox.Text);
+            if ( check.Count > 0)
+            {
+                MessageBox.Show("Model with given name is already exists", "ERROR: Duplicate Model", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             await db.FullCopyPosition(((MasterModel)comboBox1.SelectedItem!).Model, newModelNameBox.Text);
             MessageBox.Show("Copy Complete");
             this.Close();

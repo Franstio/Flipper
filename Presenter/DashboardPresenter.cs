@@ -49,7 +49,7 @@ namespace FVMI_INSPECTION.Presenter
         }
         public async Task ResetProcess()
         {
-            await process.PushCommand("MR2000", 50, "1", "0");
+            await process.PushCommand("MR2000", 300, "1", "0");
             cTokenSource.Cancel();
             cTokenSource.Dispose();
             cTokenSource = new CancellationTokenSource();
@@ -95,7 +95,12 @@ namespace FVMI_INSPECTION.Presenter
             await Task.Delay(1200);
             var record = await ReadCsv();
             if (record is null)
-                    throw new Exception("Record Error");
+            {
+                MessageBox.Show("CSV File Invalid, please check CSV File","Logging Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                view.StatusRun = "Error: Invalid CSV...";
+                return new ProcessResultModel[0];
+            }
             view.TopDecision = record[1].Any(x => x.Judgement == "NG") ? "FAIL" : "PASS";
             view.BottomDecision = record[0].Any(x => x.Judgement == "NG") ? "FAIL" : "PASS";
             view.TopRecord = record[1].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();

@@ -217,7 +217,8 @@ namespace FVMI_INSPECTION.Controls
                 //              await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Bottom);
                 //await ReadCsv();
                 data = await presenter.RunProcess();
-
+                if (data.Length < 1)
+                    return;
                 records = presenter.GenerateRecordModel(data[0], TopRecord.ToArray(), modelName, SerialNumber);
                 records.AddRange(presenter.GenerateRecordModel(data[1], BottomRecord.ToArray(), modelName, SerialNumber));
                 Invoke(delegate
