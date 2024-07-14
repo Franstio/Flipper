@@ -47,7 +47,7 @@ namespace FVMI_INSPECTION.TCP
 
         public async Task<bool> TriggerCam(string passCmd, string ngCmd, bool check = true)
         {
-            var res = await PushCommand("MR300", 10, "0", "1", "0");
+            var res = await PushCommand("MR300", 100, "0", "1", "0");
             string[]? data = null;
             if (check)
                 data = await MonitorCommand("MR400", "1", cTokenSource.Token);

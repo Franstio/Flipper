@@ -92,11 +92,19 @@ namespace FVMI_INSPECTION.Presenter
             string[] data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
             res = await process.WriteCommand("MR004", 0);
             eventUpdate("Writing Record");
-            await Task.Delay(1200);
-            var record = await ReadCsv();
+            await Task.Delay(1500);    
+            List<ProcessRecordModel>[]?  record = new List<ProcessRecordModel>[2];
+            int Count = 0;
+            do
+            {
+                record = await ReadCsv();
+                Count = Count + 1;
+                await Task.Delay(100);
+            }
+            while (Count < 100 && record is null);
             if (record is null)
             {
-                MessageBox.Show("CSV File Invalid, please check CSV File","Logging Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("CSV File Invalid, please check CSV File", "Logging Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 view.StatusRun = "Error: Invalid CSV...";
                 return new ProcessResultModel[0];
