@@ -272,8 +272,6 @@ namespace FVMI_INSPECTION.Controls
 
             processTimeLabel.Invoke(new Action(() => processTimeLabel.Text = "00:00:00"));
             startTime = DateTime.Now;
-            processTimer.Enabled = true;
-            processTimer.Start();
             await Task.Run(async delegate
             {
                 //                await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Top);
@@ -288,8 +286,6 @@ namespace FVMI_INSPECTION.Controls
                     {
                         textBox1.Enabled = true;
                         textBox1.Text = string.Empty;
-                        processTimer.Stop();
-                        processTimer.Enabled = false;
 
                         scanLabel.Text = "-";
                     });
@@ -474,6 +470,24 @@ namespace FVMI_INSPECTION.Controls
             if (presenter is null)
                 return;
             await presenter.CheckReset();
+        }
+
+        public void StartTimer()
+        {
+            Invoke(delegate
+            {
+                processTimer.Enabled = true;
+                processTimer.Start();
+            });
+        }
+
+        public void StopTimer()
+        {
+            Invoke(delegate
+            {
+                processTimer.Stop();
+                processTimer.Enabled = false;
+            });
         }
     }
 }

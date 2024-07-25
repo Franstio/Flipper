@@ -33,6 +33,8 @@ namespace FVMI_INSPECTION.Interfaces
             CountViewModel countViewModel { get; set; }
             string FinalJudge { get; set; }
             bool AllowReset { get; set; }
+            void StartTimer();
+            void StopTimer();
         }
         public interface IPresenter
         {

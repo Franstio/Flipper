@@ -115,9 +115,16 @@ namespace FVMI_INSPECTION.Presenter
             view.TopUVRecord = new List<ProcessRecordModel>();
             view.BottomUVRecord = new List<ProcessRecordModel>();
 //            view.StatusRun = view.SerialNumber;
-            string res;
+            string res,res2;
             res = await process.WriteCommand("MR004", 1);
             await Task.Delay(100);
+            do
+            {
+                res = await process.ReadCommand("R000");
+                res2 = await process.ReadCommand("MR004");
+            }
+            while (!res.Contains("1") || !res.Contains("1"));
+            view.StartTimer();
             await MonitorImageOutput();
             /*ret[0] = await TopProcess();
             view.topUVImage = ret[0].Image;
@@ -127,7 +134,7 @@ namespace FVMI_INSPECTION.Presenter
             res = await process.WriteCommand("MR004", 0);*/
             int loading = 0;
             res = await process.ReadCommand("MR004");
-            string res2 = await process.ReadCommand("MR200");
+            res2 = await process.ReadCommand("MR200");
             while ((res.Last() != '1' || res2.Last()!='1') && !cTokenSource.IsCancellationRequested)
             {
                 await Task.Delay(100);
@@ -235,6 +242,7 @@ namespace FVMI_INSPECTION.Presenter
                     ImagePath = bottomWhiteImgSet?.Item1
                 }
             ];
+            view.StopTimer();
             return ret;
         }
         private async Task MonitorImageOutput()
