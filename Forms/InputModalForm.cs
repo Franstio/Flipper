@@ -16,15 +16,23 @@ namespace FVMI_INSPECTION.Forms
         public string Result { get; set; } = string.Empty;
         public bool isDropDown { get; set; } = false;
         public List<string> Data { get; set; } = new List<string>();
-        public InputModalForm(string title)
+        public InputModalForm(string title,string desc)
         {
             InitializeComponent();
-            this.groupBox1.Text = title;
+            Text = title;
+            this.groupBox1.Text = desc;
         }
-        public InputModalForm(string title, List<string> data)
+        public InputModalForm(string title,string desc,char maskedChar)
         {
             InitializeComponent();
-            this.groupBox1.Text = title;
+            Text = title;
+            this.groupBox1.Text = desc;
+            textBox1.PasswordChar = maskedChar;
+        }
+        public InputModalForm(string title,string desc, List<string> data)
+        {
+            InitializeComponent();
+            this.groupBox1.Text = desc;
             Text = title;
             this.Data = data;
             isDropDown = true;

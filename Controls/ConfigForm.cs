@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FVMI_INSPECTION.Utilities;
 using System.Windows.Forms;
+using FVMI_INSPECTION.Forms;
 
 namespace FVMI_INSPECTION.Controls
 {
@@ -17,6 +18,16 @@ namespace FVMI_INSPECTION.Controls
         private FVMITcpClient tcp = new FVMITcpClient();
         public ConfigForm()
         {
+            InputModalForm frm = new InputModalForm("Confirm Password","Password", '*');
+            var resDialog = frm.ShowDialog();
+            if (resDialog == DialogResult.OK)
+            {
+                if (frm.textBox1.Text.Hmac512Hash() != Properties.Settings.Default.Password)
+                {
+                    MessageBox.Show("Incorrect Password");
+                    return;
+                }
+            }
             InitializeComponent();
             button15.Text = tcp.isRunning ? "Disconnect" : "Connect";
             ipBox.Enabled = !tcp.isRunning;
@@ -81,6 +92,12 @@ namespace FVMI_INSPECTION.Controls
             reportLogPath.Text = GetConfig("LogPath");
             debugLogPath.Text = GetConfig("DebugLogPath");
             csvPathBox.Text = GetConfig("CSVPath");
+            whiteCSVBox.Text = GetConfig("WhiteCSVPath");
+            whiteImgBox.Text = GetConfig("WhiteImgPath");
+            uvCSVBox.Text = GetConfig("UVCSVPath");
+            uvImgBox.Text = GetConfig("UVImgPath");
+            UVPrefixBox.Text = $"{GetConfig("UVTopPrefix")};{GetConfig("UVBottomPrefix")}";
+            WhitePrefixBox.Text = $"{GetConfig("WhiteTopPrefix")};{GetConfig("WhiteBottomPrefix")}";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -125,9 +142,33 @@ namespace FVMI_INSPECTION.Controls
             MessageBox.Show("Password Successfully Updated");
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            if (UVPrefixBox.Text.Split(";").Length != 2)
+            {
+                MessageBox.Show("Invalid UV prefix format");
+                return;
+            }
+            Properties.Settings.Default["UVTopPrefix"] = UVPrefixBox.Text.Split(";")[0];
+            Properties.Settings.Default["UVBottomPrefix"] = UVPrefixBox.Text.Split(";")[1];
+            Properties.Settings.Default.Save();
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            if (WhitePrefixBox.Text.Split(";").Length != 2)
+            {
+                MessageBox.Show("Invalid White prefix format");
+                return;
+            }
+            Properties.Settings.Default["WhiteTopPrefix"] = WhitePrefixBox.Text.Split(";")[0];
+            Properties.Settings.Default["WhiteBottomPrefix"] = WhitePrefixBox.Text.Split(";")[1];
+            Properties.Settings.Default.Save();
         }
     }
 }

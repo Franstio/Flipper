@@ -137,9 +137,9 @@
             // 
             // dashboardControl1
             // 
-            dashboardControl1.BottomActualImage = null;
-            dashboardControl1.BottomDecision = "";
-            dashboardControl1.BottomParameterImage = null;
+            dashboardControl1.topWhiteImage = null;
+            dashboardControl1.BottomUVDecision = "";
+            dashboardControl1.bottomWhiteImage = null;
             countViewModel1.Count = 0;
             countViewModel1.Fail = 0;
             countViewModel1.Pass = 0;
@@ -154,9 +154,9 @@
             dashboardControl1.Size = new Size(800, 426);
             dashboardControl1.StatusRun = "log1123445.txt";
             dashboardControl1.TabIndex = 0;
-            dashboardControl1.TopActualImage = null;
-            dashboardControl1.TopDecision = "";
-            dashboardControl1.TopParameterImage = null;
+            dashboardControl1.topUVImage = null;
+            dashboardControl1.TopUVDecision = "";
+            dashboardControl1.bottomUVImage = null;
             // 
             // MainForm
             // 

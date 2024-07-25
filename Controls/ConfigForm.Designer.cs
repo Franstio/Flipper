@@ -46,6 +46,24 @@
             label2 = new Label();
             label1 = new Label();
             groupBox3 = new GroupBox();
+            button16 = new Button();
+            WhitePrefixBox = new TextBox();
+            label21 = new Label();
+            button14 = new Button();
+            UVPrefixBox = new TextBox();
+            label20 = new Label();
+            button13 = new Button();
+            uvCSVBox = new TextBox();
+            label19 = new Label();
+            button12 = new Button();
+            label18 = new Label();
+            whiteCSVBox = new TextBox();
+            button11 = new Button();
+            label17 = new Label();
+            whiteImgBox = new TextBox();
+            button10 = new Button();
+            uvImgBox = new TextBox();
+            label16 = new Label();
             button9 = new Button();
             label15 = new Label();
             csvPathBox = new TextBox();
@@ -165,7 +183,7 @@
             groupBox2.Controls.Add(label1);
             groupBox2.Location = new Point(3, 122);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(378, 254);
+            groupBox2.Size = new Size(378, 421);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Delay Setting";
@@ -256,6 +274,24 @@
             // groupBox3
             // 
             groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox3.Controls.Add(button16);
+            groupBox3.Controls.Add(WhitePrefixBox);
+            groupBox3.Controls.Add(label21);
+            groupBox3.Controls.Add(button14);
+            groupBox3.Controls.Add(UVPrefixBox);
+            groupBox3.Controls.Add(label20);
+            groupBox3.Controls.Add(button13);
+            groupBox3.Controls.Add(uvCSVBox);
+            groupBox3.Controls.Add(label19);
+            groupBox3.Controls.Add(button12);
+            groupBox3.Controls.Add(label18);
+            groupBox3.Controls.Add(whiteCSVBox);
+            groupBox3.Controls.Add(button11);
+            groupBox3.Controls.Add(label17);
+            groupBox3.Controls.Add(whiteImgBox);
+            groupBox3.Controls.Add(button10);
+            groupBox3.Controls.Add(uvImgBox);
+            groupBox3.Controls.Add(label16);
             groupBox3.Controls.Add(button9);
             groupBox3.Controls.Add(label15);
             groupBox3.Controls.Add(csvPathBox);
@@ -279,10 +315,195 @@
             groupBox3.Controls.Add(triggerImgSaveDir);
             groupBox3.Location = new Point(390, 5);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(445, 256);
+            groupBox3.Size = new Size(445, 413);
             groupBox3.TabIndex = 3;
             groupBox3.TabStop = false;
             groupBox3.Text = "Directory Setting";
+            // 
+            // button16
+            // 
+            button16.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button16.Location = new Point(363, 373);
+            button16.Name = "button16";
+            button16.Size = new Size(75, 23);
+            button16.TabIndex = 39;
+            button16.Tag = "CSVPath";
+            button16.Text = "Change";
+            button16.UseVisualStyleBackColor = true;
+            button16.Click += button16_Click;
+            // 
+            // WhitePrefixBox
+            // 
+            WhitePrefixBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            WhitePrefixBox.Location = new Point(142, 373);
+            WhitePrefixBox.Name = "WhitePrefixBox";
+            WhitePrefixBox.Size = new Size(216, 23);
+            WhitePrefixBox.TabIndex = 38;
+            WhitePrefixBox.Tag = "CsvPath";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(5, 377);
+            label21.Name = "label21";
+            label21.Size = new Size(71, 15);
+            label21.TabIndex = 37;
+            label21.Text = "White Prefix";
+            // 
+            // button14
+            // 
+            button14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button14.Location = new Point(363, 344);
+            button14.Name = "button14";
+            button14.Size = new Size(75, 23);
+            button14.TabIndex = 36;
+            button14.Tag = "CSVPath";
+            button14.Text = "Change";
+            button14.UseVisualStyleBackColor = true;
+            button14.Click += button14_Click;
+            // 
+            // UVPrefixBox
+            // 
+            UVPrefixBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            UVPrefixBox.Location = new Point(142, 344);
+            UVPrefixBox.Name = "UVPrefixBox";
+            UVPrefixBox.Size = new Size(216, 23);
+            UVPrefixBox.TabIndex = 35;
+            UVPrefixBox.Tag = "CsvPath";
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(5, 348);
+            label20.Name = "label20";
+            label20.Size = new Size(58, 15);
+            label20.TabIndex = 34;
+            label20.Text = "UV Prefix:";
+            // 
+            // button13
+            // 
+            button13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button13.Location = new Point(364, 315);
+            button13.Name = "button13";
+            button13.Size = new Size(75, 23);
+            button13.TabIndex = 33;
+            button13.Tag = "UVCSVPath";
+            button13.Text = "Change";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += openDialogFolder;
+            // 
+            // uvCSVBox
+            // 
+            uvCSVBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            uvCSVBox.Location = new Point(143, 315);
+            uvCSVBox.Name = "uvCSVBox";
+            uvCSVBox.ReadOnly = true;
+            uvCSVBox.Size = new Size(216, 23);
+            uvCSVBox.TabIndex = 32;
+            uvCSVBox.Tag = "CsvPath";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(6, 319);
+            label19.Name = "label19";
+            label19.Size = new Size(67, 15);
+            label19.TabIndex = 31;
+            label19.Text = "UV CSV Dir:";
+            // 
+            // button12
+            // 
+            button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button12.Location = new Point(364, 256);
+            button12.Name = "button12";
+            button12.Size = new Size(75, 23);
+            button12.TabIndex = 30;
+            button12.Tag = "WhiteCSVPath";
+            button12.Text = "Change";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += openDialogFolder;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(6, 260);
+            label18.Name = "label18";
+            label18.Size = new Size(83, 15);
+            label18.TabIndex = 29;
+            label18.Text = "White CSV Dir:";
+            // 
+            // whiteCSVBox
+            // 
+            whiteCSVBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            whiteCSVBox.Location = new Point(143, 257);
+            whiteCSVBox.Name = "whiteCSVBox";
+            whiteCSVBox.ReadOnly = true;
+            whiteCSVBox.Size = new Size(216, 23);
+            whiteCSVBox.TabIndex = 28;
+            whiteCSVBox.Tag = "CsvPath";
+            // 
+            // button11
+            // 
+            button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button11.Location = new Point(364, 227);
+            button11.Name = "button11";
+            button11.Size = new Size(75, 23);
+            button11.TabIndex = 27;
+            button11.Tag = "WhiteImgPath";
+            button11.Text = "Change";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += openDialogFolder;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(6, 231);
+            label17.Name = "label17";
+            label17.Size = new Size(95, 15);
+            label17.TabIndex = 26;
+            label17.Text = "White Image Dir:";
+            // 
+            // whiteImgBox
+            // 
+            whiteImgBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            whiteImgBox.Location = new Point(143, 228);
+            whiteImgBox.Name = "whiteImgBox";
+            whiteImgBox.ReadOnly = true;
+            whiteImgBox.Size = new Size(216, 23);
+            whiteImgBox.TabIndex = 25;
+            whiteImgBox.Tag = "CsvPath";
+            whiteImgBox.TextChanged += textBox2_TextChanged;
+            // 
+            // button10
+            // 
+            button10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button10.Location = new Point(364, 286);
+            button10.Name = "button10";
+            button10.Size = new Size(75, 23);
+            button10.TabIndex = 24;
+            button10.Tag = "UVImgPath";
+            button10.Text = "Change";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += openDialogFolder;
+            // 
+            // uvImgBox
+            // 
+            uvImgBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            uvImgBox.Location = new Point(143, 286);
+            uvImgBox.Name = "uvImgBox";
+            uvImgBox.ReadOnly = true;
+            uvImgBox.Size = new Size(216, 23);
+            uvImgBox.TabIndex = 23;
+            uvImgBox.Tag = "CsvPath";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(6, 290);
+            label16.Name = "label16";
+            label16.Size = new Size(79, 15);
+            label16.TabIndex = 22;
+            label16.Text = "UV Image Dir:";
             // 
             // button9
             // 
@@ -507,9 +728,9 @@
             groupBox4.Controls.Add(label14);
             groupBox4.Controls.Add(label13);
             groupBox4.Controls.Add(currentPasswordBox);
-            groupBox4.Location = new Point(390, 273);
+            groupBox4.Location = new Point(390, 424);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(439, 103);
+            groupBox4.Size = new Size(439, 119);
             groupBox4.TabIndex = 4;
             groupBox4.TabStop = false;
             groupBox4.Text = "Setting Parameter Password";
@@ -567,7 +788,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "ConfigForm";
-            Size = new Size(838, 379);
+            Size = new Size(838, 546);
             Load += ConfigForm_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -632,5 +853,23 @@
         private Button button9;
         private Label label15;
         private TextBox csvPathBox;
+        private Button button10;
+        private TextBox uvImgBox;
+        private Label label16;
+        private Button button11;
+        private Label label17;
+        private TextBox whiteImgBox;
+        private Button button12;
+        private Label label18;
+        private TextBox whiteCSVBox;
+        private Button button13;
+        private TextBox uvCSVBox;
+        private Label label19;
+        private Button button16;
+        private TextBox WhitePrefixBox;
+        private Label label21;
+        private Button button14;
+        private TextBox UVPrefixBox;
+        private Label label20;
     }
 }

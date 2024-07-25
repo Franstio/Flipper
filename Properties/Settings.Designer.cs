@@ -215,5 +215,101 @@ namespace FVMI_INSPECTION.Properties {
                 this["CSVPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("uv/img/")]
+        public string UVImgPath {
+            get {
+                return ((string)(this["UVImgPath"]));
+            }
+            set {
+                this["UVImgPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("wht/img/")]
+        public string WhiteImgPath {
+            get {
+                return ((string)(this["WhiteImgPath"]));
+            }
+            set {
+                this["WhiteImgPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("uv/csv/")]
+        public string UVCSVPath {
+            get {
+                return ((string)(this["UVCSVPath"]));
+            }
+            set {
+                this["UVCSVPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("wht/csv/")]
+        public string WhiteCSVPath {
+            get {
+                return ((string)(this["WhiteCSVPath"]));
+            }
+            set {
+                this["WhiteCSVPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("topuv")]
+        public string UVTopPrefix {
+            get {
+                return ((string)(this["UVTopPrefix"]));
+            }
+            set {
+                this["UVTopPrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("bottomuv")]
+        public string UVBottomPrefix {
+            get {
+                return ((string)(this["UVBottomPrefix"]));
+            }
+            set {
+                this["UVBottomPrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("topwht")]
+        public string WhiteTopPrefix {
+            get {
+                return ((string)(this["WhiteTopPrefix"]));
+            }
+            set {
+                this["WhiteTopPrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("bottomwht")]
+        public string WhiteBottomPrefix {
+            get {
+                return ((string)(this["WhiteBottomPrefix"]));
+            }
+            set {
+                this["WhiteBottomPrefix"] = value;
+            }
+        }
     }
 }

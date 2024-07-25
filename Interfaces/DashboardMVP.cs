@@ -12,20 +12,27 @@ namespace FVMI_INSPECTION.Interfaces
     {
         public interface IView
         {
+            public string modelName { get; set; }
             string SerialNumber { get; set; }
             string StatusRun { get; set; }
             int CampPoint { get; set; }
-            string TopDecision { get; set; }
-            string BottomDecision { get; set; }
-            public Image? TopParameterImage { get; set; }
-            public Image? BottomParameterImage { get; set; }
+            string LogLabel { get; set; }
+            string TopUVDecision { get; set; }
+            string BottomUVDecision { get; set; }
+            string TopWhiteDecision { get; set; }
+            string BottomWhiteDecision { get; set; }
+            public Image? bottomUVImage { get; set; }
+            public Image? bottomWhiteImage { get; set; }
             
-            public Image? TopActualImage { get; set; }
-            public Image? BottomActualImage { get; set; }
-            public List<ProcessRecordModel> TopRecord { get; set; }
-            public List<ProcessRecordModel> BottomRecord { get; set; }
+            public Image? topUVImage { get; set; }
+            public Image? topWhiteImage { get; set; }
+            public List<ProcessRecordModel> TopUVRecord { get; set; }
+            public List<ProcessRecordModel> BottomUVRecord { get; set; }
+            public List<ProcessRecordModel> BottomWhiteRecord { get; set; }
+            public List<ProcessRecordModel> TopWhiteRecord { get; set; }
             CountViewModel countViewModel { get; set; }
             string FinalJudge { get; set; }
+            bool AllowReset { get; set; }
         }
         public interface IPresenter
         {
@@ -34,6 +41,7 @@ namespace FVMI_INSPECTION.Interfaces
             Task WriteLog(List<RecordModel> records);
             List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName,string serial);
             Task ResetProcess();
+            Task CheckReset();
         }
     }
 }

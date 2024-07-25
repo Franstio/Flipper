@@ -22,6 +22,13 @@ namespace FVMI_INSPECTION.Presenter
         private readonly FVMITCPProcess process;
         private readonly SettingParameterMVP.IView view;
         private bool isNew = true;
+        public enum FVMI_ImageType
+        {
+            TopWhite,
+            BottomWhite,
+            TopUV,
+            BottomUV
+        }
         public static async Task<SettingParameterPresenter> Build(string model, SettingParameterMVP.IView _view)
         {
             ModelRepository _repo = new ModelRepository();
@@ -31,17 +38,17 @@ namespace FVMI_INSPECTION.Presenter
             var _lib = new FileLib();
             var process = new FVMITCPProcess(mdl, _lib);
             if (list.Count < 1)
-                return new SettingParameterPresenter(mdl,_view,process,_lib,_repo);
+                return new SettingParameterPresenter(mdl, _view, process, _lib, _repo);
             mdl = list.First();
             process = new FVMITCPProcess(mdl, _lib);
             if (mdl.Details.Count > 0)
             {
-                var top = mdl.Details.Where(x => x.Type == "Top").FirstOrDefault();
-                if (top is not null && !string.IsNullOrEmpty(top.Image))
-                    _view.TopImage = _lib.ReadImage(top.Image, true) ?? _view.TopImage;
-                var bottom = mdl.Details.Where(x => x.Type == "Bottom").FirstOrDefault();
-                if (bottom is not null && !string.IsNullOrEmpty(bottom.Image))
-                    _view.BottomImage= _lib.ReadImage(bottom.Image, true) ?? _view.BottomImage;
+                Func<FVMI_ImageType, string?> getImage = (t) => mdl.Details.Where(x => x.Type == t.ToString()).FirstOrDefault()?.Image;
+                _view.TopUVImage = getImage(FVMI_ImageType.TopUV) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? _view.TopUVImage : _view.TopUVImage;
+                _view.BottomUVImage = getImage(FVMI_ImageType.BottomUV) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.BottomUV)!, true) ?? _view.BottomUVImage : _view.BottomUVImage;
+                _view.TopWhiteImage = getImage(FVMI_ImageType.TopWhite) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.TopWhite)!, true) ?? _view.TopWhiteImage : _view.TopWhiteImage;
+                _view.BottomWhiteImage = getImage(FVMI_ImageType.BottomWhite) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.BottomWhite)!, true) ?? _view.BottomWhiteImage : _view.BottomWhiteImage;
+                _view.CameraPoint = mdl.CameraPoint;
             }
             return new SettingParameterPresenter(mdl, _view, process, _lib, _repo);
         }
@@ -57,7 +64,28 @@ namespace FVMI_INSPECTION.Presenter
             await LoadCurrentModel();
             await process.SetupCamPoint();
         }
-
+        public async Task CylinderToggle(bool state)
+        {
+            var res = await process.SendCommand($"WR MR302 {(state ? 1 : 0)}");
+            await loadbutton();
+        }
+        public async Task UVToggle(bool state)
+        {
+            var res = await process.SendCommand($"WR MR303 {(state ? 1 : 0)}");
+            await loadbutton();
+        }
+        public async Task TriggerFlip()
+        {
+            var res = await process.SendCommand("WR MR201 1");
+            await Task.Delay(100);
+            res = await process.SendCommand("WR MR201 0");
+        }
+        public async Task TriggerOrigin()
+        {
+            var res = await process.SendCommand("WR MR200 1");
+            await Task.Delay(100);
+            res = await process.SendCommand("WR MR200 0");
+        }
         public async Task SetTopCamExec()
         {
             DetailModel detail = new DetailModel()
@@ -73,11 +101,11 @@ namespace FVMI_INSPECTION.Presenter
             await setDetail(detail, "Top");
 
         }
-        
+
         public async Task SetBottomCamExec()
         {
 
-            
+
             DetailModel detail = new DetailModel()
             {
                 Area = string.Empty,
@@ -97,7 +125,7 @@ namespace FVMI_INSPECTION.Presenter
             await repo.InsertModel(model);
             isNew = false;
         }
-        private SettingParameterPresenter(MasterModel _model,SettingParameterMVP.IView _view,FVMITCPProcess proc,FileLib fileLib,ModelRepository _repo)
+        private SettingParameterPresenter(MasterModel _model, SettingParameterMVP.IView _view, FVMITCPProcess proc, FileLib fileLib, ModelRepository _repo)
         {
             isNew = _model is null;
             model = _model ?? new MasterModel();
@@ -122,22 +150,49 @@ namespace FVMI_INSPECTION.Presenter
             }
             model = list.First();
             process.Model = model;
+            view.ModelName = modelName;
+            await process.SetupCamPoint();
+            await loadbutton();
+        }
+        private async Task loadbutton()
+        {
+
+            var cylinder = await process.ReadCommand("R505");
+            var uv = await process.ReadCommand("R502");
+            view.UVButton[0].Invoke(delegate
+            {
+                view.UVButton[0].BackColor= uv == "0" ? Color.White : Color.Gray;
+                view.UVButton[0].Enabled = uv == "0";
+            });
+            view.UVButton[1].Invoke(delegate
+            {
+                view.UVButton[1].BackColor = uv == "1" ? Color.White : Color.Gray;
+                view.UVButton[1].Enabled = uv == "1";
+            });
+            view.CylinderButton[0].Invoke(delegate
+            {
+                view.CylinderButton[0].BackColor = cylinder == "0" ? Color.White : Color.Gray;
+                view.CylinderButton[0].Enabled = cylinder == "0";
+            });
+            view.CylinderButton[1].Invoke(delegate
+            {
+
+                view.CylinderButton[1].BackColor = cylinder== "1" ? Color.White : Color.Gray;
+                view.CylinderButton[1].Enabled = cylinder == "1";
+            });
+
+
         }
         private void SetupView()
         {
-            view.CameraPoint = model.CameraPoint;
-            var top = model.Details.Where(x => x.Type == "Top").FirstOrDefault();
-            var bottom = model.Details.Where(x => x.Type == "Bottom").FirstOrDefault();
-            if (top is not null)
-            {
-                //areaBoxTop.Text = top.Area;
-                view.TopCamExecution = top.CameraExecution;
-            }
-            if (bottom is not null)
-            {
-                //areaBoxBottom.Text = bottom.Area;
-                view.BottomExecution = bottom.CameraExecution;
-            }
+            var mdl = model;
+            var _lib = lib;
+            var _view = view;
+            Func<FVMI_ImageType, string?> getImage = (t) => mdl.Details.Where(x => x.Type == t.ToString()).FirstOrDefault()?.Image;
+            _view.TopUVImage = getImage(FVMI_ImageType.TopUV) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? _view.TopUVImage : _view.TopUVImage;
+            _view.BottomUVImage = getImage(FVMI_ImageType.BottomUV) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.BottomUV)!, true) ?? _view.BottomUVImage : _view.BottomUVImage;
+            _view.TopWhiteImage = getImage(FVMI_ImageType.TopWhite) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.TopWhite)!, true) ?? _view.TopWhiteImage : _view.TopWhiteImage;
+            _view.BottomWhiteImage = getImage(FVMI_ImageType.BottomWhite) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.BottomWhite)!, true) ?? _view.BottomWhiteImage : _view.BottomWhiteImage;
         }
         private async Task setDetail(DetailModel detail, string type)
         {
@@ -147,20 +202,13 @@ namespace FVMI_INSPECTION.Presenter
             else
                 await repo.InsertModel(detail);
             await LoadCurrentModel();
-/*            await process.SetupCamExecution();
-            var result = await process!.GetNgImage(type);
-            if (type == "Top" && result is not null)
-                view.TopImage = result;
-            else if (type == "Bottom" && result is not null)
-                view.BottomImage= result;*/
         }
 
         public async Task UploadImage(string Type)
         {
+            if (isNew)
+                await CreateModelMaster();
             string TAG = Type;
-            if (TAG != "Top" && TAG != "Bottom")
-                return;
-
             var result = await repo.GetDetail(view.ModelName, TAG);
             bool isExist = result.Count() > 0;
             await lib.SaveImage(view.UploadFilePath, view.UploadFileName);
@@ -170,7 +218,7 @@ namespace FVMI_INSPECTION.Presenter
                 Model = isExist ? result.First().Model : view.ModelName,
                 Type = TAG,
                 Image = view.UploadFileName,
-                CameraExecution = isExist ? result.First().CameraExecution : TAG == "TOP" ? view.TopCamExecution : view.BottomExecution,
+                CameraExecution = 0
             };
             if (isExist)
                 await repo.UpdateModel(detail, view.ModelName, TAG);
@@ -182,10 +230,14 @@ namespace FVMI_INSPECTION.Presenter
                 MessageBox.Show("Upload Fail");
                 return;
             }
-            if (TAG == "Top" )
-                view.TopImage = img ;
-            else
-                view.BottomImage = img;
+            if (TAG ==nameof(FVMI_ImageType.TopUV) )
+                view.TopUVImage = img ;
+            else if (TAG == nameof(FVMI_ImageType.BottomUV))
+                view.BottomUVImage = img;
+            else if (TAG == nameof(FVMI_ImageType.TopWhite))
+                view.TopWhiteImage = img;
+            else if (TAG == nameof(FVMI_ImageType.BottomWhite))
+                view.BottomWhiteImage = img;
         }
     }
 }

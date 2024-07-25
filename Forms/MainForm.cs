@@ -2,6 +2,7 @@ using FVMI_INSPECTION.Controls;
 using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.Forms;
 using System.Windows.Forms;
+using FVMI_INSPECTION.Utilities;
 
 namespace FVMI_INSPECTION
 {
@@ -19,14 +20,24 @@ namespace FVMI_INSPECTION
 
         private void newModelParameterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputModalForm form = new InputModalForm("Insert New Model Name");
+            InputModalForm frm = new InputModalForm("Confirm Password", "Password",'*');
+            var resDialog = frm.ShowDialog();
+            if (resDialog == DialogResult.OK)
+            {
+                if (frm.textBox1.Text.Hmac512Hash() != Properties.Settings.Default.Password)
+                {
+                    MessageBox.Show("Incorrect Password");
+                    return;
+                }
+            }
+            InputModalForm form = new InputModalForm("New Model","Insert New Model Name");
             var res = form.ShowDialog();
             if (res == DialogResult.OK)
             {
                 panel1.Controls.Clear();
-                SettingParameterControl frm = new SettingParameterControl(form.Result);
-                frm.Dock = DockStyle.Fill;
-                panel1.Controls.Add(frm);
+                SettingParameterControl _frm = new SettingParameterControl(form.Result);
+                _frm.Dock = DockStyle.Fill;
+                panel1.Controls.Add(_frm);
             }
         }
 
@@ -34,28 +45,38 @@ namespace FVMI_INSPECTION
         {
 
             var data = await repo.GetModel();
-            SelectModalForm form = new SelectModalForm("Select Model", data.Select(x => x.Model).ToList());
+            SelectModalForm form = new SelectModalForm("Modify Model","Select Model", data.Select(x => x.Model).ToList());
             var res = form.ShowDialog();
             if (res == DialogResult.OK)
             {
                 panel1.Controls.Clear();
-                DashboardControl frm = new DashboardControl(form.Result);
-                frm.Dock = DockStyle.Fill;
-                panel1.Controls.Add(frm);
+                DashboardControl _frm = new DashboardControl(form.Result);
+                _frm.Dock = DockStyle.Fill;
+                panel1.Controls.Add(_frm);
             }
         }
 
         private async void modifyParameterToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            InputModalForm frm = new InputModalForm("Confirm Password", "Password", '*');
+            var resDialog = frm.ShowDialog();
+            if (resDialog == DialogResult.OK)
+            {
+                if (frm.textBox1.Text.Hmac512Hash() != Properties.Settings.Default.Password)
+                {
+                    MessageBox.Show("Incorrect Password");
+                    return;
+                }
+            }
             var data = await repo.GetModel();
-            SelectModalForm form = new SelectModalForm("Select Model", data.Select(x => x.Model).ToList());
+            SelectModalForm form = new SelectModalForm("Modify Model", "Select Model", data.Select(x => x.Model).ToList());
             var res = form.ShowDialog();
             if (res == DialogResult.OK)
             {
                 panel1.Controls.Clear();
-                SettingParameterControl frm = new SettingParameterControl(form.Result);
-                frm.Dock = DockStyle.Fill;
-                panel1.Controls.Add(frm);
+                SettingParameterControl _frm = new SettingParameterControl(form.Result);
+                _frm.Dock = DockStyle.Fill;
+                panel1.Controls.Add(_frm);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FVMI_INSPECTION.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,7 @@ namespace FVMI_INSPECTION.Models
         public string Judgement { get; set; } = string.Empty;
         public string? Reason { get; set; } = null;
         public string Serial { get; set;} = string.Empty;
+        public FileLib.FVMI_ProcessType ProcessType { get; set; }
+        public FileLib.FVMI_Type FVMI_Type { get; set; }
     }
 }

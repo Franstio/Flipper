@@ -18,18 +18,26 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FVMI_INSPECTION.Forms;
 using Microsoft.VisualBasic;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace FVMI_INSPECTION.Controls
 {
     public partial class DashboardControl : UserControl, DashboardMVP.IView
     {
-        private string modelName;
+        public string modelName { get; set; }
         private DateTime startTime;
         private DashboardPresenter presenter;
         private FileLib lib = new FileLib();
         private ModelRepository repo = new ModelRepository();
         private ProcessResultModel[] data = new ProcessResultModel[0];
         private CountViewModel _cvm = new CountViewModel();
+        private bool autoSave = true;
+        public bool AllowReset { get => button1.Enabled; set
+            {
+                if (button1.IsHandleCreated)
+                    button1.Invoke(delegate{ button1.Enabled = value; });
+            }
+        } 
         public CountViewModel countViewModel
         {
             get => _cvm;
@@ -56,6 +64,14 @@ namespace FVMI_INSPECTION.Controls
         }
         public string StatusRun
         {
+            get => label6.Text; set
+            {
+                if (IsHandleCreated)
+                    Invoke(delegate { label6.Text = value; });
+            }
+        }
+        public string LogLabel
+        {
             get => statusLabel.Text; set
             {
                 if (IsHandleCreated)
@@ -71,91 +87,138 @@ namespace FVMI_INSPECTION.Controls
                     {
                         Color clr = Color.Black;
                         if (value == "PASS")
-                            clr = Color.LimeGreen;
+                            clr = ColorTranslator.FromHtml("#37fd12");
                         else if (value == "NG" || value == "FAIL")
-                            clr = Color.DarkRed;
-                        finalJudgeLabel.ForeColor = clr;
+                            clr = ColorTranslator.FromHtml("#FF0707");
+                        finalJudgeLabel.ForeColor = Color.Black;
+                        finalJudgeLabel.BackColor = clr;
                         finalJudgeLabel.Text = value;
                     });
             }
         }
-        public string TopDecision
+        public string TopUVDecision
         {
-            get => topDecisionLabel.Text;
-            set
+            get => topUVDecision.Text; set
             {
-                if (IsHandleCreated)
-                    Invoke(delegate
-                    {
-                        topDecisionLabel.Text = value;
-                        Color clr = Color.Black;
-                        if (value == "PASS")
-                            clr = Color.LimeGreen;
-                        else if (value == "FAIL")
-                            clr = Color.DarkRed;
-                        topDecisionLabel.ForeColor = clr;
-                    });
+                if (!topUVDecision.IsHandleCreated) return;
+                Invoke(delegate { topUVDecision.Text = value; topUVDecision.BackColor = value == "" ? Color.Transparent : value == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707"); });
             }
         }
-        public string BottomDecision
+        public string BottomUVDecision
         {
-            get => bottomDecisionLabel.Text;
-            set
+            get => bottomUVDecision.Text; set
             {
-                if (IsHandleCreated)
-                    Invoke(delegate
-                    {
-                        bottomDecisionLabel.Text = value;
-                        Color clr = Color.Black;
-                        if (value == "PASS")
-                            clr = Color.LimeGreen;
-                        else if (value == "FAIL")
-                            clr = Color.DarkRed;
-                        bottomDecisionLabel.ForeColor = clr;
-                    });
+                if (!bottomUVDecision.IsHandleCreated) return;
+                Invoke(delegate { bottomUVDecision.Text = value; bottomUVDecision.BackColor = value == "" ? Color.Transparent : value == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707"); });
             }
         }
+        public string TopWhiteDecision
+        {
+            get => topWhiteDecision.Text; set
+            {
+                if (!topWhiteDecision.IsHandleCreated) return;
+                Invoke(delegate { topWhiteDecision.Text = value; topWhiteDecision.BackColor = value == "" ? Color.Transparent : value == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707"); });
+            }
+        }
+        public string BottomWhiteDecision
+        {
+            get => bottomWhiteDecision.Text;
+            set
+            {
+                if (!bottomWhiteDecision.IsHandleCreated) return;
+                Invoke(delegate { bottomWhiteDecision.Text = value; bottomWhiteDecision.BackColor = value == "" ? Color.Transparent : value == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707"); });
+            }
+        }
+
         public int CampPoint { get => int.Parse(campointLabel.Text); set { if (IsHandleCreated) Invoke(delegate { campointLabel.Text = value.ToString(); }); } }
-        public Image? TopParameterImage { get => parameterTop.Image; set { if (IsHandleCreated) Invoke(delegate { parameterTop.Image = value; }); } }
-        public Image? BottomParameterImage { get => parameterBottom.Image; set { if (IsHandleCreated) Invoke(delegate { parameterBottom.Image = value; }); } }
-        public Image? TopActualImage { get => actualTop.Image; set { if (IsHandleCreated) Invoke(delegate { actualTop.Image = value; }); } }
-        public Image? BottomActualImage { get => actualBottom.Image; set { if (actualBottom.IsHandleCreated) Invoke(delegate { actualBottom.Image = value; }); } }
+        public Image? bottomUVImage { get => bottomUV.Image; set { if (IsHandleCreated) Invoke(delegate { bottomUV.Image = value; }); } }
+        public Image? bottomWhiteImage { get => bottomWhite.Image; set { if (IsHandleCreated) Invoke(delegate { bottomWhite.Image = value; }); } }
+        public Image? topUVImage { get => topUV.Image; set { if (IsHandleCreated) Invoke(delegate { topUV.Image = value; }); } }
+        public Image? topWhiteImage { get => topWhite.Image; set { if (topWhite.IsHandleCreated) Invoke(delegate { topWhite.Image = value; }); } }
         private List<RecordModel> records = new List<RecordModel>();
-        private List<ProcessRecordModel> _topRecord = new List<ProcessRecordModel>(), _bottomRecord = new List<ProcessRecordModel>();
-        public List<ProcessRecordModel> TopRecord
+        private List<ProcessRecordModel> _topRecord = new List<ProcessRecordModel>(), _bottomRecord = new List<ProcessRecordModel>(), _topWhiteRecord = new List<ProcessRecordModel>(), _bottomWhiteRecord = new List<ProcessRecordModel>();
+        public List<ProcessRecordModel> TopUVRecord
         {
             get => _topRecord; set
             {
                 _topRecord = value;
-                inspectionListGridView.Invoke(delegate
+                if (!inspectionListGridTopUVView.IsHandleCreated)
+                    return;
+                inspectionListGridTopUVView.Invoke(delegate
                 {
-                    inspectionListGridView.Rows.Clear();
+                    inspectionListGridTopUVView.Rows.Clear();
                     for (int i = 0; i < value.Count; i++)
-                        inspectionListGridView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
-                    inspectionListGridView.Refresh();
-                    for (int i = 0; i < inspectionListGridView.RowCount; i++)
-                        inspectionListGridView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? Color.LimeGreen : Color.DarkRed;
-                    inspectionListGridView.Refresh();
+                        inspectionListGridTopUVView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
+                    inspectionListGridTopUVView.Refresh();
+                    for (int i = 0; i < inspectionListGridTopUVView.RowCount; i++)
+                        inspectionListGridTopUVView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+                    inspectionListGridTopUVView.Refresh();
                 });
             }
         }
-        public List<ProcessRecordModel> BottomRecord
+        public List<ProcessRecordModel> BottomUVRecord
         {
             get => _bottomRecord; set
             {
                 _bottomRecord = value;
-                bottomInspectionGridView.Invoke(delegate
+                if (!inspectionListGridBottomUVView.IsHandleCreated)
+                    return;
+                inspectionListGridBottomUVView.Invoke(delegate
                 {
-                    bottomInspectionGridView.Rows.Clear();
+                    inspectionListGridBottomUVView.Rows.Clear();
                     for (int i = 0; i < value.Count; i++)
-                        bottomInspectionGridView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
-                    bottomInspectionGridView.Refresh();
-                    for (int i = 0; i < bottomInspectionGridView.RowCount; i++)
-                        bottomInspectionGridView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? Color.LimeGreen : Color.DarkRed;
-                    bottomInspectionGridView.Refresh();
+                        inspectionListGridBottomUVView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
+                    inspectionListGridBottomUVView.Refresh();
+                    for (int i = 0; i < inspectionListGridBottomUVView.RowCount; i++)
+                        inspectionListGridBottomUVView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+                    inspectionListGridBottomUVView.Refresh();
                 });
             }
         }
+        public List<ProcessRecordModel> TopWhiteRecord
+        {
+            get => _topWhiteRecord;
+            set
+            {
+
+                _topWhiteRecord = value;
+                if (!inspectionListGridTopWhiteView.IsHandleCreated)
+                    return;
+                inspectionListGridTopWhiteView.Invoke(
+                delegate
+                {
+                    inspectionListGridTopWhiteView.Rows.Clear();
+                    for (int i = 0; i < value.Count; i++)
+                        inspectionListGridTopWhiteView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
+                    inspectionListGridTopWhiteView.Refresh();
+                    for (int i = 0; i < inspectionListGridTopWhiteView.RowCount; i++)
+                        inspectionListGridTopWhiteView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+                    inspectionListGridTopWhiteView.Refresh();
+                });
+            }
+        }
+        public List<ProcessRecordModel> BottomWhiteRecord
+        {
+            get => _bottomWhiteRecord;
+            set
+            {
+                _bottomWhiteRecord = value;
+                if (!inspectionListGridBottomWhiteView.IsHandleCreated)
+                    return;
+                inspectionListGridBottomWhiteView.Invoke(
+                delegate
+                {
+                    inspectionListGridBottomWhiteView.Rows.Clear();
+                    for (int i = 0; i < value.Count; i++)
+                        inspectionListGridBottomWhiteView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
+                    inspectionListGridBottomWhiteView.Refresh();
+                    for (int i = 0; i < inspectionListGridBottomWhiteView.RowCount; i++)
+                        inspectionListGridBottomWhiteView[1, i].Style.ForeColor = value[i].Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+                    inspectionListGridBottomWhiteView.Refresh();
+                });
+            }
+        }
+
 
         public DashboardControl()
         {
@@ -198,15 +261,16 @@ namespace FVMI_INSPECTION.Controls
                 MessageBox.Show($"Serial Number {SerialNumber} already used for {modelName}");
                 return;
             }*/
-            if (records.Count > 0)
+            if (records.Count > 0 && autoSave)
                 await presenter.WriteLog(records);
             scanLabel.Text = textBox1.Text;
             textBox1.Enabled = false;
-            topDecisionLabel.Text = string.Empty;
-            bottomDecisionLabel.Text = string.Empty;
-            processTimeLabel.Invoke(new Action(() => processTimeLabel.Text = "Process Time: 00:00:00"));
-            actualBottom.Image = null;
-            actualTop.Image = null;
+            TopUVDecision = "";
+            TopWhiteDecision = "";
+            BottomUVDecision = "";
+            BottomWhiteDecision = "";
+
+            processTimeLabel.Invoke(new Action(() => processTimeLabel.Text = "00:00:00"));
             startTime = DateTime.Now;
             processTimer.Enabled = true;
             processTimer.Start();
@@ -218,16 +282,34 @@ namespace FVMI_INSPECTION.Controls
                 //await ReadCsv();
                 data = await presenter.RunProcess();
                 if (data.Length < 1)
+                {
+                    autoSave = true;
+                    Invoke(delegate
+                    {
+                        textBox1.Enabled = true;
+                        textBox1.Text = string.Empty;
+                        processTimer.Stop();
+                        processTimer.Enabled = false;
+
+                        scanLabel.Text = "-";
+                    });
+                    records = new List<RecordModel>();
                     return;
-                records = presenter.GenerateRecordModel(data[0], TopRecord.ToArray(), modelName, SerialNumber);
-                records.AddRange(presenter.GenerateRecordModel(data[1], BottomRecord.ToArray(), modelName, SerialNumber));
+                }
+                records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
+                records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
+                records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
+                records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
+                autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
+
                 Invoke(delegate
                 {
-                    textBox1.Enabled = true;
-                    textBox1.Text = string.Empty;
+                    textBox1.Enabled = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
+                    textBox1.Text = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? textBox1.Text : string.Empty;
                     processTimer.Stop();
                     processTimer.Enabled = false;
-
+                    button2.Enabled = !autoSave;
+                    button2.BackColor = autoSave ? Color.Gray : Color.Yellow;
                     scanLabel.Text = "-";
                 });
             }).ConfigureAwait(false);
@@ -239,8 +321,12 @@ namespace FVMI_INSPECTION.Controls
             var elapsed = DateTime.Now - startTime;
             processTimeLabel.Invoke(new Action(() =>
             {
-                processTimeLabel.Text = $"Process Time: {elapsed.Hours.ToString("00")}:{elapsed.Minutes.ToString("00")}:{elapsed.Seconds.ToString("00")}";
+                processTimeLabel.Text = $"{elapsed.Hours.ToString("00")}:{elapsed.Minutes.ToString("00")}:{elapsed.Seconds.ToString("00")}";
             }));
+            scanLabel.Invoke(delegate
+            {
+                scanLabel.BackColor = scanLabel.BackColor == Color.Yellow ? processTimeLabel.BackColor : Color.Yellow;
+            });
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -253,7 +339,7 @@ namespace FVMI_INSPECTION.Controls
                     {
                         timeLabel.Invoke(new Action(() =>
                         {
-                            timeLabel.Text = $"Date: {DateTime.Now.ToString("dd MMM yyyy")}\nTime: {DateTime.Now.ToString("HH:mm:ss")}";
+                            timeLabel.Text = $"Date: {DateTime.Now.ToString("dd MMM yyyy")} Time: {DateTime.Now.ToString("HH:mm:ss")}";
                         }));
                     }
                 }
@@ -267,53 +353,68 @@ namespace FVMI_INSPECTION.Controls
 
         private void ShowNgPopup(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || data.Length < 1)
+            if (e.RowIndex < 0)
                 return;
             DataGridView v = (DataGridView)sender;
-            string type = v.Tag!.ToString()!;
-            var selected = type == "TOP" ? TopRecord : BottomRecord;
-            bool isPrevPass = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
-            if (selected is null)
-                return;
-            var record = records.Where(x => x.Type.ToLower() == type.ToLower() && x.Area == selected[e.RowIndex].Area).FirstOrDefault();
-            if (record is null) return;
-            int index = records.IndexOf(record);
-            NgPopupShowForm frm = new NgPopupShowForm(record);
-            var res = frm.ShowDialog();
-            if (res != DialogResult.OK)
-                return;
-            records[index] = frm.Model;
-
-            selected[e.RowIndex].Judgement = records[index].Judgement;
-            if (type == "TOP")
-                TopRecord = selected.ToList();
-            else
-                BottomRecord = selected.ToList();
-            if (isPrevPass && (records[index].Judgement == "NG" || records[index].Judgement == "FAIL"))
+            bool isAnyFail = records.Any(x => x.Judgement != "PASS");
+            var record = records.Where(x => x.Area == v[0, e.RowIndex].Value.ToString() && v.Tag!.ToString() == x.Type).FirstOrDefault();
+            if (record is null)
             {
-                if (type == "TOP")
-                    TopDecision = "FAIL";
-                else
-                    BottomDecision = "FAIL";
-
+                MessageBox.Show("Data Not Found");
+                return;
             }
-            else if (!isPrevPass && records[index].Judgement == "PASS")
+            var ngForm = new NgPopupShowForm(record);
+            var dialog = ngForm.ShowDialog();
+            if (dialog != DialogResult.OK)
+                return;
+            var index = records.IndexOf(record);
+            records[index] = ngForm.Model;
+            v[1, e.RowIndex].Value = ngForm.Model.Judgement;
+            v[1, e.RowIndex].Style.ForeColor = ngForm.Model.Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+            string tag = v.Tag!.ToString()!;
+            if (tag.Contains("TopUV"))
             {
-                var _data = records.Where(x => x.Type.ToLower() == type.ToLower());
-                var isPassNow = !_data.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
-                if (isPassNow)
-                {
-                    if (type == "TOP")
-                        TopDecision = "PASS";
-                    else
-                        BottomDecision = "PASS";
-
-                }
+                var r = TopUVRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = TopUVRecord.IndexOf(r);
+                TopUVRecord[index].Judgement = r.Judgement;
+                TopUVDecision = TopUVRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
             }
+            if (tag.Contains("BottomUV"))
+            {
+
+                var r = BottomUVRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = BottomUVRecord.IndexOf(r);
+                BottomUVRecord[index].Judgement = r.Judgement;
+                BottomUVDecision = BottomUVRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+            if (tag.Contains("TopWhite"))
+            {
+                var r = TopWhiteRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = TopWhiteRecord.IndexOf(r);
+                TopWhiteRecord[index].Judgement = r.Judgement;
+                TopWhiteDecision = TopWhiteRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+            if (tag.Contains("BottomWhite"))
+            {
+                var r = BottomWhiteRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = BottomWhiteRecord.IndexOf(r);
+                BottomWhiteRecord[index].Judgement = r.Judgement;
+                BottomWhiteDecision = BottomWhiteRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+
             if (records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL"))
+                FinalJudge = "FAIL";
+            else
+                FinalJudge = "PASS";
+            if (!isAnyFail)
             {
-                if (isPrevPass)
+                if (records.Any(x => x.Judgement != "PASS"))
                 {
+
                     countViewModel = new CountViewModel()
                     {
                         Count = countViewModel.Count,
@@ -321,11 +422,10 @@ namespace FVMI_INSPECTION.Controls
                         Pass = countViewModel.Pass - 1,
                     };
                 }
-                FinalJudge = "FAIL";
             }
             else
             {
-                if (!isPrevPass)
+                if (!records.Any(x => x.Judgement != "PASS"))
                 {
                     countViewModel = new CountViewModel()
                     {
@@ -334,7 +434,6 @@ namespace FVMI_INSPECTION.Controls
                         Pass = countViewModel.Pass + 1,
                     };
                 }
-                FinalJudge = "PASS";
             }
         }
 
@@ -351,6 +450,30 @@ namespace FVMI_INSPECTION.Controls
             await presenter.ResetProcess();
 
             button1.Invoke(delegate { button1.Enabled = true; });
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await presenter.WriteLog(records);
+                Invoke(delegate
+                {
+                    textBox1.Enabled = true;
+                    textBox1.Text = string.Empty;
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fail to write log", "Log Write");
+            }
+        }
+
+        private async void resetCheckTimer_Tick(object sender, EventArgs e)
+        {
+            if (presenter is null)
+                return;
+            await presenter.CheckReset();
         }
     }
 }

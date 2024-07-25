@@ -14,10 +14,14 @@ namespace FVMI_INSPECTION.Interfaces
             public int CameraPoint { get; set; }
             public int TopCamExecution { get; set; }
             public int BottomExecution { get; set; }
-            public Image TopImage { get; set; }
-            public Image BottomImage { get; set; }
+            public Image TopUVImage { get; set; }
+            public Image BottomUVImage { get; set; }
+            public Image TopWhiteImage { get; set; }
+            public Image BottomWhiteImage { get; set; }
             public string UploadFilePath { get;  }
             string UploadFileName { get ; }
+            Button[] UVButton { get; set; }
+            Button[] CylinderButton { get; set; } 
         }
         public interface IPresenter
         {
@@ -26,6 +30,10 @@ namespace FVMI_INSPECTION.Interfaces
             public Task SetBottomCamExec();
             public Task UploadImage(string Type);
             Task LoadCurrentModel();
+            Task CylinderToggle(bool state);
+            Task UVToggle(bool state);
+            Task TriggerFlip();
+            Task TriggerOrigin();
         }
     }
 }

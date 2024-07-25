@@ -50,5 +50,29 @@
     <Setting Name="CSVPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\User\OneDrive\Desktop\Vision Result\xg\result</Value>
     </Setting>
+    <Setting Name="UVImgPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">uv/img/</Value>
+    </Setting>
+    <Setting Name="WhiteImgPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">wht/img/</Value>
+    </Setting>
+    <Setting Name="UVCSVPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">uv/csv/</Value>
+    </Setting>
+    <Setting Name="WhiteCSVPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">wht/csv/</Value>
+    </Setting>
+    <Setting Name="UVTopPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">topuv</Value>
+    </Setting>
+    <Setting Name="UVBottomPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">bottomuv</Value>
+    </Setting>
+    <Setting Name="WhiteTopPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">topwht</Value>
+    </Setting>
+    <Setting Name="WhiteBottomPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">bottomwht</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

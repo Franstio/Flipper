@@ -15,6 +15,8 @@ using System.Collections;
 using System.Security.Policy;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using System.Security.Cryptography;
+using static FVMI_INSPECTION.Presenter.SettingParameterPresenter;
+using System.Collections.Frozen;
 
 namespace FVMI_INSPECTION.Presenter
 {
@@ -22,6 +24,7 @@ namespace FVMI_INSPECTION.Presenter
     {
         private readonly DashboardMVP.IView view;
         public CancellationTokenSource cTokenSource { get; private set; }
+        public CancellationTokenSource cMonitorTokenSource { get;private set; }
         private FVMITCPProcess process;
         private ModelRepository repository;
         private MasterModel Model;
@@ -35,13 +38,13 @@ namespace FVMI_INSPECTION.Presenter
             var presenter = new DashboardPresenter(view, _model, fileLib, repo);
             if (_model.Details.Count() > 0)
             {
-
-                var top = _model.Details.Where(x => x.Type == "Top").FirstOrDefault();
-                if (top is not null)
-                    view.TopParameterImage = fileLib.ReadImage(top.Image, true) ?? view.TopParameterImage;
-                var bottom = _model.Details.Where(x => x.Type == "Bottom").FirstOrDefault();
-                if (bottom is not null)
-                    view.BottomParameterImage = fileLib.ReadImage(bottom.Image, true) ?? view.BottomParameterImage;
+                var mdl = _model;
+                var _lib = fileLib;
+                var _view = view;
+                _view.TopUVDecision = "";
+                _view.TopWhiteDecision = "";
+                _view.BottomUVDecision = "";
+                _view.BottomWhiteDecision = "";
             }
             presenter.view.CampPoint = _model.CameraPoint;
             await presenter.LoadCampoint();
@@ -49,17 +52,42 @@ namespace FVMI_INSPECTION.Presenter
         }
         public async Task ResetProcess()
         {
-            await process.PushCommand("MR2000", 300, "1", "0");
+            await process.WriteCommand("MR305", "1");
+            var rst = await process.ReadCommand("R006");
+            if (rst == "0")
+                await process.PushCommand("MR200", 100, "1", "0");
+            int loading = 0;
+            do
+            {
+                rst = await process.ReadCommand("R006");
+                eventUpdate("Reset in progress" + new string('.', loading));
+                loading = (loading + 1) % 6;
+            }
+            while (rst != "1");
+            await Task.Delay(1000);
+            await process.WriteCommand("MR305", "0");
+            await process.WriteCommand("MR302", "0");
+            await process.WriteCommand("MR303", "0");
             cTokenSource.Cancel();
-            cTokenSource.Dispose();
-            cTokenSource = new CancellationTokenSource();
+            await process.WriteCommand("MR004", 0);
+            await process.WriteCommand("DM0", 0);
+            await process.WriteCommand("MR010", 0);
             view.StatusRun = "Cancelled...";
             view.SerialNumber = string.Empty;
             view.FinalJudge = string.Empty;
-            view.TopRecord = new List<ProcessRecordModel>();
-            view.BottomRecord = new List<ProcessRecordModel>();
-            view.TopDecision = "-";
-            view.BottomDecision = "-";
+            view.TopUVRecord = new List<ProcessRecordModel>();
+            view.BottomUVRecord = new List<ProcessRecordModel>();
+            view.TopWhiteRecord = new List<ProcessRecordModel>();
+            view.BottomWhiteRecord = new List<ProcessRecordModel>();
+            view.topUVImage = null;
+            view.topWhiteImage = null;
+            view.bottomUVImage = null;
+            view.bottomWhiteImage = null;
+            view.TopUVDecision = "";
+            view.BottomUVDecision = "";
+            view.TopWhiteDecision = "";
+            view.BottomWhiteDecision = "";
+
         }
         private DashboardPresenter( DashboardMVP.IView view,MasterModel model,FileLib fileLib,ModelRepository repo)
         {
@@ -67,6 +95,7 @@ namespace FVMI_INSPECTION.Presenter
             Model = model;
             this.process = new FVMITCPProcess(model,fileLib);
             cTokenSource = new CancellationTokenSource();
+            cMonitorTokenSource = new CancellationTokenSource();
             repository = repo;
             lib = fileLib;
         }
@@ -77,23 +106,39 @@ namespace FVMI_INSPECTION.Presenter
         public async Task<ProcessResultModel[]> RunProcess()
         {
             view.FinalJudge = string.Empty;
-            view.TopRecord = new List<ProcessRecordModel>();
-            view.BottomRecord = new List<ProcessRecordModel>();
-            view.TopDecision = "-";
-            view.BottomDecision = "-";
+            view.TopWhiteRecord = new List<ProcessRecordModel>();
+            view.BottomWhiteRecord = new List<ProcessRecordModel>();
+            view.TopUVRecord = new List<ProcessRecordModel>();
+            view.BottomUVRecord = new List<ProcessRecordModel>();
             view.StatusRun = view.SerialNumber;
             string res;
-            ProcessResultModel[] ret = new ProcessResultModel[2];
+            Task.Run(MonitorImageOutput);
             res = await process.WriteCommand("MR004", 1);
-            ret[0] = await TopProcess();
-            view.TopActualImage = ret[0].Image;
+            /*ret[0] = await TopProcess();
+            view.topUVImage = ret[0].Image;
             ret[1] = await BottomProcess();
-            view.BottomActualImage = ret[1].Image;
+            view.topWhiteImage = ret[1].Image;
             string[] data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
-            res = await process.WriteCommand("MR004", 0);
+            res = await process.WriteCommand("MR004", 0);*/
+            int loading = 0;
+            while (await process.ReadCommand("MR004") != "0" && !cTokenSource.IsCancellationRequested)
+            {
+                eventUpdate("Waiting for process complete" + new string('.', loading));
+                loading = (loading + 1) % 6;
+                await Task.Delay(500);
+            }
+            if (cTokenSource.IsCancellationRequested)
+            {
+                eventUpdate("Process Cancelled");
+                cTokenSource.Dispose();
+                cMonitorTokenSource.Dispose();
+                cTokenSource = new CancellationTokenSource();
+                cMonitorTokenSource = new CancellationTokenSource();
+                return [];
+            }
             eventUpdate("Writing Record");
             await Task.Delay(1500);    
-            List<ProcessRecordModel>[]?  record = new List<ProcessRecordModel>[2];
+            List<ProcessRecordModel>[]?  record = new List<ProcessRecordModel>[4];
             int Count = 0;
             do
             {
@@ -109,15 +154,16 @@ namespace FVMI_INSPECTION.Presenter
                 view.StatusRun = "Error: Invalid CSV...";
                 return new ProcessResultModel[0];
             }
-            view.TopDecision = record[1].Any(x => x.Judgement == "NG") ? "FAIL" : "PASS";
-            view.BottomDecision = record[0].Any(x => x.Judgement == "NG") ? "FAIL" : "PASS";
-            view.TopRecord = record[1].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
-            view.BottomRecord = record[0].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
+            view.TopUVRecord = record[0].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
+            view.BottomUVRecord = record[1].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
+            view.TopWhiteRecord = record[2].Where(x => x.Judgement == "NG").ToList() ?? new List<ProcessRecordModel>();
+            view.BottomWhiteRecord = record[3].Where(x => x.Judgement == "NG").ToList() ?? new List<ProcessRecordModel>();
+            bool isFail = record.SelectMany(x => x).Any(x => x.Judgement != "PASS");
             var cvm = new CountViewModel()
             {
                 Count = view.countViewModel.Count + 1,
-                Fail = (view.TopDecision == "PASS" && view.BottomDecision == "PASS") ? view.countViewModel.Fail : view.countViewModel.Fail + 1,
-                Pass = (view.TopDecision == "PASS" && view.BottomDecision == "PASS") ? view.countViewModel.Pass + 1 : view.countViewModel.Pass,
+                Fail = isFail ? view.countViewModel.Fail+1 : view.countViewModel.Fail ,
+                Pass = isFail ? view.countViewModel.Pass  : view.countViewModel.Pass+1,
             };
             view.countViewModel = cvm;
             eventUpdate("Completed...");
@@ -125,7 +171,108 @@ namespace FVMI_INSPECTION.Presenter
                 view.FinalJudge = "FAIL";
             else
                 view.FinalJudge = "PASS";
+            var topUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV);
+            var bottomUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV);
+            var topWhiteImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White);
+            var bottomWhiteImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.White);
+            ProcessResultModel[] ret =  [
+                new ProcessResultModel()
+                {
+                    Type = FileLib.FVMI_ProcessType.Top.ToString()+ FileLib.FVMI_Type.UV.ToString(),
+                    FVMI_Type =  FileLib.FVMI_Type.UV,
+                    ProcessType = FileLib.FVMI_ProcessType.Top,
+                    ResultJudgement = !view.TopUVRecord.Any(x=>x.Judgement=="NG"),
+                    Image = topUvImgSet?.Item2,
+                    ImagePath = topUvImgSet?.Item1
+                },
+                new ProcessResultModel()
+                {
+                    Type = FileLib.FVMI_ProcessType.Bottom.ToString() + FileLib.FVMI_Type.UV.ToString(),
+                    FVMI_Type = FileLib.FVMI_Type.UV,
+                    ProcessType = FileLib.FVMI_ProcessType.Bottom,
+                    ResultJudgement = !view.BottomUVRecord.Any(x=>x.Judgement=="NG"),
+                    Image = bottomUvImgSet?.Item2,
+                    ImagePath = bottomUvImgSet?.Item1
+                },
+                new ProcessResultModel()
+                {
+
+                    Type = FileLib.FVMI_ProcessType.Top.ToString() + FileLib.FVMI_Type.White.ToString(),
+                    FVMI_Type = FileLib.FVMI_Type.White,
+                    ProcessType = FileLib.FVMI_ProcessType.Top,
+                    ResultJudgement = !view.TopWhiteRecord.Any(x => x.Judgement == "NG"),
+                    Image = topWhiteImgSet?.Item2,
+                    ImagePath = topWhiteImgSet?.Item1
+                },
+                new ProcessResultModel()
+                {
+                    Type = FileLib.FVMI_ProcessType.Bottom.ToString() + FileLib.FVMI_Type.White.ToString(),
+                    FVMI_Type = FileLib.FVMI_Type.White,
+                    ProcessType = FileLib.FVMI_ProcessType.Bottom,
+                    ResultJudgement = !view.BottomWhiteRecord.Any(x => x.Judgement == "NG"),
+                    Image = bottomWhiteImgSet?.Item2,
+                    ImagePath = bottomWhiteImgSet?.Item1
+                }
+            ];
+            view.TopUVDecision = ret[0].ResultJudgement ? "PASS" : "FAIL";
+            view.BottomUVDecision = ret[1].ResultJudgement ? "PASS" : "FAIL";
+            view.TopWhiteDecision = ret[2].ResultJudgement ? "PASS" : "FAIL";
+            view.BottomWhiteDecision = ret[3].ResultJudgement ? "PASS" : "FAIL";
+            cMonitorTokenSource.Cancel();
             return ret;
+        }
+        private async Task MonitorImageOutput()
+        {
+            string ret = string.Empty;
+            do
+            {
+                ret = await process.ReadCommand("MR201");
+            }
+            while (ret != "1" && !cMonitorTokenSource.IsCancellationRequested && !cTokenSource.IsCancellationRequested);
+            if (cMonitorTokenSource.IsCancellationRequested || cTokenSource.IsCancellationRequested)
+            {
+                cMonitorTokenSource = new CancellationTokenSource();
+                return;
+            }
+            var topUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV);
+            var bottomUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV);
+            var topWhiteImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White);
+            var bottomWhiteImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.White);
+            Func<FVMI_ImageType, string?> getImage = (t) => Model.Details.Where(x => x.Type == t.ToString()).FirstOrDefault()?.Image;
+            view.topUVImage = (await process.ReadCommand("DM1000")) == "0" ? (getImage(FVMI_ImageType.TopUV) is not null ? lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? view.bottomWhiteImage : view.bottomWhiteImage) : topUvImgSet?.Item2;
+            view.bottomUVImage = (await process.ReadCommand("DM1100"))=="0" ? (getImage(FVMI_ImageType.BottomUV) is not null ? lib.ReadImage(getImage(FVMI_ImageType.BottomUV)!, true) ?? view.bottomUVImage : view.bottomUVImage) : bottomUvImgSet?.Item2;
+            view.topWhiteImage = (await process.ReadCommand("DM1200")) == "0" ? (getImage(FVMI_ImageType.TopWhite) is not null ? lib.ReadImage(getImage(FVMI_ImageType.TopWhite)!, true) ?? view.topWhiteImage : view.topWhiteImage) : topWhiteImgSet?.Item2;
+            view.bottomWhiteImage = (await process.ReadCommand("DM1300")) == "0" ? (getImage(FVMI_ImageType.BottomWhite) is not null ? lib.ReadImage(getImage(FVMI_ImageType.BottomWhite)!, true) ?? view.bottomWhiteImage : view.bottomWhiteImage) :bottomWhiteImgSet?.Item2;
+        }
+        private async Task<Tuple<string,Image>?> GetImageFVMI(FileLib.FVMI_ProcessType procType,FileLib.FVMI_Type fType)
+        {
+            var config = Properties.Settings.Default;
+            string path = string.Empty;
+            if (fType == FileLib.FVMI_Type.UV)
+            {
+                path = config.UVImgPath;
+                if (procType == FileLib.FVMI_ProcessType.Top)
+                    path = Path.Combine(path, config.UVTopPrefix);
+                else if (procType == FileLib.FVMI_ProcessType.Bottom)
+                    path = Path.Combine(path, config.UVBottomPrefix);
+            }
+            else if (fType == FileLib.FVMI_Type.White)
+            {
+                path = config.WhiteImgPath;
+
+                if (procType == FileLib.FVMI_ProcessType.Top)
+                    path = Path.Combine(path, config.WhiteTopPrefix);
+                else if (procType == FileLib.FVMI_ProcessType.Bottom)
+                    path = Path.Combine(path, config.WhiteBottomPrefix);
+            }
+            string[] dir = Directory.GetDirectories(path).OrderByDescending(x=>x).ToArray();
+            if (dir is null || dir.Length < 1)
+                return null;
+            string[] f = await lib.GetFiles(dir[0]);
+            if (f is null || f.Length < 1)
+                return null;
+            await Task.Delay(100);
+            return new Tuple<string, Image>(f[0].Split("/")[(f[0].Split("/").Length-1)], Image.FromFile(f[0]));
         }
         public List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel,string modelName,string serial)
         {
@@ -139,8 +286,10 @@ namespace FVMI_INSPECTION.Presenter
                     Judgement = pRecordModel[j].Judgement,
                     Model = modelName,
                     Type = resultModel.Type,
+                    ProcessType = resultModel.ProcessType,
+                    FVMI_Type = resultModel.FVMI_Type,
                     DateRecorded = DateTime.Now,
-                    Serial = serial
+                    Serial = serial,
                 });
             }
             return recordModels;
@@ -212,28 +361,33 @@ namespace FVMI_INSPECTION.Presenter
         public async Task<List<ProcessRecordModel>[]?> ReadCsv()
         {
             List<ProcessRecordModel>[]? mdl = null;
-            var files = await lib.GetFiles(lib.CSVPath);
-            if (files.Length < 2) return null;
-            mdl = new List<ProcessRecordModel>[2];
+            mdl = new List<ProcessRecordModel>[4];
             int count = 0;
-            for (int i = 0; i < 2; i++)
+            var getConfig = Properties.Settings.Default;
+            string[] paths = new string[]
+            {
+                Path.Combine(getConfig.UVCSVPath,getConfig.UVTopPrefix),
+                Path.Combine(getConfig.UVCSVPath,getConfig.UVBottomPrefix),
+                Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteTopPrefix),
+                Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteBottomPrefix)
+            };
+            for (int i = 0; i < paths.Length; i++)
             {
                 await Task.Delay(1000);
+                var files = await lib.GetFiles(paths[i]);
+                if (files is null || files.Length < 1)
+                    throw new Exception(paths[i] + " Empty");
                 List<ProcessRecordModel> list = new List<ProcessRecordModel>();
-                using (var stream = new FileStream(Path.Combine(lib.CSVPath, files[i]), FileMode.Open))
+                using (var stream = new FileStream(files[0], FileMode.Open))
                 {
                     using (var reader = new StreamReader(stream))
                     {
                         string? text = await reader.ReadLineAsync();
-                        if (text is null) return null;
+                        if (text is null) throw new Exception(files[0] + " Is empty");
                         string? row= await reader.ReadLineAsync();
-                        if (files[i].Contains("U0051"))
-                            row = await reader.ReadLineAsync();
-                        if (row is null)
-                            return null;
+                        if (row is null) throw new Exception(files[0] + " 2nd Row Is empty");
                         list.AddRange(ReadRecord(text, row));
-                        mdl[count] = list;
-                        count++;
+                        mdl[i] = list;
                     }
                 }
             }
@@ -265,7 +419,40 @@ namespace FVMI_INSPECTION.Presenter
 
         public async Task WriteLog(List<RecordModel> records)
         {
-            await repository.WriteLog(records);
+            if (records is null || records.Count < 1)
+                return;
+            var dt = records.Where(x => x.Judgement == "NG" || x.Judgement == "FAIL").ToArray();
+            var grouped = dt.GroupBy(x => x.Type);
+            var keys = grouped.Select(x => new KeyValuePair<string,string[]>( x.Key, x.Select(x => x.Area).ToArray()) );
+            Dictionary<string, string[]> data = new Dictionary<string, string[]>(keys);
+            var failures = dt.Where(x=>x.Reason != null && x.Reason != "").Select(x => $"{x.Area}:{x.Reason}").ToArray();
+            LogModel model = new LogModel()
+            {
+                Model = view.modelName,
+                SN = records.FirstOrDefault().Serial,
+                Status = view.FinalJudge,
+                Failure = failures.Length < 1 ? "" : string.Join(";", failures),
+                TopFailTool = data.ContainsKey("TopWhite") && data["TopWhite"].Length > 0 ? string.Join(";", data["TopWhite"]) : "NONE",
+                TopUvFailTool = data.ContainsKey("TopUV") && data["TopUV"].Length >0 ? string.Join(";", data["TopUV"]) : "NONE",
+                BotFailTool = data.ContainsKey("BottomWhite")  && data["BottomWhite"].Length >  0? string.Join(";",data["BottomWhite"]) : "NONE",
+                BotUVFailTool = data.ContainsKey("BottomUV") && data["BottomUV"].Length > 0 ? string.Join(";", data["BottomUV"]) : "NONE",
+            };
+            var log = lib.GenerateLog(model);
+            view.LogLabel = await lib.WriteLog(records.FirstOrDefault()?.Serial ?? "", log, view.FinalJudge);
+            try
+            {
+                await repository.WriteLog(records);
+            }
+            catch
+            {
+
+            }
+        }
+
+        public async Task CheckReset()
+        {
+            var rst = await process.ReadCommand("MR010");
+            view.AllowReset = rst == "1";
         }
     }
 }

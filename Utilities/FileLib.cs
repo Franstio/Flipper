@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FVMI_INSPECTION.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,13 +11,24 @@ namespace FVMI_INSPECTION.Utilities
     public class FileLib
     {
         public string _filePath { get; private set; } = string.Empty;
-        public  string _savePath { get; private set; } = string.Empty;
+        public string _savePath { get; private set; } = string.Empty;
         public string _ngSavePath { get; private set; } = string.Empty;
         private string _logPath = string.Empty;
         public string _markSaveDir { get; private set; } = string.Empty;
         private string basename_folder = "0_";
         public string CSVPath { get; set; } = string.Empty;
-//        public int FolderCode { get; set; } = 1;
+        //        public int FolderCode { get; set; } = 1;
+
+        public enum FVMI_Type
+        {
+            UV,
+            White
+        }
+        public enum FVMI_ProcessType
+        {
+            Top,
+            Bottom
+        }
         public FileLib()
         {
 
@@ -26,11 +38,11 @@ namespace FVMI_INSPECTION.Utilities
             string ngSavePath = Properties.Settings.Default["NgImageDirName"]?.ToString() ?? "ng";
             string logPath = Properties.Settings.Default["LogPath"]?.ToString() ?? "log";
             string markSaveDir = Properties.Settings.Default["MarkSaveDir"]?.ToString() ?? "markImg";
-            _filePath = settingPath.Contains(":\\") || settingPath.Contains(":/") ? settingPath :  Path.Combine( AppDomain.CurrentDomain.BaseDirectory,
+            _filePath = settingPath.Contains(":\\") || settingPath.Contains(":/") ? settingPath : Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                  settingPath);
             CSVPath = csvPath.Contains(":\\") || csvPath.Contains(":/") ? csvPath : Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
      csvPath);
-            _savePath = savePath.Contains(":\\") || savePath.Contains(":/") ? savePath  : Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+            _savePath = savePath.Contains(":\\") || savePath.Contains(":/") ? savePath : Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                  savePath);
             _ngSavePath = ngSavePath.Contains(":\\") || ngSavePath.Contains(":/") ? ngSavePath : Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 ngSavePath);
@@ -54,34 +66,60 @@ namespace FVMI_INSPECTION.Utilities
                 Console.WriteLine(_filePath);
                 Console.WriteLine(_savePath);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
         }
 
-        public Image? ReadImage(string imageName,bool local = false, string? manualPath = null)
+        public Image? ReadImage(string imageName, bool local = false, string? manualPath = null)
         {
             Image img;
             try
             {
-                img = Image.FromFile(Path.Combine(manualPath is null ? (local ? _savePath : _ngSavePath ): manualPath, imageName));
+                img = Image.FromFile(Path.Combine(manualPath is null ? (local ? _savePath : _ngSavePath) : manualPath, imageName));
                 return img;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message +$" {imageName}", "Image Load Error");
+                MessageBox.Show(ex.Message + $" {imageName}", "Image Load Error");
                 return null;
             }
         }
-        public async Task SaveImage(string imagePath,string name,bool ng=false, string? manualPath = null)
+        public Image? ReadImage(string imageName, FVMI_Type fType, FVMI_ProcessType procType)
+        {
+            string path = string.Empty;
+            var getConfig = Properties.Settings.Default;
+            if (fType == FVMI_Type.UV)
+            {
+                path = getConfig.UVImgPath;
+                path = Path.Combine(path, procType == FVMI_ProcessType.Top ? getConfig.UVTopPrefix : getConfig.UVBottomPrefix);
+            }
+            else if (fType == FVMI_Type.White)
+            {
+                path = getConfig.WhiteImgPath;
+                path = Path.Combine(path, procType == FVMI_ProcessType.Top ? getConfig.WhiteTopPrefix : getConfig.WhiteBottomPrefix);
+            }
+            try
+            {
+                Image img = Image.FromFile(Path.Combine(path, imageName));
+                return img;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
+
+        }
+        public async Task SaveImage(string imagePath, string name, bool ng = false, string? manualPath = null)
         {
             if (!File.Exists(imagePath))
             {
                 MessageBox.Show($"Path {imagePath} Not Found", "File Error");
                 return;
             }
-            string savepath = Path.Combine(manualPath is null ? (ng ? _ngSavePath : _savePath) : manualPath,name);
+            string savepath = Path.Combine(manualPath is null ? (ng ? _ngSavePath : _savePath) : manualPath, name);
             int tryCount = 0;
             do
             {
@@ -104,9 +142,9 @@ namespace FVMI_INSPECTION.Utilities
             }
             while (tryCount > -1 && tryCount < 100);
         }
-        public string[] GetFolders(string search = "",string additional="")
+        public string[] GetFolders(string search = "", string additional = "")
         {
-            string fullpath = Path.Combine(_filePath , additional);
+            string fullpath = Path.Combine(_filePath, additional);
             if (!Directory.Exists(fullpath))
             {
                 MessageBox.Show($"Directory {fullpath} is not exists", "Directory Not Found");
@@ -119,9 +157,9 @@ namespace FVMI_INSPECTION.Utilities
                 MessageBox.Show($"Path {fullpath} Not Found", "File Error");
                 return new string[0];
             }
-            return search== "" ? dirs.OrderByDescending(x=>x).ToArray() : dirs.Where(x=>x.Contains(search)).OrderByDescending(x=>x).ToArray();
+            return search == "" ? dirs.OrderByDescending(x => x).ToArray() : dirs.Where(x => x.Contains(search)).OrderByDescending(x => x).ToArray();
         }
-        public async Task<string[]> GetFiles(string path,string search="")
+        public async Task<string[]> GetFiles(string path, string search = "")
         {
             int trycount = 0;
             var files = Directory.GetFiles(path);
@@ -134,12 +172,12 @@ namespace FVMI_INSPECTION.Utilities
             {
                 await Task.Delay(3000);
                 files = Directory.GetFiles(path);
-                Debug.WriteLineIf(files.Length < 1, $"Retry fetching image on: {path}, count: {trycount+1}");
+                Debug.WriteLineIf(files.Length < 1, $"Retry fetching image on: {path}, count: {trycount + 1}");
                 trycount += 1;
             }
-            return search == "" ? files.OrderByDescending(x=>x).ToArray() : files.Where(x => x.Contains(search)).OrderByDescending(x => x).ToArray();
+            return search == "" ? files.OrderByDescending(x => x).ToArray() : files.Where(x => x.Contains(search)).OrderByDescending(x => x).ToArray();
         }
-        public async Task<string> GetTriggerImgPath(int CameraDelay= 100)
+        public async Task<string> GetTriggerImgPath(int CameraDelay = 100)
         {
             try
             {
@@ -159,21 +197,21 @@ namespace FVMI_INSPECTION.Utilities
                 await SaveImage(file.FullName, file.Name, true);
                 return file.Name;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Trace.TraceError(ex.Message);
                 return string.Empty;
             }
         }
-        public async Task<string> GetNGImgPath(bool isTop,int CameraDelay = 100)
+        public async Task<string> GetNGImgPath(bool isTop, int CameraDelay = 100)
         {
             int count = 0;
             try
             {
                 await Task.Delay(CameraDelay);
                 string foldername = $"{DateTime.Now.ToString("yyMMdd")}";
-                string[] folders = GetFolders(foldername,isTop ? "bot": "top");
-                        if (folders.Length < 1)
+                string[] folders = GetFolders(foldername, isTop ? "bot" : "top");
+                if (folders.Length < 1)
                 {
                     MessageBox.Show($"No Folder with prefix {foldername} Found", "Error");
                     return string.Empty;
@@ -210,8 +248,8 @@ namespace FVMI_INSPECTION.Utilities
                         $"Area Inspection: {record.AreaInspection}\n" +
                         $"Judgement: {record.Judgement}\n" +
                         $"Image: {record.FileName}\n"
-                    );
             }
+                    );
             string filename = $"{DateTime.Now.ToString("yyyyMMdd")}_{ScanCode}.txt";
             using (StreamWriter sw = new StreamWriter(Path.Combine(_logPath, filename)))
             {
@@ -221,5 +259,33 @@ namespace FVMI_INSPECTION.Utilities
 
             return filename;
         }*/
+        public string GenerateLog(LogModel model)
+        {
+            string text = @$"[General]
+Model={model.Model}
+Date={model.DateTime.ToString("ddMMMyyyy HH:mm:ss")}
+Status={model.Status}
+SN={model.SN}
+
+[Detail]
+TopFailTool={model.TopFailTool}
+TopUvFailTool={model.TopUvFailTool}
+BotFailTool={model.BotFailTool}
+BotUVFailTool={model.BotUVFailTool}
+
+[Judgement]
+Failure{(model.Failure==string.Empty ? "" : ("="+model.Failure) )}";
+            return text;
+        }
+
+        public async Task<string> WriteLog(string scanCode,string text,string judge)
+        {
+            string filename = $"log_{scanCode}_{judge}.txt";
+            string path = Path.Combine(_logPath, filename);
+            if (File.Exists(path))
+                File.Delete(path);
+            await File.WriteAllTextAsync(path,text);
+            return filename;
+        }
     }
 }

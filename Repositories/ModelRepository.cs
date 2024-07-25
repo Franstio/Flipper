@@ -53,7 +53,7 @@ namespace FVMI_INSPECTION.Repositories
         public async Task WriteLog(List<RecordModel> Log)
         {
             using (var _con = await GetConn())
-            {
+            {   
                 string Query = $"Insert Into Tbl_ModelRecord(Model,Area,Type,ActualImage,DateRecord,Judgement,Reason,Serial) Values(@Model,@Area,@Type,@ActualImage,@DateRecorded,@Judgement,@Reason,@Serial);";
                 await _con.ExecuteAsync(Query, Log);
             }
