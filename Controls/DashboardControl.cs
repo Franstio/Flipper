@@ -35,7 +35,7 @@ namespace FVMI_INSPECTION.Controls
         public bool AllowReset { get => button1.Enabled; set
             {
                 if (button1.IsHandleCreated)
-                    button1.Invoke(delegate{ button1.Enabled = value; });
+                    button1.Invoke(delegate{ button1.Enabled = value;button1.BackColor = value ? Color.Red : Color.Gray; button1.ForeColor = value ? Color.Black : Color.White; });
             }
         } 
         public CountViewModel countViewModel

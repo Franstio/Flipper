@@ -629,7 +629,8 @@ namespace FVMI_INSPECTION.Controls
             // button1
             // 
             button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.BackColor = Color.FromArgb(255, 7, 7);
+            button1.BackColor = Color.Gray;
+            button1.Enabled = false;
             button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             button1.Location = new Point(811, 697);
             button1.Name = "button1";
@@ -1226,8 +1227,7 @@ namespace FVMI_INSPECTION.Controls
             // 
             // resetCheckTimer
             // 
-            resetCheckTimer.Enabled = true;
-            resetCheckTimer.Interval = 1000;
+            resetCheckTimer.Interval = 2000;
             resetCheckTimer.Tick += resetCheckTimer_Tick;
             // 
             // DashboardControl
