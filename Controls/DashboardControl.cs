@@ -450,6 +450,9 @@ namespace FVMI_INSPECTION.Controls
 
         private async void button2_Click(object sender, EventArgs e)
         {
+            var resultDialog = MessageBox.Show("Confirm for Generate Log?", "Confirm Log", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (resultDialog != DialogResult.Yes)
+                return;
             try
             {
                 await presenter.WriteLog(records);

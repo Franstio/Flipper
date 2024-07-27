@@ -30,7 +30,6 @@ namespace FVMI_INSPECTION.Controls
         private readonly ModelRepository repository = new ModelRepository();
         private FVMITCPProcess? process = null;
         private readonly FileLib lib = new FileLib();
-
         public string ModelName
         {
             get => _ModelName; set
@@ -53,15 +52,18 @@ namespace FVMI_INSPECTION.Controls
         public Button[] UVButton { get; set; } = new Button[2];
         public Button[] CylinderButton { get; set; } = new Button[2];
         public SettingParameterMVP.IPresenter presenter;
+        private FVMIPictureBox[] PictureBoxes = [];
         public SettingParameterControl(string ModelName)
         {
 
             InitializeComponent();
-            UVButton = [button3,button6];
-            CylinderButton = [button8,button7];
+            UVButton = [button3, button6];
+            CylinderButton = [button8, button7];
             this._ModelName = ModelName;
             runningModel.Text = $"Model: {ModelName}";
+            PictureBoxes = [pictureBox1, pictureBox2, pictureBox3,pictureBox4 ];
         }
+
 
         private async void button1_Click(object sender, EventArgs e)
         {
@@ -75,6 +77,8 @@ namespace FVMI_INSPECTION.Controls
         {
             isNew = true;
             presenter = await SettingParameterPresenter.Build(_ModelName, this);
+            Console.WriteLine($"Width: {pictureBox1.Image.Width},Height: {pictureBox1.Image.Height}");
+            Console.WriteLine($"Width: {pictureBox1.Width},Height: {pictureBox1.Height}");
             await presenter.LoadCurrentModel();
         }
 
@@ -160,5 +164,21 @@ namespace FVMI_INSPECTION.Controls
 
             }));
         }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            var mdl = PictureBoxes.Where(x => x.isHovering).FirstOrDefault();
+            if (mdl is not null && mdl.isHovering)
+            {
+                if (e.Delta != 0)
+                {
+                    mdl.ZoomValue = Math.Max(mdl.ZoomValue + ((e.Delta > 0) ? mdl.ZoomIncrement : -mdl.ZoomIncrement), mdl.ZoomIncrement);
+                }
+                mdl.Invalidate();
+            }
+        }
+
+
+        
     }
 }

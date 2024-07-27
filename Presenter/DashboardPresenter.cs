@@ -52,7 +52,9 @@ namespace FVMI_INSPECTION.Presenter
         }
         public async Task ResetProcess()
         {
-            await process.WriteCommand("MR305", "1");
+            await process.PushCommand("MR100", 100, "1", "0");
+            await process.WriteCommand("DM0", 0);
+            /*await process.WriteCommand("MR305", "1");
             var rst = await process.ReadCommand("R006");
             if (rst == "0")
                 await process.PushCommand("MR200", 100, "1", "0");
@@ -68,10 +70,11 @@ namespace FVMI_INSPECTION.Presenter
             await process.WriteCommand("MR305", "0");
             await process.WriteCommand("MR302", "0");
             await process.WriteCommand("MR303", "0");
-            cTokenSource.Cancel();
+
             await process.WriteCommand("MR004", 0);
             await process.WriteCommand("DM0", 0);
-            await process.WriteCommand("MR010", 0);
+            await process.WriteCommand("MR010", 0);*/
+            cTokenSource.Cancel();
             view.StatusRun = "Cancelled...";
             view.SerialNumber = string.Empty;
             view.FinalJudge = string.Empty;
@@ -259,7 +262,7 @@ namespace FVMI_INSPECTION.Presenter
                 cMonitorTokenSource = new CancellationTokenSource();
                 return;
             }
-            await Task.Delay(100);
+            await Task.Delay(500);
             var topUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV);
             var bottomUvImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV);
             var topWhiteImgSet = await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White);
@@ -491,7 +494,7 @@ namespace FVMI_INSPECTION.Presenter
 
         public async Task CheckReset()
         {
-            var rst = await process.ReadCommand("MR050");
+            var rst = await process.ReadCommand("MR010");
             view.AllowReset = rst == "1";
         }
     }

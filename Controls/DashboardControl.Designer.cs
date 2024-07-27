@@ -81,10 +81,10 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel6 = new TableLayoutPanel();
             panel7 = new Panel();
             topUVDecision = new Label();
-            topUV = new PictureBox();
+            topUV = new FVMIPictureBox();
             panel9 = new Panel();
             topWhiteDecision = new Label();
-            topWhite = new PictureBox();
+            topWhite = new FVMIPictureBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
             tableLayoutPanel7 = new TableLayoutPanel();
@@ -101,12 +101,12 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel10 = new TableLayoutPanel();
             panel4 = new Panel();
             bottomWhiteDecision = new Label();
-            bottomWhite = new PictureBox();
+            bottomWhite = new FVMIPictureBox();
             label11 = new Label();
             label10 = new Label();
             panel5 = new Panel();
             bottomUVDecision = new Label();
-            bottomUV = new PictureBox();
+            bottomUV = new FVMIPictureBox();
             panel8 = new Panel();
             tableLayoutPanel11 = new TableLayoutPanel();
             panel2 = new Panel();
@@ -764,15 +764,22 @@ namespace FVMI_INSPECTION.Controls
             // 
             // topUV
             // 
+            topUV.BackgroundColor = Color.White;
             topUV.BorderStyle = BorderStyle.FixedSingle;
             topUV.Dock = DockStyle.Fill;
+            topUV.isActive = false;
+            topUV.isHovering = false;
             topUV.Location = new Point(0, 0);
             topUV.Margin = new Padding(3, 2, 3, 2);
+            topUV.MovPos = new Point(0, 0);
             topUV.Name = "topUV";
             topUV.Size = new Size(382, 278);
             topUV.SizeMode = PictureBoxSizeMode.StretchImage;
+            topUV.StartPos = new Point(0, 0);
             topUV.TabIndex = 4;
             topUV.TabStop = false;
+            topUV.ZoomIncrement = 0.01F;
+            topUV.ZoomValue = 0F;
             // 
             // panel9
             // 
@@ -800,15 +807,22 @@ namespace FVMI_INSPECTION.Controls
             // 
             // topWhite
             // 
+            topWhite.BackgroundColor = Color.White;
             topWhite.BorderStyle = BorderStyle.FixedSingle;
             topWhite.Dock = DockStyle.Fill;
+            topWhite.isActive = false;
+            topWhite.isHovering = false;
             topWhite.Location = new Point(0, 0);
             topWhite.Margin = new Padding(3, 2, 3, 2);
+            topWhite.MovPos = new Point(0, 0);
             topWhite.Name = "topWhite";
             topWhite.Size = new Size(382, 278);
             topWhite.SizeMode = PictureBoxSizeMode.StretchImage;
+            topWhite.StartPos = new Point(0, 0);
             topWhite.TabIndex = 5;
             topWhite.TabStop = false;
+            topWhite.ZoomIncrement = 0.01F;
+            topWhite.ZoomValue = 0F;
             // 
             // tableLayoutPanel4
             // 
@@ -1027,14 +1041,21 @@ namespace FVMI_INSPECTION.Controls
             // 
             // bottomWhite
             // 
+            bottomWhite.BackgroundColor = Color.White;
             bottomWhite.BorderStyle = BorderStyle.FixedSingle;
             bottomWhite.Dock = DockStyle.Fill;
+            bottomWhite.isActive = false;
+            bottomWhite.isHovering = false;
             bottomWhite.Location = new Point(0, 0);
+            bottomWhite.MovPos = new Point(0, 0);
             bottomWhite.Name = "bottomWhite";
             bottomWhite.Size = new Size(382, 327);
             bottomWhite.SizeMode = PictureBoxSizeMode.StretchImage;
+            bottomWhite.StartPos = new Point(0, 0);
             bottomWhite.TabIndex = 2;
             bottomWhite.TabStop = false;
+            bottomWhite.ZoomIncrement = 0.01F;
+            bottomWhite.ZoomValue = 0F;
             // 
             // label11
             // 
@@ -1086,14 +1107,21 @@ namespace FVMI_INSPECTION.Controls
             // 
             // bottomUV
             // 
+            bottomUV.BackgroundColor = Color.White;
             bottomUV.BorderStyle = BorderStyle.FixedSingle;
             bottomUV.Dock = DockStyle.Fill;
+            bottomUV.isActive = false;
+            bottomUV.isHovering = false;
             bottomUV.Location = new Point(0, 0);
+            bottomUV.MovPos = new Point(0, 0);
             bottomUV.Name = "bottomUV";
             bottomUV.Size = new Size(382, 327);
             bottomUV.SizeMode = PictureBoxSizeMode.StretchImage;
+            bottomUV.StartPos = new Point(0, 0);
             bottomUV.TabIndex = 3;
             bottomUV.TabStop = false;
+            bottomUV.ZoomIncrement = 0.01F;
+            bottomUV.ZoomValue = 0F;
             // 
             // panel8
             // 
@@ -1333,8 +1361,8 @@ namespace FVMI_INSPECTION.Controls
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
-        private PictureBox topUV;
-        private PictureBox topWhite;
+        private FVMIPictureBox topUV;
+        private FVMIPictureBox topWhite;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel6;
         private TableLayoutPanel tableLayoutPanel7;
@@ -1350,9 +1378,9 @@ namespace FVMI_INSPECTION.Controls
         private Label label9;
         private TableLayoutPanel tableLayoutPanel10;
         private Label label10;
-        private PictureBox bottomUV;
+        private FVMIPictureBox bottomUV;
         private Label label11;
-        private PictureBox bottomWhite;
+        private FVMIPictureBox bottomWhite;
         private Panel panel8;
         private TableLayoutPanel tableLayoutPanel1;
         private GroupBox groupBox9;
