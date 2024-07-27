@@ -219,11 +219,12 @@ namespace FVMI_INSPECTION.Controls
             }
         }
 
-
+        public FVMIPictureBox[]  PictureBoxes =[];
         public DashboardControl()
         {
             InitializeComponent();
             textBox1.Enabled = false;
+            PictureBoxes = [this.topWhite,this.topUV,this.bottomWhite,this.bottomUV];
         }
         public DashboardControl(string _model)
         {
@@ -231,6 +232,7 @@ namespace FVMI_INSPECTION.Controls
             modelName = _model;
             runningModel.Text = modelName;
             textBox1.Enabled = false;
+            PictureBoxes = [this.topWhite, this.topUV, this.bottomWhite, this.bottomUV];
         }
         protected override void OnControlRemoved(ControlEventArgs e)
         {
@@ -345,6 +347,19 @@ namespace FVMI_INSPECTION.Controls
                 }
 
             }));
+        }
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            var mdl = PictureBoxes.Where(x => x.isHovering).FirstOrDefault();
+            if (mdl is not null && mdl.isHovering)
+            {
+                if (e.Delta != 0)
+                {
+                    mdl.ZoomValue = Math.Max(mdl.ZoomValue + ((e.Delta > 0) ? mdl.ZoomIncrement : -mdl.ZoomIncrement), mdl.ZoomIncrement);
+                }
+                mdl.Invalidate();
+            }
         }
 
         private void ShowNgPopup(object sender, DataGridViewCellEventArgs e)

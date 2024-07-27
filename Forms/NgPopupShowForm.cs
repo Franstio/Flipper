@@ -1,4 +1,5 @@
-﻿using FVMI_INSPECTION.Interfaces;
+﻿using FVMI_INSPECTION.Controls;
+using FVMI_INSPECTION.Interfaces;
 using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Presenter;
 using System;
@@ -17,10 +18,12 @@ namespace FVMI_INSPECTION.Forms
     {
         private NgPopUpMVP.IPresenter presenter;
         public RecordModel Model { get; set; }
+        FVMIPictureBox[] PictureBoxes = [];
         public NgPopupShowForm(RecordModel model)
         {
             InitializeComponent();
             Model = model;
+            PictureBoxes = [this.parameterPictureBox, this.actualPictureBox];
         }
 
         public Image ActualImage { get => actualPictureBox.Image; 
@@ -63,6 +66,18 @@ namespace FVMI_INSPECTION.Forms
             Close();
             return;
         }
-
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            var mdl = PictureBoxes.Where(x => x.isHovering).FirstOrDefault();
+            if (mdl is not null && mdl.isHovering)
+            {
+                if (e.Delta != 0)
+                {
+                    mdl.ZoomValue = Math.Max(mdl.ZoomValue + ((e.Delta > 0) ? mdl.ZoomIncrement : -mdl.ZoomIncrement), mdl.ZoomIncrement);
+                }
+                mdl.Invalidate();
+            }
+        }
     }
 }
