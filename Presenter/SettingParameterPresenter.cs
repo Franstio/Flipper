@@ -36,12 +36,13 @@ namespace FVMI_INSPECTION.Presenter
             var mdl = new MasterModel();
             mdl.Model = model;
             var _lib = new FileLib();
+
             var process = new FVMITCPProcess(mdl, _lib);
-            if (list.Count < 1)
+            if ( list is  null || list.Count < 1)
                 return new SettingParameterPresenter(mdl, _view, process, _lib, _repo);
             mdl = list.First();
             process = new FVMITCPProcess(mdl, _lib);
-            if (mdl.Details.Count > 0)
+            if (mdl is not null && mdl.Details.Count > 0)
             {
                 Func<FVMI_ImageType, string?> getImage = (t) => mdl.Details.Where(x => x.Type == t.ToString()).FirstOrDefault()?.Image;
                 _view.TopUVImage = getImage(FVMI_ImageType.TopUV) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? _view.TopUVImage : _view.TopUVImage;
@@ -129,7 +130,7 @@ namespace FVMI_INSPECTION.Presenter
         {
             isNew = _model is null;
             model = _model ?? new MasterModel();
-            repo = _repo;
+            repo = new ModelRepository();
             lib = fileLib;
             process = proc;
             view = _view;
@@ -139,10 +140,9 @@ namespace FVMI_INSPECTION.Presenter
         {
             string modelName = model.Model;
             var list = await repo.GetModel(model.Model);
-            isNew = false;
-            if (list.Count < 1)
+            isNew = list is null || list.Count<1;
+            if (list?.Count < 1)
             {
-                isNew = true;
                 model = new MasterModel();
                 model.Model = modelName;
                 process.Model = model;

@@ -219,12 +219,11 @@ namespace FVMI_INSPECTION.Controls
             }
         }
 
-        public FVMIPictureBox[]  PictureBoxes =[];
+
         public DashboardControl()
         {
             InitializeComponent();
             textBox1.Enabled = false;
-            PictureBoxes = [this.topWhite,this.topUV,this.bottomWhite,this.bottomUV];
         }
         public DashboardControl(string _model)
         {
@@ -232,7 +231,6 @@ namespace FVMI_INSPECTION.Controls
             modelName = _model;
             runningModel.Text = modelName;
             textBox1.Enabled = false;
-            PictureBoxes = [this.topWhite, this.topUV, this.bottomWhite, this.bottomUV];
         }
         protected override void OnControlRemoved(ControlEventArgs e)
         {
@@ -273,7 +271,6 @@ namespace FVMI_INSPECTION.Controls
             BottomWhiteDecision = "";
 
             processTimeLabel.Invoke(new Action(() => processTimeLabel.Text = "00:00:00"));
-            startTime = DateTime.Now;
             await Task.Run(async delegate
             {
                 //                await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Top);
@@ -347,19 +344,6 @@ namespace FVMI_INSPECTION.Controls
                 }
 
             }));
-        }
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
-            base.OnMouseWheel(e);
-            var mdl = PictureBoxes.Where(x => x.isHovering).FirstOrDefault();
-            if (mdl is not null && mdl.isHovering)
-            {
-                if (e.Delta != 0)
-                {
-                    mdl.ZoomValue = Math.Max(mdl.ZoomValue + ((e.Delta > 0) ? mdl.ZoomIncrement : -mdl.ZoomIncrement), mdl.ZoomIncrement);
-                }
-                mdl.Invalidate();
-            }
         }
 
         private void ShowNgPopup(object sender, DataGridViewCellEventArgs e)
@@ -465,9 +449,6 @@ namespace FVMI_INSPECTION.Controls
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            var resultDialog = MessageBox.Show("Confirm for Generate Log?", "Confirm Log", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (resultDialog != DialogResult.Yes)
-                return;
             try
             {
                 await presenter.WriteLog(records);
@@ -494,6 +475,8 @@ namespace FVMI_INSPECTION.Controls
         {
             Invoke(delegate
             {
+                startTime = DateTime.Now;
+
                 processTimer.Enabled = true;
                 processTimer.Start();
             });

@@ -14,40 +14,46 @@ namespace FVMI_INSPECTION.Repositories
 {
     public class ModelRepository
     {
-        private readonly string ConnectionString = string.Empty;
+        private static readonly string ConnectionString = ConfigurationManager.AppSettings["ConnString"] ?? "";
         private SqlConnection conn;
         private string MasterModelName = "Tbl_Model";
         private string DetailModelName = "Tbl_ModelDetail";
         public ModelRepository() 
         {
-            ConnectionString = ConfigurationManager.AppSettings["ConnString"] ?? "";
+            if (ConnectionString is null || ConnectionString == "")
+                throw new Exception("Appsettings fail to read");
             conn = new SqlConnection(ConnectionString);
         }
         private async Task<SqlConnection> GetConn()
         {
             conn = new SqlConnection(ConnectionString);
+            await Task.Delay(100);
             await conn.OpenAsync();
             return conn;
         }
-        public async Task<List<MasterModel>> GetModel(string ModelName)
+        public async Task<List<MasterModel>?> GetModel(string ModelName)
         {
-            List<MasterModel> result = new List<MasterModel>();
+            List<MasterModel>? result = null;
             using (var _con = await GetConn())
             {
-                string Query = $"Select t1.Model,t1.CameraPoint,t2.Model,t2.Image,t2.Type,t2.CameraExecution,t2.Area From {MasterModelName} t1 inner join {DetailModelName} t2 on t1.Model=t2.Model Where t1.Model=@ModelName";
-                result= (await _con.QueryAsync<MasterModel, DetailModel, MasterModel>(Query, (masterModel, detailModel) =>
+                string Query = $"Select t1.Model,t1.CameraPoint,t2.Model,t2.Image,t2.Type,t2.CameraExecution,t2.Area From {MasterModelName} t1 left join {DetailModelName} t2 on t1.Model=t2.Model Where t1.Model=@ModelName";
+                result = (await _con.QueryAsync<MasterModel, DetailModel, MasterModel>(Query, (masterModel, detailModel) =>
                 {
-                    masterModel.Details.Add(detailModel);
+                    if (detailModel is not null)
+                        masterModel.Details.Add(detailModel);
                     return masterModel;
                 },splitOn:"Model",param: new {ModelName=ModelName}
                 )).ToList();
             }
-            result = result.GroupBy(x => x.Model).Select(g => new MasterModel()
+            if (result is not null)
             {
-                Model = g.First().Model,
-                CameraPoint = g.First().CameraPoint,
-                Details = g.Select(x=>x.Details).SelectMany(z=>z).ToList()
-            }).ToList() ;
+                result = result.GroupBy(x => x.Model).Select(g => new MasterModel()
+                {
+                    Model = g.First().Model,
+                    CameraPoint = g.First().CameraPoint,
+                    Details = g.Select(x => x.Details).SelectMany(z => z).ToList()
+                }).ToList();
+            }
             return result;
         }
         public async Task WriteLog(List<RecordModel> Log)

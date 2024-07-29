@@ -1,6 +1,4 @@
 ﻿
-using FVMI_INSPECTION.Controls;
-
 namespace FVMI_INSPECTION.Forms
 {
     partial class NgPopupShowForm
@@ -33,9 +31,9 @@ namespace FVMI_INSPECTION.Forms
         {
             tableLayoutPanel1 = new TableLayoutPanel();
             button2 = new Button();
-            actualPictureBox = new FVMIPictureBox();
+            actualPictureBox = new PictureBox();
             areaLabel = new Label();
-            parameterPictureBox = new FVMIPictureBox();
+            parameterPictureBox = new PictureBox();
             button1 = new Button();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)actualPictureBox).BeginInit();
@@ -146,8 +144,8 @@ namespace FVMI_INSPECTION.Forms
         private TableLayoutPanel tableLayoutPanel1;
         private Label areaLabel;
         private Button button2;
-        private FVMIPictureBox actualPictureBox;
-        private FVMIPictureBox parameterPictureBox;
+        private PictureBox actualPictureBox;
+        private PictureBox parameterPictureBox;
         private Button button1;
     }
 }

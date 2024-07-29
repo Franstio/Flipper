@@ -26,17 +26,17 @@ namespace FVMI_INSPECTION.Controls
     public partial class SettingParameterControl : UserControl, SettingParameterMVP.IView
     {
         private string _ModelName = string.Empty;
-        private bool isNew = false;
         private readonly ModelRepository repository = new ModelRepository();
         private FVMITCPProcess? process = null;
         private readonly FileLib lib = new FileLib();
+
         public string ModelName
         {
             get => _ModelName; set
             {
                 _ModelName = value;
-                runningModel.Invoke(delegate { runningModel.Text = $"Model: {value}"; });
-                modelBox.Invoke(delegate { modelBox.Enabled = true; modelBox.Text = value; modelBox.Enabled = false; });
+                if (runningModel.IsHandleCreated && modelBox.IsHandleCreated)
+                    Invoke(delegate { runningModel.Text = $"Model: {value}"; modelBox.Enabled = true; modelBox.Text = value; modelBox.Enabled = false; });
             }
         }
         public int CameraPoint { get => int.Parse(camPoint.Value.ToString()); set => Invoke(delegate { camPoint.Value = value; }); }
@@ -52,18 +52,14 @@ namespace FVMI_INSPECTION.Controls
         public Button[] UVButton { get; set; } = new Button[2];
         public Button[] CylinderButton { get; set; } = new Button[2];
         public SettingParameterMVP.IPresenter presenter;
-        private FVMIPictureBox[] PictureBoxes = [];
         public SettingParameterControl(string ModelName)
         {
 
             InitializeComponent();
-            UVButton = [button3, button6];
-            CylinderButton = [button8, button7];
+            UVButton = [button3,button6];
+            CylinderButton = [button8,button7];
             this._ModelName = ModelName;
-            runningModel.Text = $"Model: {ModelName}";
-            PictureBoxes = [pictureBox1, pictureBox2, pictureBox3,pictureBox4 ];
         }
-
 
         private async void button1_Click(object sender, EventArgs e)
         {
@@ -75,10 +71,8 @@ namespace FVMI_INSPECTION.Controls
         }
         private async void SettingParameterControl_Load(object sender, EventArgs e)
         {
-            isNew = true;
+            this.ModelName = _ModelName;
             presenter = await SettingParameterPresenter.Build(_ModelName, this);
-            Console.WriteLine($"Width: {pictureBox1.Image.Width},Height: {pictureBox1.Image.Height}");
-            Console.WriteLine($"Width: {pictureBox1.Width},Height: {pictureBox1.Height}");
             await presenter.LoadCurrentModel();
         }
 
@@ -164,21 +158,5 @@ namespace FVMI_INSPECTION.Controls
 
             }));
         }
-
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
-            var mdl = PictureBoxes.Where(x => x.isHovering).FirstOrDefault();
-            if (mdl is not null && mdl.isHovering)
-            {
-                if (e.Delta != 0)
-                {
-                    mdl.ZoomValue = Math.Max(mdl.ZoomValue + ((e.Delta > 0) ? mdl.ZoomIncrement : -mdl.ZoomIncrement), mdl.ZoomIncrement);
-                }
-                mdl.Invalidate();
-            }
-        }
-
-
-        
     }
 }
