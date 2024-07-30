@@ -28,6 +28,8 @@ namespace FVMI_INSPECTION.Controls
                     return;
                 }
             }
+            else
+                return;
             InitializeComponent();
             button15.Text = tcp.isRunning ? "Disconnect" : "Connect";
             ipBox.Enabled = !tcp.isRunning;

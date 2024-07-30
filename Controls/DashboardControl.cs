@@ -32,12 +32,14 @@ namespace FVMI_INSPECTION.Controls
         private ProcessResultModel[] data = new ProcessResultModel[0];
         private CountViewModel _cvm = new CountViewModel();
         private bool autoSave = true;
-        public bool AllowReset { get => button1.Enabled; set
+        public bool AllowReset
+        {
+            get => button1.Enabled; set
             {
                 if (button1.IsHandleCreated)
-                    button1.Invoke(delegate{ button1.Enabled = value;button1.BackColor = value ? Color.Red : Color.Gray; button1.ForeColor = value ? Color.Black : Color.White; });
+                    button1.Invoke(delegate { button1.Enabled = value; button1.BackColor = value ? Color.Red : Color.Gray; button1.ForeColor = value ? Color.Black : Color.White; });
             }
-        } 
+        }
         public CountViewModel countViewModel
         {
             get => _cvm;
@@ -265,6 +267,7 @@ namespace FVMI_INSPECTION.Controls
                 await presenter.WriteLog(records);
             scanLabel.Text = textBox1.Text;
             textBox1.Enabled = false;
+            button2.Enabled = false;
             TopUVDecision = "";
             TopWhiteDecision = "";
             BottomUVDecision = "";
@@ -432,10 +435,10 @@ namespace FVMI_INSPECTION.Controls
             }
         }
 
-        private async void DashboardControl_Leave(object sender, EventArgs e)
+        private void DashboardControl_Leave(object sender, EventArgs e)
         {
-            if (records.Count > 0)
-                await presenter.WriteLog(records);
+//            if (records.Count > 0)
+//                await presenter.WriteLog(records);
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -449,11 +452,14 @@ namespace FVMI_INSPECTION.Controls
 
         private async void button2_Click(object sender, EventArgs e)
         {
+            var rst = MessageBox.Show("Confirm for Generate Log?", "Generate Log Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (rst != DialogResult.Yes) return;
             try
             {
                 await presenter.WriteLog(records);
                 Invoke(delegate
                 {
+
                     textBox1.Enabled = true;
                     textBox1.Text = string.Empty;
                 });

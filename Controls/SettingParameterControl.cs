@@ -79,6 +79,7 @@ namespace FVMI_INSPECTION.Controls
         private async void button14_Click(object sender, EventArgs e)
         {
             await presenter.SetCamPoint();
+            MessageBox.Show("Set Complete");
         }
 
         private async void uploadEvent(object sender, EventArgs e)

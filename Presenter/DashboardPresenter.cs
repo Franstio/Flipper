@@ -132,17 +132,6 @@ namespace FVMI_INSPECTION.Presenter
             view.topWhiteImage = ret[1].Image;
             string[] data = await process.MonitorCommand("MR8000", "0", cTokenSource.Token);
             res = await process.WriteCommand("MR004", 0);*/
-            int loading = 0;
-            res = await process.ReadCommand("MR004");
-            res2 = await process.ReadCommand("MR200");
-            while ((res.Last() != '1' || res2.Last()!='1') && !cTokenSource.IsCancellationRequested)
-            {
-                await Task.Delay(100);
-                eventUpdate("Waiting for process complete" + new string('.', loading));
-                loading = (loading + 1) % 6;
-                res = await process.ReadCommand("MR004");
-                res2 = await process.ReadCommand("MR200");
-            }
             if (cTokenSource.IsCancellationRequested)
             {
                 eventUpdate("Process Cancelled");
@@ -194,7 +183,7 @@ namespace FVMI_INSPECTION.Presenter
                 Pass = isFail ? view.countViewModel.Pass  : view.countViewModel.Pass+1,
             };
             view.countViewModel = cvm;
-            eventUpdate("Completed...");
+            eventUpdate($"Completed... {(isFail ? "(Please Click Generate Log)" : "")}" );
             if (record.SelectMany(x => x).Any(x => x.Judgement == "NG" || x.Judgement == "FAIL"))
                 view.FinalJudge = "FAIL";
             else
@@ -248,10 +237,14 @@ namespace FVMI_INSPECTION.Presenter
         private async Task MonitorImageOutput()
         {
             string ret = string.Empty, ret1 = string.Empty ;
+            int loading = 0;
             do
             {
                 ret = await process.ReadCommand("MR200");
                 ret1 = await process.ReadCommand("MR004");
+                await Task.Delay(100);
+                eventUpdate("Waiting for process complete" + new string('.', loading));
+                loading = (loading + 1) % 6;
             }
             while ( (ret.Last() !='1' || ret1.Last() != '1')  && !cMonitorTokenSource.IsCancellationRequested && !cTokenSource.IsCancellationRequested);
             if (cMonitorTokenSource.IsCancellationRequested || cTokenSource.IsCancellationRequested)
@@ -469,7 +462,7 @@ namespace FVMI_INSPECTION.Presenter
             LogModel model = new LogModel()
             {
                 Model = view.modelName,
-                SN = records.FirstOrDefault().Serial,
+                SN = records.First()!.Serial,
                 Status = view.FinalJudge,
                 Failure = failures.Length < 1 ? "" : string.Join(";", failures),
                 TopFailTool = data.ContainsKey("TopWhite") && data["TopWhite"].Length > 0 ? string.Join(";", data["TopWhite"]) : "NONE",
@@ -491,7 +484,7 @@ namespace FVMI_INSPECTION.Presenter
 
         public async Task CheckReset()
         {
-            var rst = await process.ReadCommand("MR050");
+            var rst = await process.ReadCommand("MR010");
             view.AllowReset = rst == "1";
         }
     }
