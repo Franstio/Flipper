@@ -463,6 +463,7 @@ namespace FVMI_INSPECTION.Controls
                     textBox1.Enabled = true;
                     textBox1.Text = string.Empty;
                 });
+                StatusRun = "Please Scan Code";
             }
             catch (Exception ex)
             {

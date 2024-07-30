@@ -311,5 +311,17 @@ namespace FVMI_INSPECTION.Properties {
                 this["WhiteBottomPrefix"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("backup/")]
+        public string BackupLogPath {
+            get {
+                return ((string)(this["BackupLogPath"]));
+            }
+            set {
+                this["BackupLogPath"] = value;
+            }
+        }
     }
 }

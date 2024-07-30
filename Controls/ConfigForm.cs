@@ -92,6 +92,7 @@ namespace FVMI_INSPECTION.Controls
             markedImgSaveDir.Text = GetConfig("MarkSaveDir");
             ftpCameraDir.Text = GetConfig("ImageDirName");
             reportLogPath.Text = GetConfig("LogPath");
+            backupReportLogPath.Text = GetConfig("BackupLogPath");
             debugLogPath.Text = GetConfig("DebugLogPath");
             csvPathBox.Text = GetConfig("CSVPath");
             whiteCSVBox.Text = GetConfig("WhiteCSVPath");

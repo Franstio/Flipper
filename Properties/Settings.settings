@@ -74,5 +74,8 @@
     <Setting Name="WhiteBottomPrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">bottomwht</Value>
     </Setting>
+    <Setting Name="BackupLogPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">backup/</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,5 @@
 ﻿using FVMI_INSPECTION.Models;
+using FVMI_INSPECTION.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -278,13 +279,16 @@ Failure{(model.Failure==string.Empty ? "" : ("="+model.Failure) )}";
             return text;
         }
 
-        public async Task<string> WriteLog(string scanCode,string text,string judge)
+        public async Task<string> WriteLog(string scanCode, string text, string judge)
         {
             string filename = $"log_{scanCode}_{judge}.txt";
-            string path = Path.Combine(_logPath, filename);
-            if (File.Exists(path))
-                File.Delete(path);
-            await File.WriteAllTextAsync(path,text);
+            string[] paths = [Path.Combine(_logPath, filename), Path.Combine(Settings.Default.BackupLogPath, filename)];
+            foreach (string path in paths)
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+                await File.WriteAllTextAsync(path, text);
+            }
             return filename;
         }
     }

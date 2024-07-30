@@ -16,7 +16,8 @@
 .tools/
 .dotnet/
 .packages/
-
+*.settings
+*.config
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

@@ -46,6 +46,9 @@
             label2 = new Label();
             label1 = new Label();
             groupBox3 = new GroupBox();
+            button17 = new Button();
+            label22 = new Label();
+            backupReportLogPath = new TextBox();
             button16 = new Button();
             WhitePrefixBox = new TextBox();
             label21 = new Label();
@@ -183,7 +186,7 @@
             groupBox2.Controls.Add(label1);
             groupBox2.Location = new Point(3, 122);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(378, 421);
+            groupBox2.Size = new Size(378, 453);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Delay Setting";
@@ -274,6 +277,9 @@
             // groupBox3
             // 
             groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox3.Controls.Add(button17);
+            groupBox3.Controls.Add(label22);
+            groupBox3.Controls.Add(backupReportLogPath);
             groupBox3.Controls.Add(button16);
             groupBox3.Controls.Add(WhitePrefixBox);
             groupBox3.Controls.Add(label21);
@@ -315,15 +321,46 @@
             groupBox3.Controls.Add(triggerImgSaveDir);
             groupBox3.Location = new Point(390, 5);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(445, 413);
+            groupBox3.Size = new Size(445, 447);
             groupBox3.TabIndex = 3;
             groupBox3.TabStop = false;
             groupBox3.Text = "Directory Setting";
             // 
+            // button17
+            // 
+            button17.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button17.Location = new Point(365, 197);
+            button17.Name = "button17";
+            button17.Size = new Size(75, 23);
+            button17.TabIndex = 42;
+            button17.Tag = "BackupLogPath";
+            button17.Text = "Change";
+            button17.UseVisualStyleBackColor = true;
+            button17.Click += openDialogFolder;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(6, 201);
+            label22.Name = "label22";
+            label22.Size = new Size(137, 15);
+            label22.TabIndex = 41;
+            label22.Text = "Backup Report Log Path:";
+            // 
+            // backupReportLogPath
+            // 
+            backupReportLogPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            backupReportLogPath.Location = new Point(144, 198);
+            backupReportLogPath.Name = "backupReportLogPath";
+            backupReportLogPath.ReadOnly = true;
+            backupReportLogPath.Size = new Size(216, 23);
+            backupReportLogPath.TabIndex = 40;
+            backupReportLogPath.Tag = "BackupLogPath";
+            // 
             // button16
             // 
             button16.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button16.Location = new Point(363, 373);
+            button16.Location = new Point(364, 403);
             button16.Name = "button16";
             button16.Size = new Size(75, 23);
             button16.TabIndex = 39;
@@ -335,7 +372,7 @@
             // WhitePrefixBox
             // 
             WhitePrefixBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            WhitePrefixBox.Location = new Point(142, 373);
+            WhitePrefixBox.Location = new Point(143, 403);
             WhitePrefixBox.Name = "WhitePrefixBox";
             WhitePrefixBox.Size = new Size(216, 23);
             WhitePrefixBox.TabIndex = 38;
@@ -344,7 +381,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(5, 377);
+            label21.Location = new Point(6, 412);
             label21.Name = "label21";
             label21.Size = new Size(71, 15);
             label21.TabIndex = 37;
@@ -353,7 +390,7 @@
             // button14
             // 
             button14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button14.Location = new Point(363, 344);
+            button14.Location = new Point(364, 374);
             button14.Name = "button14";
             button14.Size = new Size(75, 23);
             button14.TabIndex = 36;
@@ -365,7 +402,7 @@
             // UVPrefixBox
             // 
             UVPrefixBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            UVPrefixBox.Location = new Point(142, 344);
+            UVPrefixBox.Location = new Point(143, 374);
             UVPrefixBox.Name = "UVPrefixBox";
             UVPrefixBox.Size = new Size(216, 23);
             UVPrefixBox.TabIndex = 35;
@@ -374,7 +411,7 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Location = new Point(5, 348);
+            label20.Location = new Point(6, 383);
             label20.Name = "label20";
             label20.Size = new Size(58, 15);
             label20.TabIndex = 34;
@@ -383,7 +420,7 @@
             // button13
             // 
             button13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button13.Location = new Point(364, 315);
+            button13.Location = new Point(365, 345);
             button13.Name = "button13";
             button13.Size = new Size(75, 23);
             button13.TabIndex = 33;
@@ -395,7 +432,7 @@
             // uvCSVBox
             // 
             uvCSVBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            uvCSVBox.Location = new Point(143, 315);
+            uvCSVBox.Location = new Point(144, 345);
             uvCSVBox.Name = "uvCSVBox";
             uvCSVBox.ReadOnly = true;
             uvCSVBox.Size = new Size(216, 23);
@@ -405,7 +442,7 @@
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(6, 319);
+            label19.Location = new Point(7, 354);
             label19.Name = "label19";
             label19.Size = new Size(67, 15);
             label19.TabIndex = 31;
@@ -414,7 +451,7 @@
             // button12
             // 
             button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button12.Location = new Point(364, 256);
+            button12.Location = new Point(365, 286);
             button12.Name = "button12";
             button12.Size = new Size(75, 23);
             button12.TabIndex = 30;
@@ -426,7 +463,7 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(6, 260);
+            label18.Location = new Point(7, 290);
             label18.Name = "label18";
             label18.Size = new Size(83, 15);
             label18.TabIndex = 29;
@@ -435,7 +472,7 @@
             // whiteCSVBox
             // 
             whiteCSVBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            whiteCSVBox.Location = new Point(143, 257);
+            whiteCSVBox.Location = new Point(144, 287);
             whiteCSVBox.Name = "whiteCSVBox";
             whiteCSVBox.ReadOnly = true;
             whiteCSVBox.Size = new Size(216, 23);
@@ -445,7 +482,7 @@
             // button11
             // 
             button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button11.Location = new Point(364, 227);
+            button11.Location = new Point(365, 257);
             button11.Name = "button11";
             button11.Size = new Size(75, 23);
             button11.TabIndex = 27;
@@ -457,7 +494,7 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(6, 231);
+            label17.Location = new Point(7, 261);
             label17.Name = "label17";
             label17.Size = new Size(95, 15);
             label17.TabIndex = 26;
@@ -466,7 +503,7 @@
             // whiteImgBox
             // 
             whiteImgBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            whiteImgBox.Location = new Point(143, 228);
+            whiteImgBox.Location = new Point(144, 258);
             whiteImgBox.Name = "whiteImgBox";
             whiteImgBox.ReadOnly = true;
             whiteImgBox.Size = new Size(216, 23);
@@ -477,7 +514,7 @@
             // button10
             // 
             button10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button10.Location = new Point(364, 286);
+            button10.Location = new Point(365, 316);
             button10.Name = "button10";
             button10.Size = new Size(75, 23);
             button10.TabIndex = 24;
@@ -489,7 +526,7 @@
             // uvImgBox
             // 
             uvImgBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            uvImgBox.Location = new Point(143, 286);
+            uvImgBox.Location = new Point(144, 316);
             uvImgBox.Name = "uvImgBox";
             uvImgBox.ReadOnly = true;
             uvImgBox.Size = new Size(216, 23);
@@ -499,7 +536,7 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(6, 290);
+            label16.Location = new Point(7, 325);
             label16.Name = "label16";
             label16.Size = new Size(79, 15);
             label16.TabIndex = 22;
@@ -508,7 +545,7 @@
             // button9
             // 
             button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button9.Location = new Point(364, 197);
+            button9.Location = new Point(365, 227);
             button9.Name = "button9";
             button9.Size = new Size(75, 23);
             button9.TabIndex = 21;
@@ -520,7 +557,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(6, 201);
+            label15.Location = new Point(7, 231);
             label15.Name = "label15";
             label15.Size = new Size(93, 15);
             label15.TabIndex = 20;
@@ -529,7 +566,7 @@
             // csvPathBox
             // 
             csvPathBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            csvPathBox.Location = new Point(143, 198);
+            csvPathBox.Location = new Point(144, 228);
             csvPathBox.Name = "csvPathBox";
             csvPathBox.ReadOnly = true;
             csvPathBox.Size = new Size(216, 23);
@@ -728,9 +765,9 @@
             groupBox4.Controls.Add(label14);
             groupBox4.Controls.Add(label13);
             groupBox4.Controls.Add(currentPasswordBox);
-            groupBox4.Location = new Point(390, 424);
+            groupBox4.Location = new Point(390, 458);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(439, 119);
+            groupBox4.Size = new Size(439, 117);
             groupBox4.TabIndex = 4;
             groupBox4.TabStop = false;
             groupBox4.Text = "Setting Parameter Password";
@@ -788,7 +825,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "ConfigForm";
-            Size = new Size(838, 546);
+            Size = new Size(838, 578);
             Load += ConfigForm_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -871,5 +908,8 @@
         private Button button14;
         private TextBox UVPrefixBox;
         private Label label20;
+        private Button button17;
+        private Label label22;
+        private TextBox backupReportLogPath;
     }
 }
