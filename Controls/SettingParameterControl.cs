@@ -52,6 +52,7 @@ namespace FVMI_INSPECTION.Controls
         public Button[] UVButton { get; set; } = new Button[2];
         public Button[] CylinderButton { get; set; } = new Button[2];
         public SettingParameterMVP.IPresenter presenter;
+        private FVMIPictureBox[] boxes;
         public SettingParameterControl(string ModelName)
         {
 
@@ -59,6 +60,12 @@ namespace FVMI_INSPECTION.Controls
             UVButton = [button3,button6];
             CylinderButton = [button8,button7];
             this._ModelName = ModelName;
+            boxes = [
+                pictureBox1,
+                pictureBox2,
+                pictureBox3,
+                pictureBox4,
+            ];
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -136,6 +143,18 @@ namespace FVMI_INSPECTION.Controls
             }
             await presenter.CylinderToggle(val == "1");
             flipControl(sender!, true);
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            var hoverBox= boxes.Where(x=>x.isHovering).FirstOrDefault();
+            if (hoverBox is null)
+                return;
+            if (e.Delta == 0)
+                return;
+            hoverBox.ZoomValue = Math.Max(hoverBox.ZoomValue + (e.Delta> 0 ? hoverBox.ZoomIncrement : -hoverBox.ZoomIncrement), hoverBox.ZoomIncrement);
+            hoverBox.Invalidate();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
