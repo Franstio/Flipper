@@ -406,7 +406,7 @@ namespace FVMI_INSPECTION.Presenter
             };
             for (int i = 0; i < paths.Length; i++)
             {
-                await Task.Delay(1000);
+                await Task.Delay(2000);
                 var files = await lib.GetFiles(paths[i]);
                 if (files is null || files.Length < 1)
                     throw new Exception(paths[i] + " Empty");
