@@ -52,27 +52,27 @@ namespace FVMI_INSPECTION.Presenter
         }
         public async Task ResetProcess()
         {
-            await process.WriteCommand("MR305", "1");
-            var rst = await process.ReadCommand("R006");
-            if (rst == "0")
-                await process.PushCommand("MR200", 100, "1", "0");
-            int loading = 0;
+            await process.WriteCommand("MR101", 1);
+            await process.WriteCommand("DM0", 0);
+            await process.WriteCommand("MR004", 0);
+            await process.WriteCommand("MR201", 0);
+            string retWait = string.Empty;
             do
             {
-                rst = await process.ReadCommand("R006");
-                eventUpdate("Reset in progress" + new string('.', loading));
-                loading = (loading + 1) % 6;
+                retWait = await process.ReadCommand("R003");
             }
-            while (!rst.Contains("1"));
-            await Task.Delay(1000);
-            await process.WriteCommand("MR305", "0");
-            await process.WriteCommand("MR302", "0");
-            await process.WriteCommand("MR303", "0");
+            while (retWait.Last() != '1');
+            await process.WriteCommand("MR200", 0);
+            await process.WriteCommand("MR5000", 0);
+            await process.WriteCommand("MR5001", 0);
+            await process.WriteCommand("MR5002", 0);
+            await process.WriteCommand("MR5003", 0);
+            await process.WriteCommand("MR400", 0);
+//            await process.WriteCommand("MR010", 0);
             cTokenSource.Cancel();
-            await process.WriteCommand("MR004", 0);
-            await process.WriteCommand("DM0", 0);
-            await process.WriteCommand("MR010", 0);
-            view.StatusRun = "Cancelled...";
+            view.StatusRun = "Please scan code";
+            view.EnableControls();
+            view.ResetControls();
             view.SerialNumber = string.Empty;
             view.FinalJudge = string.Empty;
             view.TopUVRecord = new List<ProcessRecordModel>();
@@ -87,6 +87,8 @@ namespace FVMI_INSPECTION.Presenter
             view.BottomUVDecision = "";
             view.TopWhiteDecision = "";
             view.BottomWhiteDecision = "";
+            view.EmergencyActive = false;
+            view.AllowReset = false;
 
         }
         private DashboardPresenter( DashboardMVP.IView view,MasterModel model,FileLib fileLib,ModelRepository repo)
@@ -105,6 +107,9 @@ namespace FVMI_INSPECTION.Presenter
         }
         public async Task<ProcessResultModel[]> RunProcess()
         {
+            eventUpdate("Press Start Button..");
+            cTokenSource = new CancellationTokenSource();
+            cMonitorTokenSource = new CancellationTokenSource();
             view.topUVImage = null;
             view.topWhiteImage = null;
             view.bottomUVImage = null;
@@ -118,6 +123,7 @@ namespace FVMI_INSPECTION.Presenter
             string res,res2;
             res = await process.WriteCommand("MR004", 1);
             await Task.Delay(100);
+//            view.tReset =  Task.Run(view.CheckResetTask);
             do
             {
                 res = await process.ReadCommand("R000");
@@ -134,7 +140,7 @@ namespace FVMI_INSPECTION.Presenter
             res = await process.WriteCommand("MR004", 0);*/
             if (cTokenSource.IsCancellationRequested)
             {
-                eventUpdate("Process Cancelled");
+                eventUpdate("Process Cancelled, Please Click Reset");
                 cTokenSource.Dispose();
                 cMonitorTokenSource.Dispose();
                 cTokenSource = new CancellationTokenSource();
@@ -150,17 +156,13 @@ namespace FVMI_INSPECTION.Presenter
             do
             {
                 record = await ReadCsv();
+                if (cTokenSource.IsCancellationRequested)
+                    continue;
                 Count = Count + 1;
+                await CheckReset();
                 await Task.Delay(100);
             }
-            while (Count < 100 && record is null);
-            if (record is null)
-            {
-                MessageBox.Show("CSV File Invalid, please check CSV File", "Logging Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                view.StatusRun = "Error: Invalid CSV...";
-                return new ProcessResultModel[0];
-            }
+            while (Count < 100 && record is null && !cTokenSource.IsCancellationRequested) ; 
             if (cTokenSource.IsCancellationRequested)
             {
                 eventUpdate("Process Cancelled");
@@ -170,6 +172,13 @@ namespace FVMI_INSPECTION.Presenter
                 cMonitorTokenSource = new CancellationTokenSource();
                 cMonitorTokenSource.Cancel();
                 return [];
+            }
+            if (record is null)
+            {
+                MessageBox.Show("CSV File Invalid, please check CSV File", "Logging Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                view.StatusRun = "Error: Invalid CSV...";
+                return new ProcessResultModel[0];
             }
             view.TopUVRecord = record[0].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
             view.BottomUVRecord = record[1].Where(x=>x.Judgement=="NG").ToList() ?? new List<ProcessRecordModel>();
@@ -183,7 +192,7 @@ namespace FVMI_INSPECTION.Presenter
                 Pass = isFail ? view.countViewModel.Pass  : view.countViewModel.Pass+1,
             };
             view.countViewModel = cvm;
-            eventUpdate($"Completed... {(isFail ? "(Please Click Generate Log)" : "")}" );
+            eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}" );
             if (record.SelectMany(x => x).Any(x => x.Judgement == "NG" || x.Judgement == "FAIL"))
                 view.FinalJudge = "FAIL";
             else
@@ -231,6 +240,7 @@ namespace FVMI_INSPECTION.Presenter
                     ImagePath = bottomWhiteImgSet?.Item1
                 }
             ];
+            view.EmergencyActive = false;
             view.StopTimer();
             return ret;
         }
@@ -245,6 +255,7 @@ namespace FVMI_INSPECTION.Presenter
                 await Task.Delay(100);
                 eventUpdate("Waiting for process complete" + new string('.', loading));
                 loading = (loading + 1) % 6;
+                await CheckReset();
             }
             while ( (ret.Last() !='1' || ret1.Last() != '1')  && !cMonitorTokenSource.IsCancellationRequested && !cTokenSource.IsCancellationRequested);
             if (cMonitorTokenSource.IsCancellationRequested || cTokenSource.IsCancellationRequested)
@@ -404,8 +415,14 @@ namespace FVMI_INSPECTION.Presenter
                 Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteTopPrefix),
                 Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteBottomPrefix)
             };
+            bool[] checkResult = [view.TopUVDecision == "PASS", view.BottomUVDecision == "PASS", view.TopWhiteDecision == "PASS", view.BottomWhiteDecision == "PASS"];
             for (int i = 0; i < paths.Length; i++)
             {
+                if (checkResult[i])
+                {
+                    mdl[i] = new List<ProcessRecordModel>();
+                    continue;
+                }
                 await Task.Delay(2000);
                 var files = await lib.GetFiles(paths[i]);
                 if (files is null || files.Length < 1)
@@ -484,8 +501,19 @@ namespace FVMI_INSPECTION.Presenter
 
         public async Task CheckReset()
         {
-            var rst = await process.ReadCommand("MR010");
-            view.AllowReset = rst == "1";
+            var rst = await process.ReadCommand("MR2000");
+            bool valreset = rst == "1";
+
+            if (!view.AllowReset && valreset)
+            {
+                view.AllowReset = valreset;
+                view.EmergencyActive = true;
+                view.StopTimer();
+                cTokenSource.Cancel();
+                
+                cMonitorTokenSource.Cancel();
+                eventUpdate("Emergency Active");
+            }
         }
     }
 }

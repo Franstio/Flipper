@@ -1227,7 +1227,7 @@ namespace FVMI_INSPECTION.Controls
             // 
             // resetCheckTimer
             // 
-            resetCheckTimer.Interval = 2000;
+            resetCheckTimer.Interval = 1000;
             resetCheckTimer.Tick += resetCheckTimer_Tick;
             // 
             // DashboardControl

@@ -24,6 +24,7 @@ namespace FVMI_INSPECTION.Controls
 {
     public partial class DashboardControl : UserControl, DashboardMVP.IView
     {
+        public Task? tReset { get; set; } = null;
         public string modelName { get; set; }
         private DateTime startTime;
         private DashboardPresenter presenter;
@@ -31,7 +32,14 @@ namespace FVMI_INSPECTION.Controls
         private ModelRepository repo = new ModelRepository();
         private ProcessResultModel[] data = new ProcessResultModel[0];
         private CountViewModel _cvm = new CountViewModel();
+        private CancellationTokenSource resetCheckToken = new CancellationTokenSource();
         private bool autoSave = true;
+        private bool _emergencyActive { get; set; }
+        public bool EmergencyActive { get => _emergencyActive;
+            set {
+                _emergencyActive = value;
+            }
+        }
         public bool AllowReset
         {
             get => button1.Enabled; set
@@ -252,6 +260,7 @@ namespace FVMI_INSPECTION.Controls
                 textBox1.Enabled = true;
 
             });
+//           tReset = Task.Run(CheckResetTask);
         }
         private async void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -272,7 +281,6 @@ namespace FVMI_INSPECTION.Controls
             TopWhiteDecision = "";
             BottomUVDecision = "";
             BottomWhiteDecision = "";
-
             processTimeLabel.Invoke(new Action(() => processTimeLabel.Text = "00:00:00"));
             await Task.Run(async delegate
             {
@@ -281,7 +289,9 @@ namespace FVMI_INSPECTION.Controls
                 //              await dashboardProcess.RunProcess(FVMITCPProcess.DashboardProcessType.Bottom);
                 //await ReadCsv();
                 data = await presenter.RunProcess();
-                if (data.Length < 1)
+                if (EmergencyActive)
+                    return;
+                if (data.Length < 1 )
                 {
                     autoSave = true;
                     Invoke(delegate
@@ -294,13 +304,29 @@ namespace FVMI_INSPECTION.Controls
                     records = new List<RecordModel>();
                     return;
                 }
-                records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
-                records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
-                records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
-                records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
-                autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
-
-                Invoke(delegate
+                    records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
+                    records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
+                    records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
+                    records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
+                    autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
+                if (!EmergencyActive)
+                    EnableControls();
+            });
+        }
+        public void EnableControls()
+        {
+            Invoke(delegate
+            {
+                if (AllowReset)
+                {
+                    textBox1.Enabled = true;
+                    textBox1.Text = "";
+                    processTimer.Stop();
+                    processTimer.Enabled = false;
+                    button2.Enabled = false;
+                    button2.BackColor = Color.Gray;
+                }
+                else
                 {
                     textBox1.Enabled = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
                     textBox1.Text = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? textBox1.Text : string.Empty;
@@ -308,11 +334,26 @@ namespace FVMI_INSPECTION.Controls
                     processTimer.Enabled = false;
                     button2.Enabled = !autoSave;
                     button2.BackColor = autoSave ? Color.Gray : Color.Yellow;
-                    scanLabel.Text = "-";
-                });
-            }).ConfigureAwait(false);
+                }
+                scanLabel.Text = "-";
+            });
         }
-
+        public void ResetControls()
+        {
+            Invoke(delegate
+            {
+                textBox1.Enabled = true;
+                textBox1.Text = "";
+                processTimer.Stop();
+                processTimer.Enabled = false;
+                processTimeLabel.Text = "00:00:00";
+                button2.Enabled = false;
+                scanLabel.Text = "-";
+                button2.BackColor = Color.Gray;
+                button1.Enabled = false;
+                button1.BackColor = Color.Gray;
+            });
+        }
         private void processTimer_Tick(object sender, EventArgs e)
         {
 
@@ -437,17 +478,24 @@ namespace FVMI_INSPECTION.Controls
 
         private void DashboardControl_Leave(object sender, EventArgs e)
         {
-//            if (records.Count > 0)
-//                await presenter.WriteLog(records);
+            //            if (records.Count > 0)
+            //                await presenter.WriteLog(records);
+            try
+            {
+                resetCheckToken.Cancel();
+            }
+            catch
+            {
+
+            }
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
             button1.Invoke(delegate { button1.Enabled = false; });
-
+            resetCheckToken.Cancel();
             await presenter.ResetProcess();
-
-            button1.Invoke(delegate { button1.Enabled = true; });
+//            tReset = Task.Run(CheckResetTask);
         }
 
         private async void button2_Click(object sender, EventArgs e)
@@ -470,12 +518,22 @@ namespace FVMI_INSPECTION.Controls
                 MessageBox.Show("Fail to write log", "Log Write");
             }
         }
-
-        private async void resetCheckTimer_Tick(object sender, EventArgs e)
+        public async Task CheckResetTask()
         {
-            if (presenter is null)
-                return;
-            await presenter.CheckReset();
+            resetCheckToken = new CancellationTokenSource();
+            while (!resetCheckToken.IsCancellationRequested)
+            {
+                if (presenter is not null)
+                {
+                    await presenter.CheckReset();
+                    await Task.Delay(1000);
+
+                }
+            }
+            resetCheckToken.Dispose();
+        }
+        private  void resetCheckTimer_Tick(object sender, EventArgs e)
+        {
         }
 
         public void StartTimer()

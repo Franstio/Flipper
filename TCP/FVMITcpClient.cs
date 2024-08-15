@@ -88,9 +88,11 @@ namespace FVMI_INSPECTION.TCP
                 try
                 {
                     Debug.WriteLineIf(log, $"Writing {cmd} Command, Count: {tryCount + 1}");
+                    await client.GetStream().FlushAsync();
                     await client.GetStream().WriteAsync(buffer, 0, buffer.Length);
                     await client.GetStream().FlushAsync();
                     result = await GetMessage(cmd);
+                    await client.GetStream().FlushAsync();
                 }
                 catch (Exception ex)
                 {
