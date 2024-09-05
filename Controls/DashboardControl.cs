@@ -258,7 +258,7 @@ namespace FVMI_INSPECTION.Controls
             textBox1.Invoke(delegate
             {
                 textBox1.Enabled = true;
-
+                textBox1.Focus();
             });
 //           tReset = Task.Run(CheckResetTask);
         }
@@ -272,8 +272,8 @@ namespace FVMI_INSPECTION.Controls
                 MessageBox.Show($"Serial Number {SerialNumber} already used for {modelName}");
                 return;
             }*/
-            if (records.Count > 0 && autoSave)
-                await presenter.WriteLog(records);
+//            if (records.Count > 0 && autoSave)
+  //              await presenter.WriteLog(records);
             scanLabel.Text = textBox1.Text;
             textBox1.Enabled = false;
             button2.Enabled = false;
@@ -309,6 +309,8 @@ namespace FVMI_INSPECTION.Controls
                     records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
                     records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
                     autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
+                if (autoSave)
+                    await presenter.WriteLog(records);
                 if (!EmergencyActive)
                     EnableControls();
             });
@@ -321,6 +323,7 @@ namespace FVMI_INSPECTION.Controls
                 {
                     textBox1.Enabled = true;
                     textBox1.Text = "";
+                    textBox1.Focus();
                     processTimer.Stop();
                     processTimer.Enabled = false;
                     button2.Enabled = false;
