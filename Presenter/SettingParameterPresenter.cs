@@ -51,6 +51,7 @@ namespace FVMI_INSPECTION.Presenter
                 _view.BottomWhiteImage = getImage(FVMI_ImageType.BottomWhite) is not null ? _lib.ReadImage(getImage(FVMI_ImageType.BottomWhite)!, true) ?? _view.BottomWhiteImage : _view.BottomWhiteImage;
                 _view.CameraPoint = mdl.CameraPoint;
             }
+            _view.SetUVStatus(mdl.isUV);
             return new SettingParameterPresenter(mdl, _view, process, _lib, _repo);
         }
 
@@ -58,6 +59,16 @@ namespace FVMI_INSPECTION.Presenter
         {
 
             model.CameraPoint = view.CameraPoint;
+            if (isNew)
+                await repo.InsertModel(model);
+            else
+                await repo.UpdateModel(model, model.Model);
+            await LoadCurrentModel();
+            await process.SetupCamPoint();
+        }
+        public async Task SetUV(bool val)
+        {
+            model.isUV = val;
             if (isNew)
                 await repo.InsertModel(model);
             else

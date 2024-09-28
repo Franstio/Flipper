@@ -20,7 +20,7 @@ namespace FVMI_INSPECTION
 
         private void newModelParameterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputModalForm frm = new InputModalForm("Confirm Password", "Password",'*');
+            InputModalForm frm = new InputModalForm("Confirm Password", "Password", '*');
             var resDialog = frm.ShowDialog();
             if (resDialog == DialogResult.OK)
             {
@@ -32,7 +32,7 @@ namespace FVMI_INSPECTION
             }
             else
                 return;
-            InputModalForm form = new InputModalForm("New Model","Insert New Model Name");
+            InputModalForm form = new InputModalForm("New Model", "Insert New Model Name");
             var res = form.ShowDialog();
             if (res == DialogResult.OK)
             {
@@ -47,7 +47,7 @@ namespace FVMI_INSPECTION
         {
 
             var data = await repo.GetModel();
-            SelectModalForm form = new SelectModalForm("Run Model","Select Model", data.Select(x => x.Model).ToList());
+            SelectModalForm form = new SelectModalForm("Run Model", "Select Model", data.Select(x => x.Model).ToList());
             var res = form.ShowDialog();
             if (res == DialogResult.OK)
             {
@@ -101,6 +101,12 @@ namespace FVMI_INSPECTION
         private void deleteProgramToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteProgramForm frm = new DeleteProgramForm();
+            frm.ShowDialog(this);
+        }
+
+        private void manageReasonNGToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListReasonsForm frm = new ListReasonsForm();
             frm.ShowDialog(this);
         }
     }

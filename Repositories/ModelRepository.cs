@@ -36,7 +36,7 @@ namespace FVMI_INSPECTION.Repositories
             List<MasterModel>? result = null;
             using (var _con = await GetConn())
             {
-                string Query = $"Select t1.Model,t1.CameraPoint,t2.Model,t2.Image,t2.Type,t2.CameraExecution,t2.Area From {MasterModelName} t1 left join {DetailModelName} t2 on t1.Model=t2.Model Where t1.Model=@ModelName";
+                string Query = $"Select t1.Model,t1.isUV,t1.CameraPoint,t2.Model,t2.Image,t2.Type,t2.CameraExecution,t2.Area From {MasterModelName} t1 left join {DetailModelName} t2 on t1.Model=t2.Model Where t1.Model=@ModelName";
                 result = (await _con.QueryAsync<MasterModel, DetailModel, MasterModel>(Query, (masterModel, detailModel) =>
                 {
                     if (detailModel is not null)
@@ -50,6 +50,7 @@ namespace FVMI_INSPECTION.Repositories
                 result = result.GroupBy(x => x.Model).Select(g => new MasterModel()
                 {
                     Model = g.First().Model,
+                    isUV = g.First().isUV,
                     CameraPoint = g.First().CameraPoint,
                     Details = g.Select(x => x.Details).SelectMany(z => z).ToList()
                 }).ToList();
@@ -94,7 +95,7 @@ namespace FVMI_INSPECTION.Repositories
             List<MasterModel> result = new List<MasterModel>();
             using (var _con = await GetConn())
             {
-                string Query = $"Select t1.Model,t1.CameraPoint From {MasterModelName} t1  ";
+                string Query = $"Select t1.Model,t1.CameraPoint,t1.isUV From {MasterModelName} t1  ";
                 result = (await _con.QueryAsync<MasterModel>(Query
                 )).ToList();
             }
@@ -105,7 +106,7 @@ namespace FVMI_INSPECTION.Repositories
         {
             using (var _con = await GetConn())
             {
-                string Query = $"Insert Into {MasterModelName}(Model,CameraPoint) Values(@Model,@CameraPoint);";
+                string Query = $"Insert Into {MasterModelName}(Model,CameraPoint,isUV) Values(@Model,@CameraPoint,@isUV);";
                 await _con.ExecuteAsync(Query, model);
                 foreach (var detail in model.Details)
                     await InsertModel(detail);
@@ -124,8 +125,8 @@ namespace FVMI_INSPECTION.Repositories
         {
             using (var _con = await GetConn())
             {
-                string Query = $"Update {MasterModelName} Set Model=@Model,CameraPoint=@CameraPoint where Model=@oldModelName";
-                await _con.ExecuteAsync(Query,new {Model=model.Model,CameraPoint=model.CameraPoint,oldModelName=oldModelName});
+                string Query = $"Update {MasterModelName} Set Model=@Model,CameraPoint=@CameraPoint,isUV=@isUV where Model=@oldModelName";
+                await _con.ExecuteAsync(Query,new {Model=model.Model,CameraPoint=model.CameraPoint,isUV=model.isUV,oldModelName=oldModelName});
             }
         }
 
@@ -150,7 +151,7 @@ namespace FVMI_INSPECTION.Repositories
             string[] queries = new string[]
                 {
 
-                    "Insert Into tbl_Model(Model,CameraPoint) Select @newModelName,CameraPoint From TBl_Model where model=@oldModelName;",
+                    "Insert Into tbl_Model(Model,CameraPoint,isUV) Select @newModelName,CameraPoint,isUV From TBl_Model where model=@oldModelName;",
                     "Insert Into Tbl_ModelDetail(Model,Image,Type,CameraExecution,Area) Select @newModelName,Image,Type,CameraExecution,Area From TBl_ModelDetail where model=@oldModelName",
                 };
             using (var conn = await GetConn())

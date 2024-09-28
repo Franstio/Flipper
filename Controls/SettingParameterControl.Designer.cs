@@ -33,6 +33,10 @@
             button14 = new Button();
             camPoint = new NumericUpDown();
             groupBox2 = new GroupBox();
+            groupBox7 = new GroupBox();
+            tableLayoutPanel9 = new TableLayoutPanel();
+            uvCheckRadio = new RadioButton();
+            nonUvCheckRadio = new RadioButton();
             groupBox6 = new GroupBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             button9 = new Button();
@@ -71,6 +75,8 @@
             groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)camPoint).BeginInit();
             groupBox2.SuspendLayout();
+            groupBox7.SuspendLayout();
+            tableLayoutPanel9.SuspendLayout();
             groupBox6.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -134,6 +140,7 @@
             // 
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             groupBox2.BackColor = Color.FromArgb(28, 154, 220);
+            groupBox2.Controls.Add(groupBox7);
             groupBox2.Controls.Add(groupBox6);
             groupBox2.Controls.Add(groupBox4);
             groupBox2.Controls.Add(groupBox3);
@@ -149,6 +156,62 @@
             groupBox2.TabIndex = 34;
             groupBox2.TabStop = false;
             groupBox2.Text = "Setting Parameter";
+            // 
+            // groupBox7
+            // 
+            groupBox7.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox7.BackColor = Color.FromArgb(28, 154, 220);
+            groupBox7.Controls.Add(tableLayoutPanel9);
+            groupBox7.FlatStyle = FlatStyle.Flat;
+            groupBox7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            groupBox7.Location = new Point(6, 323);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(276, 56);
+            groupBox7.TabIndex = 39;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "UV/Non-UV";
+            // 
+            // tableLayoutPanel9
+            // 
+            tableLayoutPanel9.ColumnCount = 2;
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel9.Controls.Add(uvCheckRadio, 0, 0);
+            tableLayoutPanel9.Controls.Add(nonUvCheckRadio, 1, 0);
+            tableLayoutPanel9.Dock = DockStyle.Fill;
+            tableLayoutPanel9.Location = new Point(3, 19);
+            tableLayoutPanel9.Name = "tableLayoutPanel9";
+            tableLayoutPanel9.Padding = new Padding(3);
+            tableLayoutPanel9.RowCount = 1;
+            tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel9.Size = new Size(270, 34);
+            tableLayoutPanel9.TabIndex = 0;
+            // 
+            // uvCheckRadio
+            // 
+            uvCheckRadio.AutoSize = true;
+            uvCheckRadio.Checked = true;
+            uvCheckRadio.Location = new Point(6, 6);
+            uvCheckRadio.Name = "uvCheckRadio";
+            uvCheckRadio.Size = new Size(42, 19);
+            uvCheckRadio.TabIndex = 0;
+            uvCheckRadio.TabStop = true;
+            uvCheckRadio.Tag = "1";
+            uvCheckRadio.Text = "UV";
+            uvCheckRadio.UseVisualStyleBackColor = true;
+            uvCheckRadio.Click += setUV;
+            // 
+            // nonUvCheckRadio
+            // 
+            nonUvCheckRadio.AutoSize = true;
+            nonUvCheckRadio.Location = new Point(138, 6);
+            nonUvCheckRadio.Name = "nonUvCheckRadio";
+            nonUvCheckRadio.Size = new Size(70, 19);
+            nonUvCheckRadio.TabIndex = 1;
+            nonUvCheckRadio.Tag = "0";
+            nonUvCheckRadio.Text = "Non-UV";
+            nonUvCheckRadio.UseVisualStyleBackColor = true;
+            nonUvCheckRadio.Click += setUV;
             // 
             // groupBox6
             // 
@@ -403,47 +466,75 @@
             // 
             // pictureBox2
             // 
+            pictureBox2.BackgroundColor = Color.White;
             pictureBox2.BorderStyle = BorderStyle.FixedSingle;
             pictureBox2.Dock = DockStyle.Fill;
+            pictureBox2.isActive = false;
+            pictureBox2.isHovering = false;
             pictureBox2.Location = new Point(345, 62);
+            pictureBox2.MovPos = new Point(0, 0);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(335, 223);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.StartPos = new Point(0, 0);
             pictureBox2.TabIndex = 38;
             pictureBox2.TabStop = false;
+            pictureBox2.ZoomIncrement = 0.1F;
+            pictureBox2.ZoomValue = 1F;
             // 
             // pictureBox1
             // 
+            pictureBox1.BackgroundColor = Color.White;
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.isActive = false;
+            pictureBox1.isHovering = false;
             pictureBox1.Location = new Point(4, 62);
+            pictureBox1.MovPos = new Point(0, 0);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(334, 223);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.StartPos = new Point(0, 0);
             pictureBox1.TabIndex = 37;
             pictureBox1.TabStop = false;
+            pictureBox1.ZoomIncrement = 0.1F;
+            pictureBox1.ZoomValue = 1F;
             // 
             // pictureBox3
             // 
+            pictureBox3.BackgroundColor = Color.White;
             pictureBox3.BorderStyle = BorderStyle.FixedSingle;
             pictureBox3.Dock = DockStyle.Fill;
+            pictureBox3.isActive = false;
+            pictureBox3.isHovering = false;
             pictureBox3.Location = new Point(4, 350);
+            pictureBox3.MovPos = new Point(0, 0);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(334, 225);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox3.StartPos = new Point(0, 0);
             pictureBox3.TabIndex = 43;
             pictureBox3.TabStop = false;
+            pictureBox3.ZoomIncrement = 0.1F;
+            pictureBox3.ZoomValue = 1F;
             // 
             // pictureBox4
             // 
+            pictureBox4.BackgroundColor = Color.White;
             pictureBox4.BorderStyle = BorderStyle.FixedSingle;
             pictureBox4.Dock = DockStyle.Fill;
+            pictureBox4.isActive = false;
+            pictureBox4.isHovering = false;
             pictureBox4.Location = new Point(345, 350);
+            pictureBox4.MovPos = new Point(0, 0);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(335, 225);
             pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox4.StartPos = new Point(0, 0);
             pictureBox4.TabIndex = 44;
             pictureBox4.TabStop = false;
+            pictureBox4.ZoomIncrement = 0.1F;
+            pictureBox4.ZoomValue = 1F;
             // 
             // tableLayoutPanel5
             // 
@@ -617,6 +708,9 @@
             groupBox5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)camPoint).EndInit();
             groupBox2.ResumeLayout(false);
+            groupBox7.ResumeLayout(false);
+            tableLayoutPanel9.ResumeLayout(false);
+            tableLayoutPanel9.PerformLayout();
             groupBox6.ResumeLayout(false);
             tableLayoutPanel4.ResumeLayout(false);
             groupBox4.ResumeLayout(false);
@@ -686,5 +780,9 @@
         private PictureBox pictureBox8;
         private TableLayoutPanel tableLayoutPanel7;
         private PictureBox pictureBox7;
+        private GroupBox groupBox7;
+        private TableLayoutPanel tableLayoutPanel9;
+        private RadioButton uvCheckRadio;
+        private RadioButton nonUvCheckRadio;
     }
 }

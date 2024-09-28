@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            Models.ViewData.CountViewModel countViewModel1 = new Models.ViewData.CountViewModel();
             menuStrip1 = new MenuStrip();
             optionToolStripMenuItem = new ToolStripMenuItem();
             changeModelToolStripMenuItem = new ToolStripMenuItem();
@@ -41,9 +39,8 @@
             configurationToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
-            dashboardControl1 = new Controls.DashboardControl();
+            manageReasonNGToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
-            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -75,7 +72,7 @@
             // 
             // settingParameterToolStripMenuItem
             // 
-            settingParameterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newModelParameterToolStripMenuItem, modifyParameterToolStripMenuItem, copyProgramToolStripMenuItem, deleteProgramToolStripMenuItem });
+            settingParameterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newModelParameterToolStripMenuItem, modifyParameterToolStripMenuItem, copyProgramToolStripMenuItem, deleteProgramToolStripMenuItem, manageReasonNGToolStripMenuItem });
             settingParameterToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             settingParameterToolStripMenuItem.Name = "settingParameterToolStripMenuItem";
             settingParameterToolStripMenuItem.Size = new Size(180, 22);
@@ -128,35 +125,18 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(dashboardControl1);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 24);
             panel1.Name = "panel1";
             panel1.Size = new Size(800, 426);
             panel1.TabIndex = 2;
             // 
-            // dashboardControl1
+            // manageReasonNGToolStripMenuItem
             // 
-            dashboardControl1.topWhiteImage = null;
-            dashboardControl1.BottomUVDecision = "";
-            dashboardControl1.bottomWhiteImage = null;
-            countViewModel1.Count = 0;
-            countViewModel1.Fail = 0;
-            countViewModel1.Pass = 0;
-            countViewModel1.Yield = new decimal(new int[] { 0, 0, 0, 0 });
-            dashboardControl1.countViewModel = countViewModel1;
-            dashboardControl1.Dock = DockStyle.Fill;
-            dashboardControl1.FinalJudge = "";
-            dashboardControl1.Location = new Point(0, 0);
-            dashboardControl1.Margin = new Padding(3, 2, 3, 2);
-            dashboardControl1.Name = "dashboardControl1";
-            dashboardControl1.SerialNumber = "";
-            dashboardControl1.Size = new Size(800, 426);
-            dashboardControl1.StatusRun = "log1123445.txt";
-            dashboardControl1.TabIndex = 0;
-            dashboardControl1.topUVImage = null;
-            dashboardControl1.TopUVDecision = "";
-            dashboardControl1.bottomUVImage = null;
+            manageReasonNGToolStripMenuItem.Name = "manageReasonNGToolStripMenuItem";
+            manageReasonNGToolStripMenuItem.Size = new Size(192, 22);
+            manageReasonNGToolStripMenuItem.Text = "Manage Reason NG";
+            manageReasonNGToolStripMenuItem.Click += manageReasonNGToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -169,7 +149,6 @@
             Text = "Form1";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -188,5 +167,6 @@
         private Controls.DashboardControl dashboardControl1;
         private ToolStripMenuItem copyProgramToolStripMenuItem;
         private ToolStripMenuItem deleteProgramToolStripMenuItem;
+        private ToolStripMenuItem manageReasonNGToolStripMenuItem;
     }
 }

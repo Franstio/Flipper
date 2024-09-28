@@ -10,6 +10,7 @@ namespace FVMI_INSPECTION.Interfaces
     {
         public interface IView
         {
+            void SetUVStatus(bool status);
             public string ModelName { get; set; } 
             public int CameraPoint { get; set; }
             public int TopCamExecution { get; set; }
@@ -25,6 +26,7 @@ namespace FVMI_INSPECTION.Interfaces
         }
         public interface IPresenter
         {
+            Task SetUV(bool val);
             public  Task SetCamPoint();
             public Task SetTopCamExec();
             public Task SetBottomCamExec();

@@ -21,7 +21,7 @@ namespace FVMI_INSPECTION.TCP
         private int GeneralDelay = 0;
         public bool isRunning
         {
-            get => client.Client.Connected;
+            get => client.Connected;
         }
         public FVMITcpClient()
         {
@@ -39,6 +39,10 @@ namespace FVMI_INSPECTION.TCP
         {
             _address = IPAddress.Parse(ipAddress);
         }
+        public void setLog(bool val)
+        {
+            log = val;
+        }
         public void SetPort(int port)
         {
             _port = port;
@@ -46,6 +50,11 @@ namespace FVMI_INSPECTION.TCP
         public async Task Connect()
         {
             client = new TcpClient();
+            client.NoDelay = true;
+            client.ReceiveTimeout = 500;
+            client.SendTimeout = 500;
+            client.ReceiveBufferSize = 64;
+            client.SendBufferSize = 1024;
             try
             {
                 await client.ConnectAsync(_address, _port);
@@ -67,9 +76,12 @@ namespace FVMI_INSPECTION.TCP
                 return string.Empty;
             }
 
-            byte[] buffer = new byte[512];
+            byte[] buffer = new byte[64];
             var stream = client.GetStream();
-            await stream.ReadAsync(buffer, 0, buffer.Length);
+            var token = new CancellationTokenSource();
+            _ = Task.Delay(300).ContinueWith((a) => token.Cancel());
+            await stream.ReadAsync(buffer, 0, buffer.Length,token.Token);
+
             string msg = Encoding.ASCII.GetString(buffer);
             Trace.WriteLineIf(log, $"Result From {logCommand}: {msg}");
             return msg.Trim();
@@ -84,19 +96,24 @@ namespace FVMI_INSPECTION.TCP
             int tryCount = 0;
             do
             {
+
                 tryCount = tryCount + 1;
                 try
                 {
                     Debug.WriteLineIf(log, $"Writing {cmd} Command, Count: {tryCount + 1}");
-                    await client.GetStream().FlushAsync();
-                    await client.GetStream().WriteAsync(buffer, 0, buffer.Length);
-                    await client.GetStream().FlushAsync();
+                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    _  = Task.Delay(300).ContinueWith((a)=>cancellationTokenSource.Cancel());
+                    await client.GetStream().WriteAsync(buffer, 0, buffer.Length,cancellationTokenSource.Token);
                     result = await GetMessage(cmd);
-                    await client.GetStream().FlushAsync();
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLineIf(log, $"Error Writing {cmd} Command, Count: {tryCount + 1} : {ex.Message} {ex.InnerException?.Message}");
+                }
+                finally
+                {
+                    if (client.Connected && client.Client.Connected)
+                        await client.GetStream().FlushAsync();
                 }
             }
             while ((result.ToUpper().Contains("E1") || string.IsNullOrEmpty(result)) && tryCount < 10);

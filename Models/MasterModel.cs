@@ -12,6 +12,7 @@ namespace FVMI_INSPECTION.Models
         [ExplicitKey]
         public string Model { get; set; } = string.Empty;
         public int CameraPoint { get; set; } = 0;
+        public bool isUV { get; set; } = true;
         public ICollection<DetailModel> Details { get; set; }  =new List<DetailModel>();
         public MasterModel()
         {
@@ -21,6 +22,7 @@ namespace FVMI_INSPECTION.Models
         {
             Model = model.Model;
             CameraPoint = model.CameraPoint;
+            isUV = model.isUV;
         }
     }
 }

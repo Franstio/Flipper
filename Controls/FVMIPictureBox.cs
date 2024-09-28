@@ -17,10 +17,21 @@ namespace FVMI_INSPECTION.Controls
         public float ZoomIncrement { get; set; } = 0.1F;
         public float ZoomValue { get; set; } = 1F;
         public Color BackgroundColor { get; set; } = Color.White;
+        private bool _isUV = true;
+        public bool AllowZoom { get; set; } = true;
+        public bool AllowPan { get; set; } = true;
+        public bool IsUV { get => _isUV;
+            set 
+            { 
+                _isUV = value;
+                if (IsHandleCreated)
+                    Invalidate();
+            } 
+        } 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (isActive)
+            if (isActive && (AllowPan || AllowZoom))
             {
                 MovPos = new Point(e.Location.X - StartPos.X, e.Location.Y - StartPos.Y);
                 Invalidate();
@@ -29,15 +40,28 @@ namespace FVMI_INSPECTION.Controls
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            if (!IsUV)
+            {
+                e.Graphics.Clear(BackgroundColor);
+                using (Font font = new Font("Segoe UI", 48))
+                {
+                    StringFormat format = new StringFormat();
+                    format.LineAlignment = StringAlignment.Center;
+                    format.Alignment = StringAlignment.Center;
+                    e.Graphics.DrawString("N\\A", font, Brushes.Red,ClientRectangle,format );
+                }
+                return;
+            }
             if (Image is null || Height <1 || Width < 1)
                 return;
-            if (isActive || isHovering)
+            if ((isActive || isHovering) && (AllowZoom || AllowPan))
             {
                 var image = new Bitmap(Image, GetDisplayedImageSize());
-                e.Graphics.Clear(Color.White);
-                if (ZoomValue != 0.00F && isHovering)
+                e.Graphics.Clear(BackgroundColor);
+                if (ZoomValue != 0.00F && (isHovering && AllowZoom) )
                     e.Graphics.ScaleTransform(ZoomValue, ZoomValue);
-                e.Graphics.DrawImage(image, MovPos);
+                if (AllowPan)
+                    e.Graphics.DrawImage(image, MovPos);
             }
         }
         private Size GetDisplayedImageSize()
@@ -62,17 +86,20 @@ namespace FVMI_INSPECTION.Controls
         }
         protected override void OnMouseHover(EventArgs e)
         {
+
             base.OnMouseHover(e);
-            isHovering = true;
+            isHovering = (AllowZoom || AllowZoom) && true;
         }
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            isHovering = false;
+            isHovering =  false;
         }
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
+            if (!AllowPan && !AllowZoom)
+                return;
             isActive = true;
             StartPos = new Point(e.Location.X - MovPos.X,
                             e.Location.Y - MovPos.Y);

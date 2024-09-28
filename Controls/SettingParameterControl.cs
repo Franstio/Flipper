@@ -53,12 +53,13 @@ namespace FVMI_INSPECTION.Controls
         public Button[] CylinderButton { get; set; } = new Button[2];
         public SettingParameterMVP.IPresenter presenter;
         private FVMIPictureBox[] boxes;
+        private bool _uvStatus = false;
         public SettingParameterControl(string ModelName)
         {
 
             InitializeComponent();
-            UVButton = [button3,button6];
-            CylinderButton = [button8,button7];
+            UVButton = [button3, button6];
+            CylinderButton = [button8, button7];
             this._ModelName = ModelName;
             boxes = [
                 pictureBox1,
@@ -66,6 +67,17 @@ namespace FVMI_INSPECTION.Controls
                 pictureBox3,
                 pictureBox4,
             ];
+        }
+        public void SetUVStatus(bool status)
+        {
+            this.Invoke(delegate
+            {
+                if (uvCheckRadio.IsHandleCreated && nonUvCheckRadio.IsHandleCreated)
+                {
+                    uvCheckRadio.Checked = status;
+                    nonUvCheckRadio.Checked = !status;
+                }
+            });
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -148,12 +160,12 @@ namespace FVMI_INSPECTION.Controls
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            var hoverBox= boxes.Where(x=>x.isHovering).FirstOrDefault();
+            var hoverBox = boxes.Where(x => x.isHovering).FirstOrDefault();
             if (hoverBox is null)
                 return;
             if (e.Delta == 0)
                 return;
-            hoverBox.ZoomValue = Math.Max(hoverBox.ZoomValue + (e.Delta> 0 ? hoverBox.ZoomIncrement : -hoverBox.ZoomIncrement), hoverBox.ZoomIncrement);
+            hoverBox.ZoomValue = Math.Max(hoverBox.ZoomValue + (e.Delta > 0 ? hoverBox.ZoomIncrement : -hoverBox.ZoomIncrement), hoverBox.ZoomIncrement);
             hoverBox.Invalidate();
         }
 
@@ -177,6 +189,12 @@ namespace FVMI_INSPECTION.Controls
                 }
 
             }));
+        }
+
+        private void setUV(object sender, EventArgs e)
+        {
+            RadioButton btn = (RadioButton)sender;
+            presenter.SetUV(btn.Tag!.ToString() == "1");
         }
     }
 }

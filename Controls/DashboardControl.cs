@@ -25,6 +25,27 @@ namespace FVMI_INSPECTION.Controls
     public partial class DashboardControl : UserControl, DashboardMVP.IView
     {
         public Task? tReset { get; set; } = null;
+        private bool _uvStatus = false;
+        public bool UVStatus
+        {
+            get => _uvStatus; set
+            {
+                if (uvLabel.IsHandleCreated)
+                    uvLabel.Invoke(delegate
+                    {
+                        _uvStatus = value;
+                        uvLabel.Text = value ? "UV" : "Non-UV";
+                        inspectionListGridBottomUVView.IsUV = value;
+                    });
+                Invoke(delegate
+                {
+                    topUV.IsUV = value;
+                    bottomUV.IsUV = value;
+                    inspectionListGridBottomUVView.IsUV = value;
+                    inspectionListGridTopUVView.IsUV = value;
+                });
+            }
+        }
         public string modelName { get; set; }
         private DateTime startTime;
         private DashboardPresenter presenter;
@@ -33,10 +54,15 @@ namespace FVMI_INSPECTION.Controls
         private ProcessResultModel[] data = new ProcessResultModel[0];
         private CountViewModel _cvm = new CountViewModel();
         private CancellationTokenSource resetCheckToken = new CancellationTokenSource();
+        public string ProcessTimeRun { get => processTimeLabel.Text; }
+
         private bool autoSave = true;
         private bool _emergencyActive { get; set; }
-        public bool EmergencyActive { get => _emergencyActive;
-            set {
+        public bool EmergencyActive
+        {
+            get => _emergencyActive;
+            set
+            {
                 _emergencyActive = value;
             }
         }
@@ -157,6 +183,7 @@ namespace FVMI_INSPECTION.Controls
                 inspectionListGridTopUVView.Invoke(delegate
                 {
                     inspectionListGridTopUVView.Rows.Clear();
+
                     for (int i = 0; i < value.Count; i++)
                         inspectionListGridTopUVView.Rows.Add(new object[] { value[i].Area, value[i].Judgement });
                     inspectionListGridTopUVView.Refresh();
@@ -234,6 +261,10 @@ namespace FVMI_INSPECTION.Controls
         {
             InitializeComponent();
             textBox1.Enabled = false;
+            /*topUV.IsUV = false;
+            bottomUV.IsUV = false;
+            inspectionListGridBottomUVView.IsUV = false;
+            inspectionListGridTopUVView.IsUV = false;   */
         }
         public DashboardControl(string _model)
         {
@@ -241,6 +272,7 @@ namespace FVMI_INSPECTION.Controls
             modelName = _model;
             runningModel.Text = modelName;
             textBox1.Enabled = false;
+
         }
         protected override void OnControlRemoved(ControlEventArgs e)
         {
@@ -260,7 +292,7 @@ namespace FVMI_INSPECTION.Controls
                 textBox1.Enabled = true;
                 textBox1.Focus();
             });
-//           tReset = Task.Run(CheckResetTask);
+            tReset = Task.Run(CheckResetTask);
         }
         private async void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -272,8 +304,8 @@ namespace FVMI_INSPECTION.Controls
                 MessageBox.Show($"Serial Number {SerialNumber} already used for {modelName}");
                 return;
             }*/
-//            if (records.Count > 0 && autoSave)
-  //              await presenter.WriteLog(records);
+            //            if (records.Count > 0 && autoSave)
+            //              await presenter.WriteLog(records);
             scanLabel.Text = textBox1.Text;
             textBox1.Enabled = false;
             button2.Enabled = false;
@@ -291,7 +323,7 @@ namespace FVMI_INSPECTION.Controls
                 data = await presenter.RunProcess();
                 if (EmergencyActive)
                     return;
-                if (data.Length < 1 )
+                if (data.Length < 1)
                 {
                     autoSave = true;
                     Invoke(delegate
@@ -304,13 +336,16 @@ namespace FVMI_INSPECTION.Controls
                     records = new List<RecordModel>();
                     return;
                 }
-                    records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
-                    records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
-                    records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
-                    records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
-                    autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
+                records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
+                records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
+                records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
+                records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
+                autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
                 if (autoSave)
-                    await presenter.WriteLog(records);
+                {
+                    await presenter.WriteLog(records, textBox1.Text);
+                    textBox1.Invoke(new(() => textBox1.Clear()));
+                }
                 if (!EmergencyActive)
                     EnableControls();
             });
@@ -332,12 +367,14 @@ namespace FVMI_INSPECTION.Controls
                 else
                 {
                     textBox1.Enabled = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
-                    textBox1.Text = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? textBox1.Text : string.Empty;
+                    textBox1.Text = records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? textBox1.Text : string.Empty;
                     processTimer.Stop();
                     processTimer.Enabled = false;
                     button2.Enabled = !autoSave;
                     button2.BackColor = autoSave ? Color.Gray : Color.Yellow;
                 }
+                if (textBox1.Enabled)
+                    textBox1.Focus();
                 scanLabel.Text = "-";
             });
         }
@@ -495,10 +532,12 @@ namespace FVMI_INSPECTION.Controls
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            button1.Invoke(delegate { button1.Enabled = false; });
-            resetCheckToken.Cancel();
+            if (tReset is not null)
+                await tReset;
+            resetCheckToken = new CancellationTokenSource();
             await presenter.ResetProcess();
-//            tReset = Task.Run(CheckResetTask);
+            tReset = Task.Run(CheckResetTask);
+
         }
 
         private async void button2_Click(object sender, EventArgs e)
@@ -507,12 +546,14 @@ namespace FVMI_INSPECTION.Controls
             if (rst != DialogResult.Yes) return;
             try
             {
-                await presenter.WriteLog(records);
+                await presenter.WriteLog(records, textBox1.Text);
                 Invoke(delegate
                 {
 
                     textBox1.Enabled = true;
                     textBox1.Text = string.Empty;
+                    button2.Enabled = false;
+                    button2.BackColor = Color.Gray;
                 });
                 StatusRun = "Please Scan Code";
             }
@@ -524,18 +565,26 @@ namespace FVMI_INSPECTION.Controls
         public async Task CheckResetTask()
         {
             resetCheckToken = new CancellationTokenSource();
-            while (!resetCheckToken.IsCancellationRequested)
+            try
             {
-                if (presenter is not null)
+                resetCheckToken.Token.ThrowIfCancellationRequested();
+                while (!resetCheckToken.IsCancellationRequested)
                 {
-                    await presenter.CheckReset();
-                    await Task.Delay(1000);
+                    if (presenter is not null)
+                    {
+                        await presenter.CheckReset();
+                        await Task.Delay(1);
 
+                    }
                 }
+                resetCheckToken.Dispose();
             }
-            resetCheckToken.Dispose();
+            catch (OperationCanceledException e) when (e.CancellationToken == resetCheckToken.Token)
+            {
+                return;
+            }
         }
-        private  void resetCheckTimer_Tick(object sender, EventArgs e)
+        private void resetCheckTimer_Tick(object sender, EventArgs e)
         {
         }
 
@@ -557,6 +606,21 @@ namespace FVMI_INSPECTION.Controls
                 processTimer.Stop();
                 processTimer.Enabled = false;
             });
+        }
+
+        public void CancelResetTask()
+        {
+            resetCheckToken.Cancel();
+        }
+
+        private void tableLayoutPanel11_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

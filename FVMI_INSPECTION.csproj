@@ -16,21 +16,13 @@
 
   <ItemGroup>
     <Compile Update="Controls\DashboardControl.cs" />
-    <Compile Update="Controls\SettingParameterControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\SettingParameterControl.cs" />
     <Compile Update="Forms\CopyProgramForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\DeleteProgramForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Forms\InputModalForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Forms\SelectModalForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Forms\DeleteProgramForm.cs" />
+    <Compile Update="Forms\InputModalForm.cs" />
+    <Compile Update="Forms\SelectModalForm.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>

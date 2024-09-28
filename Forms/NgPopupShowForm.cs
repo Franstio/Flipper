@@ -2,6 +2,7 @@
 using FVMI_INSPECTION.Interfaces;
 using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Presenter;
+using FVMI_INSPECTION.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,8 @@ namespace FVMI_INSPECTION.Forms
         private NgPopUpMVP.IPresenter presenter;
         public RecordModel Model { get; set; }
         private FVMIPictureBox[] boxes;
+        private ReasonRepository reasonRepo = new ReasonRepository();
+
         public NgPopupShowForm(RecordModel model)
         {
             InitializeComponent();
@@ -65,15 +68,17 @@ namespace FVMI_INSPECTION.Forms
         private async void UpdateStatus(object sender, EventArgs e) 
         {
             Button btn = (Button)sender;
-            InputTextModalForm frm = new InputTextModalForm("Reason");
-            DialogResult res = frm.ShowDialog();
-            if (res != DialogResult.OK)
+            string result = "PASS";
+            if (btn.Tag!.ToString() != "PASS")
             {
-                Close();
-                return;
+                var reasons = await reasonRepo.GetReason();
+                SelectModalForm frm = new SelectModalForm("Confirm Result", "Reason", reasons.Select(x=>x.Reason).ToList());
+                DialogResult res = frm.ShowDialog();
+                if (res != DialogResult.OK)
+                    return;
+                result = frm.Result;
             }
-
-            Model = await presenter.UpdateResult(btn.Tag!.ToString() == "PASS", frm.Result);
+            Model = await presenter.UpdateResult(btn.Tag!.ToString() == "PASS", result);
             DialogResult = DialogResult.OK;
             Close();
             return;

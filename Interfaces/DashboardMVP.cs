@@ -12,6 +12,8 @@ namespace FVMI_INSPECTION.Interfaces
     {
         public interface IView
         {
+            bool UVStatus { get; set; }
+            string ProcessTimeRun { get; }
             public string modelName { get; set; }
             string SerialNumber { get; set; }
             string StatusRun { get; set; }
@@ -40,12 +42,14 @@ namespace FVMI_INSPECTION.Interfaces
             Task CheckResetTask();
             void ResetControls();
             Task? tReset { get; set; }
+            void CancelResetTask();
         }
         public interface IPresenter
         {
+            Task ToggleUV(bool value);
             Task<ProcessResultModel[]> RunProcess();
             Task<List<ProcessRecordModel>[]?> ReadCsv();
-            Task WriteLog(List<RecordModel> records);
+            Task WriteLog(List<RecordModel> records,string sn);
             List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName,string serial);
             Task ResetProcess();
             Task CheckReset();
