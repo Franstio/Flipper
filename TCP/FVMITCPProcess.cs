@@ -42,8 +42,9 @@ namespace FVMI_INSPECTION.TCP
         }
         public async Task SetupCamPoint()
         {
-            var res1 = await WriteCommand("W0FC", Model.CameraPoint);
-            var res2 = await PushCommand("B040", 10, "1", "0");
+            _ = await WriteCommand("W0FC", Model.CameraPoint);
+
+            _= await PushCommand("MR401", 10, "1", "0");
         }
 
         public async Task<bool> TriggerCam(string passCmd, string ngCmd, bool check = true)
