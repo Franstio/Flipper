@@ -155,5 +155,193 @@ namespace FVMI_INSPECTION.Controls
 
             }));
         }
+<<<<<<< Updated upstream
+=======
+
+        private void ShowNgPopup(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+            DataGridView v = (DataGridView)sender;
+            bool isAnyFail = records.Any(x => x.Judgement != "PASS");
+            var record = records.Where(x => x.Area == v[0, e.RowIndex].Value.ToString() && v.Tag!.ToString() == x.Type).FirstOrDefault();
+            if (record is null)
+            {
+                MessageBox.Show("Data Not Found");
+                return;
+            }
+            var ngForm = new NgPopupShowForm(record);
+            var dialog = ngForm.ShowDialog();
+            if (dialog != DialogResult.OK)
+                return;
+            var index = records.IndexOf(record);
+            records[index] = ngForm.Model;
+            v[1, e.RowIndex].Value = ngForm.Model.Judgement;
+            v[1, e.RowIndex].Style.ForeColor = ngForm.Model.Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
+            string tag = v.Tag!.ToString()!;
+            if (tag.Contains("TopUV"))
+            {
+                var r = TopUVRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = TopUVRecord.IndexOf(r);
+                TopUVRecord[index].Judgement = r.Judgement;
+                TopUVDecision = TopUVRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+            if (tag.Contains("BottomUV"))
+            {
+
+                var r = BottomUVRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = BottomUVRecord.IndexOf(r);
+                BottomUVRecord[index].Judgement = r.Judgement;
+                BottomUVDecision = BottomUVRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+            if (tag.Contains("TopWhite"))
+            {
+                var r = TopWhiteRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = TopWhiteRecord.IndexOf(r);
+                TopWhiteRecord[index].Judgement = r.Judgement;
+                TopWhiteDecision = TopWhiteRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+            if (tag.Contains("BottomWhite"))
+            {
+                var r = BottomWhiteRecord.Where(x => x.Area == record.Area).First();
+                r.Judgement = ngForm.Model.Judgement;
+                index = BottomWhiteRecord.IndexOf(r);
+                BottomWhiteRecord[index].Judgement = r.Judgement;
+                BottomWhiteDecision = BottomWhiteRecord.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL") ? "FAIL" : "PASS";
+            }
+
+            if (records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL"))
+                FinalJudge = "FAIL";
+            else
+                FinalJudge = "PASS";
+            if (!isAnyFail)
+            {
+                if (records.Any(x => x.Judgement != "PASS"))
+                {
+
+                    countViewModel = new CountViewModel()
+                    {
+                        Count = countViewModel.Count,
+                        Fail = countViewModel.Fail + 1,
+                        Pass = countViewModel.Pass - 1,
+                    };
+                }
+            }
+            else
+            {
+                if (!records.Any(x => x.Judgement != "PASS"))
+                {
+                    countViewModel = new CountViewModel()
+                    {
+                        Count = countViewModel.Count,
+                        Fail = countViewModel.Fail - 1,
+                        Pass = countViewModel.Pass + 1,
+                    };
+                }
+            }
+        }
+
+        private void DashboardControl_Leave(object sender, EventArgs e)
+        {
+            //            if (records.Count > 0)
+            //                await presenter.WriteLog(records);
+            try
+            {
+                resetCheckToken.Cancel();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            if (tReset is not null)
+                await tReset;
+            resetCheckToken = new CancellationTokenSource();
+            await presenter.ResetProcess();
+            tReset = Task.Run(CheckResetTask);
+
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            var rst = MessageBox.Show("Confirm for Generate Log?", "Generate Log Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (rst != DialogResult.Yes) return;
+            try
+            {
+                await presenter.WriteLog(records, textBox1.Text);
+                Invoke(delegate
+                {
+
+                    textBox1.Enabled = true;
+                    textBox1.Text = string.Empty;
+                    button2.Enabled = false;
+                    button2.BackColor = Color.Gray;
+                });
+                StatusRun = "Please Scan Code";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fail to write log", "Log Write");
+            }
+        }
+        public async Task CheckResetTask()
+        {
+            resetCheckToken = new CancellationTokenSource();
+            try
+            {
+                resetCheckToken.Token.ThrowIfCancellationRequested();
+                while (!resetCheckToken.IsCancellationRequested)
+                {
+                    if (presenter is not null)
+                    {
+                        await presenter.CheckReset();
+                        await Task.Delay(1);
+
+                    }
+                }
+                resetCheckToken.Dispose();
+            }
+            catch (OperationCanceledException e) when (e.CancellationToken == resetCheckToken.Token)
+            {
+                return;
+            }
+        }
+        private void resetCheckTimer_Tick(object sender, EventArgs e)
+        {
+        }
+
+        public void StartTimer()
+        {
+            Invoke(delegate
+            {
+                startTime = DateTime.Now;
+
+                processTimer.Enabled = true;
+                processTimer.Start();
+            });
+        }
+
+        public void StopTimer()
+        {
+            Invoke(delegate
+            {
+                processTimer.Stop();
+                processTimer.Enabled = false;
+            });
+        }
+
+        public void CancelResetTask()
+        {
+            resetCheckToken.Cancel();
+        }
+
+    
+>>>>>>> Stashed changes
     }
 }

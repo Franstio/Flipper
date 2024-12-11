@@ -49,7 +49,10 @@ namespace FVMI_INSPECTION.Controls
             areaLabel = new Label();
             label4 = new Label();
             groupBox3 = new GroupBox();
+<<<<<<< Updated upstream
             inspectionListGridView = new DataGridView();
+=======
+>>>>>>> Stashed changes
             AREA = new DataGridViewTextBoxColumn();
             JUDGEMENT = new DataGridViewTextBoxColumn();
             groupBox4 = new GroupBox();
@@ -64,6 +67,20 @@ namespace FVMI_INSPECTION.Controls
             groupBox6 = new GroupBox();
             panel1 = new Panel();
             label1 = new Label();
+<<<<<<< Updated upstream
+=======
+            tableLayoutPanel1 = new TableLayoutPanel();
+            groupBox10 = new GroupBox();
+            groupBox2 = new GroupBox();
+            groupBox9 = new GroupBox();
+            dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+            button1 = new Button();
+>>>>>>> Stashed changes
             groupBox7 = new GroupBox();
             campointLabel = new Label();
             pictureBox2 = new PictureBox();
@@ -73,6 +90,13 @@ namespace FVMI_INSPECTION.Controls
             actualPictureBox = new PictureBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel6 = new TableLayoutPanel();
+<<<<<<< Updated upstream
+=======
+            panel7 = new Panel();
+            topUVDecision = new Label();
+            panel9 = new Panel();
+            topWhiteDecision = new Label();
+>>>>>>> Stashed changes
             tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
             tableLayoutPanel7 = new TableLayoutPanel();
@@ -87,13 +111,37 @@ namespace FVMI_INSPECTION.Controls
             label8 = new Label();
             label9 = new Label();
             tableLayoutPanel10 = new TableLayoutPanel();
+<<<<<<< Updated upstream
             pictureBox4 = new PictureBox();
             label11 = new Label();
             label10 = new Label();
             pictureBox1 = new PictureBox();
+=======
+            panel4 = new Panel();
+            bottomWhiteDecision = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            panel5 = new Panel();
+            bottomUVDecision = new Label();
+            panel8 = new Panel();
+            tableLayoutPanel11 = new TableLayoutPanel();
+            panel2 = new Panel();
+            button2 = new Button();
+            tableLayoutPanel13 = new TableLayoutPanel();
+            panel15 = new Panel();
+            panel14 = new Panel();
+            label3 = new Label();
+            panel13 = new Panel();
+            label2 = new Label();
+            panel12 = new Panel();
+            resetCheckTimer = new System.Windows.Forms.Timer(components);
+            groupBox12 = new GroupBox();
+            uvLabel = new Label();
+>>>>>>> Stashed changes
             groupBox1.SuspendLayout();
             panel6.SuspendLayout();
             panel3.SuspendLayout();
+<<<<<<< Updated upstream
             groupBox2.SuspendLayout();
             panel7.SuspendLayout();
             panel5.SuspendLayout();
@@ -104,19 +152,47 @@ namespace FVMI_INSPECTION.Controls
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
             panel1.SuspendLayout();
+=======
+            groupBox4.SuspendLayout();
+            panel10.SuspendLayout();
+            groupBox5.SuspendLayout();
+            panel11.SuspendLayout();
+            groupBox6.SuspendLayout();
+            panel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+>>>>>>> Stashed changes
             groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             tableLayoutPanel2.SuspendLayout();
+<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)parameterPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)actualPictureBox).BeginInit();
+=======
+            panel7.SuspendLayout();
+            panel9.SuspendLayout();
+>>>>>>> Stashed changes
             tableLayoutPanel7.SuspendLayout();
             groupBox8.SuspendLayout();
             tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel9.SuspendLayout();
             tableLayoutPanel10.SuspendLayout();
+<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+=======
+            panel4.SuspendLayout();
+            panel5.SuspendLayout();
+            panel8.SuspendLayout();
+            tableLayoutPanel11.SuspendLayout();
+            panel2.SuspendLayout();
+            tableLayoutPanel13.SuspendLayout();
+            panel15.SuspendLayout();
+            panel14.SuspendLayout();
+            panel13.SuspendLayout();
+            panel12.SuspendLayout();
+            groupBox12.SuspendLayout();
+>>>>>>> Stashed changes
             SuspendLayout();
             // 
             // runningModel
@@ -321,8 +397,12 @@ namespace FVMI_INSPECTION.Controls
             // 
             // groupBox3
             // 
+<<<<<<< Updated upstream
             groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             groupBox3.Controls.Add(inspectionListGridView);
+=======
+            groupBox3.Dock = DockStyle.Fill;
+>>>>>>> Stashed changes
             groupBox3.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             groupBox3.Location = new Point(902, 97);
             groupBox3.Name = "groupBox3";
@@ -332,6 +412,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox3.TabStop = false;
             groupBox3.Text = "Inspection List:";
             // 
+<<<<<<< Updated upstream
             // inspectionListGridView
             // 
             inspectionListGridView.AllowUserToAddRows = false;
@@ -351,6 +432,8 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridView.Size = new Size(301, 509);
             inspectionListGridView.TabIndex = 0;
             // 
+=======
+>>>>>>> Stashed changes
             // AREA
             // 
             AREA.HeaderText = "AREA";
@@ -388,6 +471,7 @@ namespace FVMI_INSPECTION.Controls
             label6.TabIndex = 8;
             label6.Text = "No Log Available";
             label6.TextAlign = ContentAlignment.MiddleLeft;
+            label6.Click += label6_Click;
             // 
             // groupBox5
             // 
@@ -414,6 +498,7 @@ namespace FVMI_INSPECTION.Controls
             statusLabel.TabIndex = 8;
             statusLabel.Text = "log1123445.txt";
             statusLabel.TextAlign = ContentAlignment.MiddleLeft;
+            statusLabel.Click += statusLabel_Click;
             // 
             // timer1
             // 
@@ -494,6 +579,117 @@ namespace FVMI_INSPECTION.Controls
             label1.Text = "FVMI INSPECTION MACHINE";
             label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
+<<<<<<< Updated upstream
+=======
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Controls.Add(groupBox3, 0, 2);
+            tableLayoutPanel1.Controls.Add(groupBox10, 0, 0);
+            tableLayoutPanel1.Controls.Add(groupBox2, 0, 3);
+            tableLayoutPanel1.Controls.Add(groupBox9, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.Padding = new Padding(5);
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(318, 815);
+            tableLayoutPanel1.TabIndex = 25;
+            // 
+            // groupBox10
+            // 
+            groupBox10.Dock = DockStyle.Fill;
+            groupBox10.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            groupBox10.Location = new Point(8, 8);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Padding = new Padding(3, 2, 3, 2);
+            groupBox10.Size = new Size(302, 195);
+            groupBox10.TabIndex = 9;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Bottom White:";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            groupBox2.Location = new Point(8, 611);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(3, 2, 3, 2);
+            groupBox2.Size = new Size(302, 196);
+            groupBox2.TabIndex = 8;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Top White:";
+            // 
+            // groupBox9
+            // 
+            groupBox9.Dock = DockStyle.Fill;
+            groupBox9.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            groupBox9.Location = new Point(8, 209);
+            groupBox9.Name = "groupBox9";
+            groupBox9.Padding = new Padding(3, 2, 3, 2);
+            groupBox9.Size = new Size(302, 195);
+            groupBox9.TabIndex = 5;
+            groupBox9.TabStop = false;
+            groupBox9.Text = "Bottom UV:";
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewTextBoxColumn5.HeaderText = "AREA";
+            dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            dataGridViewTextBoxColumn6.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewTextBoxColumn3.HeaderText = "AREA";
+            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            dataGridViewTextBoxColumn4.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            dataGridViewTextBoxColumn1.HeaderText = "AREA";
+            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            dataGridViewTextBoxColumn2.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // button1
+            // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.BackColor = Color.Gray;
+            button1.Enabled = false;
+            button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            button1.Location = new Point(716, 792);
+            button1.Name = "button1";
+            button1.Size = new Size(315, 38);
+            button1.TabIndex = 6;
+            button1.Text = "Reset";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
+>>>>>>> Stashed changes
             // groupBox7
             // 
             groupBox7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -616,6 +812,55 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel6.Size = new Size(320, 45);
             tableLayoutPanel6.TabIndex = 7;
             // 
+<<<<<<< Updated upstream
+=======
+            // panel7
+            // 
+            panel7.Controls.Add(topUVDecision);
+            panel7.Dock = DockStyle.Fill;
+            panel7.Location = new Point(3, 3);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(333, 278);
+            panel7.TabIndex = 8;
+            // 
+            // topUVDecision
+            // 
+            topUVDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            topUVDecision.BackColor = Color.Transparent;
+            topUVDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            topUVDecision.Location = new Point(184, 3);
+            topUVDecision.Margin = new Padding(0);
+            topUVDecision.Name = "topUVDecision";
+            topUVDecision.RightToLeft = RightToLeft.Yes;
+            topUVDecision.Size = new Size(136, 30);
+            topUVDecision.TabIndex = 5;
+            topUVDecision.Text = "-";
+            topUVDecision.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // panel9
+            // 
+            panel9.Controls.Add(topWhiteDecision);
+            panel9.Dock = DockStyle.Fill;
+            panel9.Location = new Point(342, 3);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(333, 278);
+            panel9.TabIndex = 9;
+            // 
+            // topWhiteDecision
+            // 
+            topWhiteDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            topWhiteDecision.BackColor = Color.Transparent;
+            topWhiteDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            topWhiteDecision.Location = new Point(184, 3);
+            topWhiteDecision.Margin = new Padding(0);
+            topWhiteDecision.Name = "topWhiteDecision";
+            topWhiteDecision.RightToLeft = RightToLeft.Yes;
+            topWhiteDecision.Size = new Size(136, 30);
+            topWhiteDecision.TabIndex = 6;
+            topWhiteDecision.Text = "-";
+            topWhiteDecision.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+>>>>>>> Stashed changes
             // tableLayoutPanel4
             // 
             tableLayoutPanel4.ColumnCount = 2;
@@ -809,6 +1054,7 @@ namespace FVMI_INSPECTION.Controls
             // 
             // pictureBox4
             // 
+<<<<<<< Updated upstream
             pictureBox4.BorderStyle = BorderStyle.FixedSingle;
             pictureBox4.Dock = DockStyle.Fill;
             pictureBox4.Location = new Point(327, 31);
@@ -817,6 +1063,28 @@ namespace FVMI_INSPECTION.Controls
             pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox4.TabIndex = 3;
             pictureBox4.TabStop = false;
+=======
+            panel4.Controls.Add(bottomWhiteDecision);
+            panel4.Dock = DockStyle.Fill;
+            panel4.Location = new Point(3, 40);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(333, 327);
+            panel4.TabIndex = 28;
+            // 
+            // bottomWhiteDecision
+            // 
+            bottomWhiteDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            bottomWhiteDecision.BackColor = Color.Transparent;
+            bottomWhiteDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            bottomWhiteDecision.Location = new Point(184, 4);
+            bottomWhiteDecision.Margin = new Padding(0);
+            bottomWhiteDecision.Name = "bottomWhiteDecision";
+            bottomWhiteDecision.RightToLeft = RightToLeft.Yes;
+            bottomWhiteDecision.Size = new Size(136, 30);
+            bottomWhiteDecision.TabIndex = 3;
+            bottomWhiteDecision.Text = "-";
+            bottomWhiteDecision.TextAlign = ContentAlignment.MiddleCenter;
+>>>>>>> Stashed changes
             // 
             // label11
             // 
@@ -844,6 +1112,7 @@ namespace FVMI_INSPECTION.Controls
             // 
             // pictureBox1
             // 
+<<<<<<< Updated upstream
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Dock = DockStyle.Fill;
             pictureBox1.Location = new Point(3, 31);
@@ -852,6 +1121,190 @@ namespace FVMI_INSPECTION.Controls
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
+=======
+            panel5.Controls.Add(bottomUVDecision);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(342, 40);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(333, 327);
+            panel5.TabIndex = 29;
+            // 
+            // bottomUVDecision
+            // 
+            bottomUVDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            bottomUVDecision.BackColor = Color.Transparent;
+            bottomUVDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            bottomUVDecision.Location = new Point(184, 4);
+            bottomUVDecision.Margin = new Padding(0);
+            bottomUVDecision.Name = "bottomUVDecision";
+            bottomUVDecision.RightToLeft = RightToLeft.Yes;
+            bottomUVDecision.Size = new Size(136, 30);
+            bottomUVDecision.TabIndex = 4;
+            bottomUVDecision.Text = "-";
+            bottomUVDecision.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // panel8
+            // 
+            panel8.Controls.Add(tableLayoutPanel7);
+            panel8.Controls.Add(tableLayoutPanel2);
+            panel8.Dock = DockStyle.Fill;
+            panel8.Location = new Point(3, 379);
+            panel8.Name = "panel8";
+            panel8.Size = new Size(678, 371);
+            panel8.TabIndex = 24;
+            // 
+            // tableLayoutPanel11
+            // 
+            tableLayoutPanel11.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel11.ColumnCount = 1;
+            tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel10, 0, 0);
+            tableLayoutPanel11.Controls.Add(panel8, 0, 1);
+            tableLayoutPanel11.Location = new Point(23, 107);
+            tableLayoutPanel11.Name = "tableLayoutPanel11";
+            tableLayoutPanel11.RowCount = 2;
+            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel11.Size = new Size(684, 753);
+            tableLayoutPanel11.TabIndex = 26;
+            tableLayoutPanel11.Paint += tableLayoutPanel11_Paint;
+            // 
+            // panel2
+            // 
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            panel2.AutoScroll = true;
+            panel2.Controls.Add(tableLayoutPanel1);
+            panel2.Location = new Point(1037, 110);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(335, 745);
+            panel2.TabIndex = 27;
+            // 
+            // button2
+            // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.BackColor = Color.Yellow;
+            button2.Enabled = false;
+            button2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            button2.Location = new Point(716, 746);
+            button2.Name = "button2";
+            button2.Size = new Size(315, 34);
+            button2.TabIndex = 28;
+            button2.Text = "Generate Log";
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click;
+            // 
+            // tableLayoutPanel13
+            // 
+            tableLayoutPanel13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            tableLayoutPanel13.ColumnCount = 2;
+            tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
+            tableLayoutPanel13.Controls.Add(panel15, 1, 0);
+            tableLayoutPanel13.Controls.Add(panel14, 0, 1);
+            tableLayoutPanel13.Controls.Add(panel13, 0, 0);
+            tableLayoutPanel13.Controls.Add(panel12, 1, 1);
+            tableLayoutPanel13.Location = new Point(716, 628);
+            tableLayoutPanel13.Name = "tableLayoutPanel13";
+            tableLayoutPanel13.RowCount = 2;
+            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel13.Size = new Size(315, 93);
+            tableLayoutPanel13.TabIndex = 29;
+            // 
+            // panel15
+            // 
+            panel15.Controls.Add(label6);
+            panel15.Dock = DockStyle.Fill;
+            panel15.Location = new Point(108, 3);
+            panel15.Name = "panel15";
+            panel15.Padding = new Padding(3);
+            panel15.Size = new Size(204, 40);
+            panel15.TabIndex = 3;
+            // 
+            // panel14
+            // 
+            panel14.Controls.Add(label3);
+            panel14.Dock = DockStyle.Fill;
+            panel14.Location = new Point(3, 49);
+            panel14.Name = "panel14";
+            panel14.Padding = new Padding(3);
+            panel14.Size = new Size(99, 41);
+            panel14.TabIndex = 2;
+            // 
+            // label3
+            // 
+            label3.Dock = DockStyle.Fill;
+            label3.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label3.Location = new Point(3, 3);
+            label3.Name = "label3";
+            label3.Size = new Size(93, 35);
+            label3.TabIndex = 1;
+            label3.Text = "Log File";
+            label3.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // panel13
+            // 
+            panel13.Controls.Add(label2);
+            panel13.Dock = DockStyle.Fill;
+            panel13.Location = new Point(3, 3);
+            panel13.Name = "panel13";
+            panel13.Padding = new Padding(3);
+            panel13.Size = new Size(99, 40);
+            panel13.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.Dock = DockStyle.Fill;
+            label2.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            label2.Location = new Point(3, 3);
+            label2.Name = "label2";
+            label2.Size = new Size(93, 34);
+            label2.TabIndex = 0;
+            label2.Text = "Status";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
+            label2.Click += label2_Click;
+            // 
+            // panel12
+            // 
+            panel12.Controls.Add(statusLabel);
+            panel12.Dock = DockStyle.Fill;
+            panel12.Location = new Point(108, 49);
+            panel12.Name = "panel12";
+            panel12.Padding = new Padding(3);
+            panel12.Size = new Size(204, 41);
+            panel12.TabIndex = 0;
+            // 
+            // resetCheckTimer
+            // 
+            resetCheckTimer.Interval = 1000;
+            resetCheckTimer.Tick += resetCheckTimer_Tick;
+            // 
+            // groupBox12
+            // 
+            groupBox12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBox12.BackColor = SystemColors.Control;
+            groupBox12.Controls.Add(uvLabel);
+            groupBox12.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            groupBox12.Location = new Point(719, 167);
+            groupBox12.Name = "groupBox12";
+            groupBox12.Size = new Size(312, 64);
+            groupBox12.TabIndex = 16;
+            groupBox12.TabStop = false;
+            groupBox12.Text = "UV Status";
+            // 
+            // uvLabel
+            // 
+            uvLabel.BackColor = Color.FromArgb(28, 154, 220);
+            uvLabel.Dock = DockStyle.Fill;
+            uvLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold | FontStyle.Italic);
+            uvLabel.Location = new Point(3, 23);
+            uvLabel.Name = "uvLabel";
+            uvLabel.Size = new Size(306, 38);
+            uvLabel.TabIndex = 0;
+            uvLabel.Text = "-";
+            uvLabel.TextAlign = ContentAlignment.MiddleCenter;
+>>>>>>> Stashed changes
             // 
             // DashboardControl
             // 
@@ -883,6 +1336,7 @@ namespace FVMI_INSPECTION.Controls
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
             panel3.ResumeLayout(false);
+<<<<<<< Updated upstream
             groupBox2.ResumeLayout(false);
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
@@ -894,12 +1348,28 @@ namespace FVMI_INSPECTION.Controls
             groupBox5.ResumeLayout(false);
             groupBox6.ResumeLayout(false);
             panel1.ResumeLayout(false);
+=======
+            panel3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            panel10.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            panel11.ResumeLayout(false);
+            groupBox6.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+>>>>>>> Stashed changes
             groupBox7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
+<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)parameterPictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)actualPictureBox).EndInit();
+=======
+            panel7.ResumeLayout(false);
+            panel9.ResumeLayout(false);
+>>>>>>> Stashed changes
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel7.PerformLayout();
             groupBox8.ResumeLayout(false);
@@ -909,8 +1379,22 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel9.PerformLayout();
             tableLayoutPanel10.ResumeLayout(false);
             tableLayoutPanel10.PerformLayout();
+<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+=======
+            panel4.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel8.ResumeLayout(false);
+            tableLayoutPanel11.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            tableLayoutPanel13.ResumeLayout(false);
+            panel15.ResumeLayout(false);
+            panel14.ResumeLayout(false);
+            panel13.ResumeLayout(false);
+            panel12.ResumeLayout(false);
+            groupBox12.ResumeLayout(false);
+>>>>>>> Stashed changes
             ResumeLayout(false);
             PerformLayout();
         }

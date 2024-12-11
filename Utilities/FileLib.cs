@@ -184,5 +184,39 @@ namespace FVMI_INSPECTION.Utilities
 
             return filename;
         }*/
+<<<<<<< Updated upstream
+=======
+        public string GenerateLog(LogModel model)
+        {
+            string text = @$"[General]
+Model={model.Model}
+Date={model.DateTime.ToString("ddMMMyyyy HH:mm:ss")}
+Status={model.Status}
+SN={model.SN}
+
+[Detail]
+TopFailTool={model.TopFailTool}
+TopUvFailTool={model.TopUvFailTool}
+BotFailTool={model.BotFailTool}
+BotUVFailTool={model.BotUVFailTool}
+
+[Judgement]
+Failure{(model.Failure==string.Empty ? "" : ("="+model.Failure) )}";
+            return text;
+        }
+
+        public async Task<string> WriteLog(string scanCode, string text, string judge)
+        {
+            string filename = $"log_{scanCode}_{judge}.txt ";
+            string[] paths = [Path.Combine(_logPath, filename), Path.Combine(Settings.Default.BackupLogPath, filename)];
+            foreach (string path in paths)
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+                await File.WriteAllTextAsync(path, text);
+            }
+            return filename;
+        }
+>>>>>>> Stashed changes
     }
 }
