@@ -50,7 +50,7 @@ namespace FVMI_INSPECTION.Presenter
                 _view.BottomWhiteDecision = "";
             }
             presenter.view.CampPoint = _model.CameraPoint;
-//            await presenter.ToggleUV(_model.isUV);
+            await presenter.ToggleUV(true);
             await presenter.LoadCampoint();
             return presenter;
         }
