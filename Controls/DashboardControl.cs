@@ -292,7 +292,7 @@ namespace FVMI_INSPECTION.Controls
                 textBox1.Enabled = true;
                 textBox1.Focus();
             });
-            p.ToggleUV(true);
+            await p.ToggleUV(true);
             tReset = Task.Run(CheckResetTask);
         }
         private async void textBox1_KeyDown(object sender, KeyEventArgs e)
