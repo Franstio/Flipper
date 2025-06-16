@@ -50,7 +50,7 @@ namespace FVMI_INSPECTION.Presenter
                 _view.BottomWhiteDecision = "";
             }
             presenter.view.CampPoint = _model.CameraPoint;
-//            await presenter.ToggleUV(_model.isUV);
+            await presenter.ToggleUV(_model.isUV);
             await presenter.LoadCampoint();
             return presenter;
         }
@@ -265,6 +265,7 @@ namespace FVMI_INSPECTION.Presenter
                     }
                 ];
                 view.EmergencyActive = false;
+                await process.WriteCommand("MR303", 1);
 
                 eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}");
                 return ret;
