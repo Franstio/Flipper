@@ -3,6 +3,8 @@ using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.Forms;
 using System.Windows.Forms;
 using FVMI_INSPECTION.Utilities;
+using FVMI_INSPECTION.TCP;
+using System.Diagnostics;
 
 namespace FVMI_INSPECTION
 {
@@ -108,6 +110,12 @@ namespace FVMI_INSPECTION
         {
             ListReasonsForm frm = new ListReasonsForm();
             frm.ShowDialog(this);
+        }
+
+        private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FVMITcpClient process = new FVMITcpClient();
+            await process.WriteCommand("MR2100",0);
         }
     }
 }

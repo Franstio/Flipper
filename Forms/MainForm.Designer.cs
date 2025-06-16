@@ -36,10 +36,10 @@
             modifyParameterToolStripMenuItem = new ToolStripMenuItem();
             copyProgramToolStripMenuItem = new ToolStripMenuItem();
             deleteProgramToolStripMenuItem = new ToolStripMenuItem();
+            manageReasonNGToolStripMenuItem = new ToolStripMenuItem();
             configurationToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
-            manageReasonNGToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -66,7 +66,7 @@
             // 
             changeModelToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             changeModelToolStripMenuItem.Name = "changeModelToolStripMenuItem";
-            changeModelToolStripMenuItem.Size = new Size(180, 22);
+            changeModelToolStripMenuItem.Size = new Size(168, 22);
             changeModelToolStripMenuItem.Text = "Change Model";
             changeModelToolStripMenuItem.Click += changeModelToolStripMenuItem_Click;
             // 
@@ -75,7 +75,7 @@
             settingParameterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newModelParameterToolStripMenuItem, modifyParameterToolStripMenuItem, copyProgramToolStripMenuItem, deleteProgramToolStripMenuItem, manageReasonNGToolStripMenuItem });
             settingParameterToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             settingParameterToolStripMenuItem.Name = "settingParameterToolStripMenuItem";
-            settingParameterToolStripMenuItem.Size = new Size(180, 22);
+            settingParameterToolStripMenuItem.Size = new Size(168, 22);
             settingParameterToolStripMenuItem.Text = "Setting Parameter";
             // 
             // newModelParameterToolStripMenuItem
@@ -108,11 +108,18 @@
             deleteProgramToolStripMenuItem.Text = "Delete Program";
             deleteProgramToolStripMenuItem.Click += deleteProgramToolStripMenuItem_Click;
             // 
+            // manageReasonNGToolStripMenuItem
+            // 
+            manageReasonNGToolStripMenuItem.Name = "manageReasonNGToolStripMenuItem";
+            manageReasonNGToolStripMenuItem.Size = new Size(192, 22);
+            manageReasonNGToolStripMenuItem.Text = "Manage Reason NG";
+            manageReasonNGToolStripMenuItem.Click += manageReasonNGToolStripMenuItem_Click;
+            // 
             // configurationToolStripMenuItem
             // 
             configurationToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            configurationToolStripMenuItem.Size = new Size(180, 22);
+            configurationToolStripMenuItem.Size = new Size(168, 22);
             configurationToolStripMenuItem.Text = "Configuration";
             configurationToolStripMenuItem.Click += configurationToolStripMenuItem_Click;
             // 
@@ -120,7 +127,7 @@
             // 
             exitToolStripMenuItem.Font = new Font("Segoe UI", 9F);
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(168, 22);
             exitToolStripMenuItem.Text = "Exit";
             // 
             // panel1
@@ -131,13 +138,6 @@
             panel1.Size = new Size(800, 426);
             panel1.TabIndex = 2;
             // 
-            // manageReasonNGToolStripMenuItem
-            // 
-            manageReasonNGToolStripMenuItem.Name = "manageReasonNGToolStripMenuItem";
-            manageReasonNGToolStripMenuItem.Size = new Size(192, 22);
-            manageReasonNGToolStripMenuItem.Text = "Manage Reason NG";
-            manageReasonNGToolStripMenuItem.Click += manageReasonNGToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -147,6 +147,7 @@
             Controls.Add(menuStrip1);
             Name = "MainForm";
             Text = "Form1";
+            FormClosing += MainForm_FormClosing;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
