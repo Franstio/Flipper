@@ -111,9 +111,11 @@ namespace FVMI_INSPECTION.Presenter
         {
             await process.SetupCamPoint();
         }
+        
         public async Task<ProcessResultModel[]> RunProcess()
         {
             eventUpdate("Press Start Button..");
+            CancellationTokenSource cts = new CancellationTokenSource();
             cTokenSource = new CancellationTokenSource();
             cMonitorTokenSource = new CancellationTokenSource();
             view.topUVImage = null;
@@ -130,8 +132,19 @@ namespace FVMI_INSPECTION.Presenter
             res = await process.WriteCommand("MR004", 1);
             await Task.Delay(100);
             //            view.tReset =  Task.Run(view.CheckResetTask);
-
-            await process.WriteCommand("MR303", 1);
+            _ = Task.Run(async () => 
+            {
+                try
+                {
+                    cts.Token.ThrowIfCancellationRequested();
+                    while (!cts.IsCancellationRequested)
+                    {
+                        await process.WriteCommand("MR303", 1);
+                        await Task.Delay(100);
+                    }
+                }
+                catch { }
+            });
             do
             {
                 res = await process.ReadCommand("R000");
@@ -269,7 +282,7 @@ namespace FVMI_INSPECTION.Presenter
                 ];
                 view.EmergencyActive = false;
                 await process.WriteCommand("MR303", 1);
-
+                cts.Cancel();
                 eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}");
                 return ret;
             }
