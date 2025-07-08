@@ -115,7 +115,6 @@ namespace FVMI_INSPECTION.Presenter
         public async Task<ProcessResultModel[]> RunProcess()
         {
             eventUpdate("Press Start Button..");
-            CancellationTokenSource cts = new CancellationTokenSource();
             cTokenSource = new CancellationTokenSource();
             cMonitorTokenSource = new CancellationTokenSource();
             view.topUVImage = null;
@@ -269,7 +268,6 @@ namespace FVMI_INSPECTION.Presenter
                 ];
                 view.EmergencyActive = false;
                 await process.WriteCommand("MR303", 1);
-                cts.Cancel();
                 eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}");
                 return ret;
             }
