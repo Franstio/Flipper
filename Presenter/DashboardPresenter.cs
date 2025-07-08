@@ -132,19 +132,6 @@ namespace FVMI_INSPECTION.Presenter
             res = await process.WriteCommand("MR004", 1);
             await Task.Delay(100);
             //            view.tReset =  Task.Run(view.CheckResetTask);
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    cts.Token.ThrowIfCancellationRequested();
-                    while (!cts.IsCancellationRequested)
-                    {
-                        await process.WriteCommand("MR303", 1);
-                        await Task.Delay(10);
-                    }
-                }
-                catch { }
-            });
             do
             {
                 res = await process.ReadCommand("R000");
@@ -573,6 +560,7 @@ namespace FVMI_INSPECTION.Presenter
         public async Task CheckReset()
         {
             var rst = await this.pocesssReset.ReadCommand("MR2000");
+            await process.WriteCommand("MR303", 1);
             bool valreset = rst == "1";
             
             Debug.WriteLine($"Reset Detected : {valreset} {view.ProcessTimeRun}");
