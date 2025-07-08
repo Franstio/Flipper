@@ -129,6 +129,9 @@ namespace FVMI_INSPECTION.Presenter
             view.BottomUVRecord = new List<ProcessRecordModel>();
 //            view.StatusRun = view.SerialNumber;
             string res,res2;
+            res = await process.WriteCommand("MR004", 1);
+            await Task.Delay(100);
+            //            view.tReset =  Task.Run(view.CheckResetTask);
             _ = Task.Run(async () =>
             {
                 try
@@ -142,10 +145,6 @@ namespace FVMI_INSPECTION.Presenter
                 }
                 catch { }
             });
-            res = await process.WriteCommand("MR004", 1);
-            await Task.Delay(100);
-            //            view.tReset =  Task.Run(view.CheckResetTask);
-
             do
             {
                 res = await process.ReadCommand("R000");
