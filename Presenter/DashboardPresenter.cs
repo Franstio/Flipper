@@ -140,7 +140,7 @@ namespace FVMI_INSPECTION.Presenter
                     while (!cts.IsCancellationRequested)
                     {
                         await process.WriteCommand("MR303", 1);
-                        await Task.Delay(1);
+                        await Task.Delay(10);
                     }
                 }
                 catch { }
