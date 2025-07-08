@@ -558,9 +558,9 @@ namespace FVMI_INSPECTION.Presenter
         public async Task CheckReset()
         {
             var rst = await this.pocesssReset.ReadCommand("MR2000");
-            await process.WriteCommand("MR303", 1);
             bool valreset = rst == "1";
-            
+            await pocesssReset.WriteCommand("MR303", 1);
+
             Debug.WriteLine($"Reset Detected : {valreset} {view.ProcessTimeRun}");
             if (!view.AllowReset && valreset)
             {
