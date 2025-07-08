@@ -129,13 +129,16 @@ namespace FVMI_INSPECTION.Presenter
             string res,res2;
             res = await process.WriteCommand("MR004", 1);
             await Task.Delay(100);
-//            view.tReset =  Task.Run(view.CheckResetTask);
+            //            view.tReset =  Task.Run(view.CheckResetTask);
+
+            await process.WriteCommand("MR303", 1);
             do
             {
                 res = await process.ReadCommand("R000");
                 res2 = await process.ReadCommand("MR004");
             }
             while (!res.Contains("1") || !res.Contains("1"));
+            await process.WriteCommand("MR303", 1);
             view.StartTimer();
             var imageMonitor = await MonitorImageOutput();
             /*ret[0] = await TopProcess();
