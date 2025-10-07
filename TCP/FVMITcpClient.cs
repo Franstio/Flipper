@@ -17,6 +17,7 @@ namespace FVMI_INSPECTION.TCP
         private IPAddress _address;
         private int _port;
         private TcpClient client = new TcpClient();
+        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
         private bool log = false;
         private int GeneralDelay = 0;
         public bool isRunning
@@ -88,38 +89,48 @@ namespace FVMI_INSPECTION.TCP
         }
         public async Task<string> SendCommand(string cmd)
         {
-            if (!isRunning)
-                await Connect();
-            Trace.WriteLineIf(log, $"Writing Command {cmd}");
-            byte[] buffer = Encoding.ASCII.GetBytes($"{cmd}\r\n");
-            string result = string.Empty;
-            int tryCount = 0;
-            do
+            await semaphoreSlim.WaitAsync();
+            try
             {
+                if (!isRunning)
+                    await Connect();
+                Trace.WriteLineIf(log, $"Writing Command {cmd}");
+                byte[] buffer = Encoding.ASCII.GetBytes($"{cmd}\r\n");
+                string result = string.Empty;
+                int tryCount = 0;
+                do
+                {
 
-                tryCount = tryCount + 1;
-                try
-                {
-                    Debug.WriteLineIf(log, $"Writing {cmd} Command, Count: {tryCount + 1}");
-                    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    _  = Task.Delay(300).ContinueWith((a)=>cancellationTokenSource.Cancel());
-                    await client.GetStream().WriteAsync(buffer, 0, buffer.Length,cancellationTokenSource.Token);
-                    result = await GetMessage(cmd);
+                    tryCount = tryCount + 1;
+                    try
+                    {
+                        Debug.WriteLineIf(log, $"Writing {cmd} Command, Count: {tryCount + 1}");
+                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                        _ = Task.Delay(300).ContinueWith((a) => cancellationTokenSource.Cancel());
+                        await client.GetStream().WriteAsync(buffer, 0, buffer.Length, cancellationTokenSource.Token);
+                        result = await GetMessage(cmd);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLineIf(log, $"Error Writing {cmd} Command, Count: {tryCount + 1} : {ex.Message} {ex.InnerException?.Message}");
+                    }
+                    finally
+                    {
+                        if (client.Connected && client.Client.Connected)
+                            await client.GetStream().FlushAsync();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLineIf(log, $"Error Writing {cmd} Command, Count: {tryCount + 1} : {ex.Message} {ex.InnerException?.Message}");
-                }
-                finally
-                {
-                    if (client.Connected && client.Client.Connected)
-                        await client.GetStream().FlushAsync();
-                }
+                while ((result.ToUpper().Contains("E1") || string.IsNullOrEmpty(result)) && tryCount < 10);
+
+                result = result.Replace("\r", "").Replace("\n", "").Replace("\0", "");
+                semaphoreSlim.Release();
+                return result;
             }
-            while ((result.ToUpper().Contains("E1") || string.IsNullOrEmpty(result)) && tryCount < 10);
-
-            result = result.Replace("\r", "").Replace("\n", "").Replace("\0", "");
-            return result;
+            catch
+            {
+                semaphoreSlim.Release();
+                return string.Empty;
+            }
         }
         public async Task<string> ReadCommand(string nameCommand) => await SendCommand($"RD {nameCommand}");
         public async Task<string> WriteCommand(string nameCommand, object value) => await SendCommand($"WR {nameCommand} {value}");
