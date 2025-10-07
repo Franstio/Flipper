@@ -89,7 +89,6 @@ namespace FVMI_INSPECTION.TCP
         }
         public async Task<string> SendCommand(string cmd)
         {
-            await semaphoreSlim.WaitAsync();
             try
             {
                 if (!isRunning)
@@ -123,12 +122,10 @@ namespace FVMI_INSPECTION.TCP
                 while ((result.ToUpper().Contains("E1") || string.IsNullOrEmpty(result)) && tryCount < 10);
 
                 result = result.Replace("\r", "").Replace("\n", "").Replace("\0", "");
-                semaphoreSlim.Release();
                 return result;
             }
             catch
             {
-                semaphoreSlim.Release();
                 return string.Empty;
             }
         }
