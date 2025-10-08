@@ -115,7 +115,7 @@ namespace FVMI_INSPECTION
         private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             FVMITcpClient process = new FVMITcpClient();
-            await process.WriteCommand("MR303", 0);
+//            await process.WriteCommand("MR303", 0);
         }
     }
 }

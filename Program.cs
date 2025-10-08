@@ -13,7 +13,7 @@ namespace FVMI_INSPECTION
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             FVMITcpClient process = new FVMITcpClient();
-            _ =process.WriteCommand("MR303", 1).Result;
+//            _ =process.WriteCommand("MR303", 1).Result;
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm() { WindowState= FormWindowState.Maximized} );
         }

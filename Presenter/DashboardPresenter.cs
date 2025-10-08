@@ -137,7 +137,7 @@ namespace FVMI_INSPECTION.Presenter
                 res2 = await process.ReadCommand("MR004");
             }
             while (!res.Contains("1") || !res.Contains("1"));
-            await process.WriteCommand("MR303", 1);
+//            await process.WriteCommand("MR303", 1);
             view.StartTimer();
             var imageMonitor = await MonitorImageOutput();
             /*ret[0] = await TopProcess();
@@ -267,7 +267,7 @@ namespace FVMI_INSPECTION.Presenter
                     }
                 ];
                 view.EmergencyActive = false;
-                await process.WriteCommand("MR303", 1);
+//                await process.WriteCommand("MR303", 1);
                 eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}");
                 return ret;
             }
@@ -559,7 +559,7 @@ namespace FVMI_INSPECTION.Presenter
         {
             var rst = await this.pocesssReset.ReadCommand("MR2000");
             bool valreset = rst == "1";
-            await pocesssReset.WriteCommand("MR303", 1);
+//            await pocesssReset.WriteCommand("MR303", 1);
 
             Debug.WriteLine($"Reset Detected : {valreset} {view.ProcessTimeRun}");
             if (!view.AllowReset && valreset)
