@@ -129,7 +129,7 @@ namespace FVMI_INSPECTION.Presenter
 //            view.StatusRun = view.SerialNumber;
             string res,res2;
             res = await process.WriteCommand("MR004", 1);
-            await Task.Delay(100);
+            /*await Task.Delay(100);*/
             //            view.tReset =  Task.Run(view.CheckResetTask);
             do
             {
@@ -284,7 +284,7 @@ namespace FVMI_INSPECTION.Presenter
             {
                 ret = await process.ReadCommand("MR200");
                 ret1 = await process.ReadCommand("MR004");
-                await Task.Delay(100);
+                /*await Task.Delay(100);*/
                 eventUpdate("Waiting for process complete" + new string('.', loading));
                 loading = (loading + 1) % 6;
             }
@@ -297,7 +297,7 @@ namespace FVMI_INSPECTION.Presenter
             try
             {
                 cTokenSource.Token.ThrowIfCancellationRequested();
-                await Task.Delay(100);
+                /*await Task.Delay(100);*/
                 Task<Tuple<string, Image>?>[] getImagesTask =
                 [
                     GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV),
@@ -340,7 +340,7 @@ namespace FVMI_INSPECTION.Presenter
         {
             var config = Properties.Settings.Default;
             string path = string.Empty;
-
+            SemaphoreSlim ss = new SemaphoreSlim(0,1);
             if (fType == FileLib.FVMI_Type.UV)
             {
                 path = config.UVImgPath;
@@ -358,17 +358,33 @@ namespace FVMI_INSPECTION.Presenter
                 else if (procType == FileLib.FVMI_ProcessType.Bottom)
                     path = Path.Combine(path, config.WhiteBottomPrefix);
             }
-            await Task.Delay(delay);
-//            string[] dir = Directory.GetDirectories(path).OrderByDescending(x=>x).ToArray();
-            DirectoryInfo info = new DirectoryInfo(path);
-            DirectoryInfo[] infos = info.GetDirectories();
-            string[] dir = infos.OrderByDescending(x => x.CreationTime).Select(x => x.FullName).ToArray();
-            if (dir is null || dir.Length < 1)
+            FileSystemWatcher watcher = new FileSystemWatcher(path)
+            {
+                EnableRaisingEvents = true,
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
+            };
+            string? f = null;
+            string? fn = string.Empty;
+            watcher.Created +=  (s, e) =>
+            {
+                try
+                {
+                    f = e.FullPath;
+                    fn = e.Name;
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    ss.Release();
+                }
+            };
+            await ss.WaitAsync();
+            if (f is null || fn is null)
                 return null;
-            string[] f = await lib.GetFiles(dir[0]);
-            if (f is null || f.Length < 1)
-                return null;
-            return new Tuple<string, Image>(f[0].Split("/")[(f[0].Split("/").Length-1)], Image.FromFile(f[0]));
+            return new Tuple<string, Image>(fn, Image.FromFile(f));
         }
         public List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel,string modelName,string serial)
         {
