@@ -284,7 +284,7 @@ namespace FVMI_INSPECTION.Presenter
             {
                 ret = await process.ReadCommand("MR200");
                 ret1 = await process.ReadCommand("MR004");
-                /*await Task.Delay(100);*/
+                /*await Task.Delay(100);*/ 
                 eventUpdate("Waiting for process complete" + new string('.', loading));
                 loading = (loading + 1) % 6;
             }
