@@ -380,10 +380,14 @@ namespace FVMI_INSPECTION.Presenter
                 }
                 finally
                 {
-                    ss.Release();
+                    try
+                    {
+                        ss.Release();
+                    }
+                    catch { }
                 }
             };
-            await ss.WaitAsync(TimeSpan.FromMilliseconds(1));
+            await ss.WaitAsync(TimeSpan.FromSeconds(10));
             if (f is null || fn is null)
                 return null;
             return new Tuple<string, Image>(fn, Image.FromFile(f));
