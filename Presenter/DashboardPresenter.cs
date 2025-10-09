@@ -361,7 +361,9 @@ namespace FVMI_INSPECTION.Presenter
             FileSystemWatcher watcher = new FileSystemWatcher(path)
             {
                 EnableRaisingEvents = true,
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime,
+                IncludeSubdirectories = true
+
             };
             string? f = null;
             string? fn = string.Empty;
@@ -381,7 +383,7 @@ namespace FVMI_INSPECTION.Presenter
                     ss.Release();
                 }
             };
-            await ss.WaitAsync();
+            await ss.WaitAsync(TimeSpan.FromMilliseconds(1));
             if (f is null || fn is null)
                 return null;
             return new Tuple<string, Image>(fn, Image.FromFile(f));
