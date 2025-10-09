@@ -173,17 +173,17 @@ namespace FVMI_INSPECTION.Presenter
             });
 //            await Task.Delay(500);
   //          eventUpdate("Writing Record");
-            List<ProcessRecordModel>[]?  record = new List<ProcessRecordModel>[4];
-            int Count = 0;
-            do
-            {
-                record = await ReadCsv();
-                if (cTokenSource.IsCancellationRequested)
-                    continue;
-                Count = Count + 1;
-                await Task.Delay(100);
-            }
-            while (Count < 100 && record is null && !cTokenSource.IsCancellationRequested) ; 
+            List<ProcessRecordModel>[]?  record = [[new ProcessRecordModel()], [new ProcessRecordModel()], [new ProcessRecordModel()], [new ProcessRecordModel()]];
+            //int Count = 0;
+            //do
+            //{
+            //    record = await ReadCsv();
+            //    if (cTokenSource.IsCancellationRequested)
+            //        continue;
+            //    Count = Count + 1;
+            //    await Task.Delay(100);
+            //}
+            //while (Count < 100 && record is null && !cTokenSource.IsCancellationRequested) ; 
             if (cTokenSource.IsCancellationRequested)
             {
                 eventUpdate("Process Cancelled, Please Click Reset");
@@ -298,14 +298,15 @@ namespace FVMI_INSPECTION.Presenter
             {
                 cTokenSource.Token.ThrowIfCancellationRequested();
                 /*await Task.Delay(100);*/
-                Task<Tuple<string, Image>?>[] getImagesTask =
-                [
-                    GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV),
-                    GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV),
-                    GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White),
-                    GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.White)
-                ];
-                var data = await Task.WhenAll(getImagesTask);
+                //Task<Tuple<string, Image>?>[] getImagesTask =
+                //[
+                //    GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV),
+                //    GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV),
+                //    GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White),
+                //    GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.White)
+                //];
+                //var data = await Task.WhenAll(getImagesTask);
+                Tuple<string, Image>?[]? data = [ null,null,null,null];
                 var topUvImgSet = data[0];//await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV);
                 var bottomUvImgSet = data[1]; //GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV);
                 var topWhiteImgSet = data[2];//GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White);
