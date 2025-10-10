@@ -139,6 +139,7 @@ namespace FVMI_INSPECTION.Presenter
             while (!res.Contains("1") || !res.Contains("1"));
 //            await process.WriteCommand("MR303", 1);
             view.StartTimer();
+            Task<string?[]> csvFilesTask = Task.Run(LoadCsv);
             Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput();
             /*ret[0] = await TopProcess();
             view.topUVImage = ret[0].Image;
@@ -171,19 +172,14 @@ namespace FVMI_INSPECTION.Presenter
                 if (cTokenSource.IsCancellationRequested)
                     return;
             });
-//            await Task.Delay(500);
-  //          eventUpdate("Writing Record");
+            //            await Task.Delay(500);
+            //          eventUpdate("Writing Record");
+            string?[] csvFiles = await csvFilesTask;
             List<ProcessRecordModel>[]?  record = new List<ProcessRecordModel>[4];
-            int Count = 0;
-            do
-            {
-                record = await ReadCsv();
+                record = await ReadCsv(csvFiles);
                 if (cTokenSource.IsCancellationRequested)
-                    continue;
-                Count = Count + 1;
-                await Task.Delay(100);
-            }
-            while (Count < 100 && record is null && !cTokenSource.IsCancellationRequested) ; 
+                    return [];
+             
             if (cTokenSource.IsCancellationRequested)
             {
                 eventUpdate("Process Cancelled, Please Click Reset");
@@ -475,12 +471,8 @@ namespace FVMI_INSPECTION.Presenter
                 Type="Bottom"
             };
         }
-
-        public async Task<List<ProcessRecordModel>[]?> ReadCsv()
+        public async Task<string?[]> LoadCsv()
         {
-            List<ProcessRecordModel>[]? mdl = null;
-            mdl = new List<ProcessRecordModel>[4];
-            int count = 0;
             var getConfig = Properties.Settings.Default;
             string[] paths = new string[]
             {
@@ -489,27 +481,63 @@ namespace FVMI_INSPECTION.Presenter
                 Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteTopPrefix),
                 Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteBottomPrefix)
             };
+            List<Task<string?>> tasks = [];
+            foreach (var path in paths)
+            {
+                string _path = path;
+                tasks.Add(Task.Run(async () =>
+                {
+                    TaskCompletionSource<string?> fileName = new TaskCompletionSource<string?>();
+                    FileSystemWatcher watcher = new FileSystemWatcher(_path)
+                    {
+                        IncludeSubdirectories = true,
+                        EnableRaisingEvents = true,
+                        NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
+                    };
+                    watcher.Created += (s, e) =>
+                    {
+                        fileName.TrySetResult(e.FullPath);
+                    };
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                    await using (cts.Token.Register(()=>fileName.TrySetResult(null)))
+                    {
+                        return await fileName.Task;
+                    }
+                }));
+            }
+            return await Task.WhenAll(tasks);
+
+        }
+        public async Task<List<ProcessRecordModel>[]> ReadCsv(string?[] paths)
+        {
+            List<ProcessRecordModel>[] mdl = [];
+            mdl = new List<ProcessRecordModel>[4];
+            var getConfig = Properties.Settings.Default;
+            //string[] paths = new string[]
+            //{
+            //    Path.Combine(getConfig.UVCSVPath,getConfig.UVTopPrefix),
+            //    Path.Combine(getConfig.UVCSVPath,getConfig.UVBottomPrefix),
+            //    Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteTopPrefix),
+            //    Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteBottomPrefix)
+            //};
             bool[] checkResult = [view.TopUVDecision == "PASS" || !Model.isUV, view.BottomUVDecision == "PASS" || !Model.isUV, view.TopWhiteDecision == "PASS", view.BottomWhiteDecision == "PASS"];
             for (int i = 0; i < paths.Length; i++)
             {
-                if (checkResult[i])
+                if (checkResult[i] || paths[i] is null)
                 {
                     mdl[i] = new List<ProcessRecordModel>();
                     continue;
                 }
-                await Task.Delay(100);
-                var files = await lib.GetFiles(paths[i]);
-                if (files is null || files.Length < 1)
-                    throw new Exception(paths[i] + " Empty");
+                string _path = paths[i]!;
                 List<ProcessRecordModel> list = new List<ProcessRecordModel>();
-                using (var stream = new FileStream(files[0], FileMode.Open))
+                using (var stream = new FileStream(_path, FileMode.Open))
                 {
                     using (var reader = new StreamReader(stream))
                     {
                         string? text = await reader.ReadLineAsync();
-                        if (text is null) throw new Exception(files[0] + " Is empty");
+                        if (text is null) throw new Exception(_path + " Is empty");
                         string? row= await reader.ReadLineAsync();
-                        if (row is null) throw new Exception(files[0] + " 2nd Row Is empty");
+                        if (row is null) throw new Exception(_path + " 2nd Row Is empty");
                         list.AddRange(ReadRecord(text, row));
                         mdl[i] = list;
                     }

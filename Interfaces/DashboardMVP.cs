@@ -48,7 +48,7 @@ namespace FVMI_INSPECTION.Interfaces
         {
             Task ToggleUV(bool value);
             Task<ProcessResultModel[]> RunProcess();
-            Task<List<ProcessRecordModel>[]?> ReadCsv();
+            Task<List<ProcessRecordModel>[]> ReadCsv(string?[] paths);
             Task WriteLog(List<RecordModel> records,string sn);
             List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName,string serial);
             Task ResetProcess();
