@@ -520,7 +520,7 @@ namespace FVMI_INSPECTION.Presenter
                     {
                         fileName.TrySetResult(e.FullPath);
                     };
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
                     await using (cts.Token.Register(() => fileName.TrySetResult(null)))
                     {
                         return await fileName.Task;
