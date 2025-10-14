@@ -134,13 +134,13 @@ namespace FVMI_INSPECTION.Presenter
             var imgTask = Task.Run(() => LoadImageMonitoring());
             Task<string?[]> csvFilesTask = Task.Run(LoadCsv);
 
-            Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput(await imgTask);
             do
             {
                 res = await process.ReadCommand("R000");
                 res2 = await process.ReadCommand("MR004");
             }
             while (!res.Contains("1") || !res.Contains("1"));
+            Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput( imgTask);
             //            await process.WriteCommand("MR303", 1);
 
             view.StartTimer();
@@ -287,7 +287,7 @@ namespace FVMI_INSPECTION.Presenter
                 ];
             return await Task.WhenAll(getImagesTask);
         }
-        private async Task<Tuple<string, Image>?[]?> MonitorImageOutput(Tuple<string, Image>?[]? data)
+        private async Task<Tuple<string, Image>?[]?> MonitorImageOutput(Task<Tuple<string, Image>?[]?> dataTask)
         {
             string ret = string.Empty, ret1 = string.Empty;
             int loading = 0;
@@ -309,7 +309,7 @@ namespace FVMI_INSPECTION.Presenter
             {
                 cTokenSource.Token.ThrowIfCancellationRequested();
                 /*await Task.Delay(100);*/
-
+                var data = await dataTask;
                 var topUvImgSet = data[0];//await GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.UV);
                 var bottomUvImgSet = data[1]; //GetImageFVMI(FileLib.FVMI_ProcessType.Bottom, FileLib.FVMI_Type.UV);
                 var topWhiteImgSet = data[2];//GetImageFVMI(FileLib.FVMI_ProcessType.Top, FileLib.FVMI_Type.White);
@@ -394,7 +394,21 @@ namespace FVMI_INSPECTION.Presenter
             await ss.WaitAsync(TimeSpan.FromSeconds(9));
             if (f is null || fn is null)
                 return null;
-            return new Tuple<string, Image>(fn, Image.FromFile(f));
+            int count = 1;
+            do
+            {
+                try
+                {
+                    return new Tuple<string, Image>(fn, Image.FromFile(f));
+                }
+                catch
+                {
+                    count = count + 1;
+                    await Task.Delay(500);
+                }
+            }
+            while (count < 5);
+            return null;
         }
         public List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName, string serial)
         {
