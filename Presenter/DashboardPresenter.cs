@@ -200,6 +200,7 @@ namespace FVMI_INSPECTION.Presenter
                 view.StatusRun = "Error: Invalid CSV...";
                 return new ProcessResultModel[0];
             }
+            view.StopTimer();
             try
             {
                 cTokenSource.Token.ThrowIfCancellationRequested();
