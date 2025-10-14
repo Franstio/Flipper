@@ -128,7 +128,7 @@ namespace FVMI_INSPECTION.Presenter
             view.BottomUVRecord = new List<ProcessRecordModel>();
             //            view.StatusRun = view.SerialNumber;
             string res, res2;
-            var imgTask = Task.Run(async () => await LoadImageMonitoring());
+            var imgTask = Task.Run(LoadImageMonitoring);
             res = await process.WriteCommand("MR004", 1);
             /*await Task.Delay(100);*/
             //            view.tReset =  Task.Run(view.CheckResetTask);
