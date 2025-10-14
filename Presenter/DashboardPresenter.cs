@@ -128,10 +128,10 @@ namespace FVMI_INSPECTION.Presenter
             view.BottomUVRecord = new List<ProcessRecordModel>();
             //            view.StatusRun = view.SerialNumber;
             string res, res2;
+            var imgTask = Task.Run(async () => await LoadImageMonitoring());
             res = await process.WriteCommand("MR004", 1);
             /*await Task.Delay(100);*/
             //            view.tReset =  Task.Run(view.CheckResetTask);
-            var imgTask = Task.Run(() => LoadImageMonitoring());
             Task<string?[]> csvFilesTask = Task.Run(LoadCsv);
 
             do
@@ -391,7 +391,7 @@ namespace FVMI_INSPECTION.Presenter
                     catch { }
                 }
             };
-            await ss.WaitAsync(TimeSpan.FromSeconds(12));
+            await ss.WaitAsync(TimeSpan.FromSeconds(20));
             if (f is null || fn is null)
                 return null;
             int count = 1;
