@@ -391,7 +391,7 @@ namespace FVMI_INSPECTION.Presenter
                     catch { }
                 }
             };
-            await ss.WaitAsync(TimeSpan.FromSeconds(19));
+            await ss.WaitAsync(TimeSpan.FromSeconds(18));
             if (f is null || fn is null)
                 return null;
             int count = 1;
@@ -520,7 +520,7 @@ namespace FVMI_INSPECTION.Presenter
                     {
                         fileName.TrySetResult(e.FullPath);
                     };
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(19));
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(18));
                     await using (cts.Token.Register(() => fileName.TrySetResult(null)))
                     {
                         return await fileName.Task;
