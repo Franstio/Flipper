@@ -133,6 +133,8 @@ namespace FVMI_INSPECTION.Presenter
             //            view.tReset =  Task.Run(view.CheckResetTask);
             var imgTask = Task.Run(() => LoadImageMonitoring());
             Task<string?[]> csvFilesTask = Task.Run(LoadCsv);
+
+            Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput(await imgTask);
             do
             {
                 res = await process.ReadCommand("R000");
@@ -142,7 +144,6 @@ namespace FVMI_INSPECTION.Presenter
             //            await process.WriteCommand("MR303", 1);
 
             view.StartTimer();
-            Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput(await imgTask);
             /*ret[0] = await TopProcess();
             view.topUVImage = ret[0].Image;
             ret[1] = await BottomProcess();
