@@ -140,10 +140,10 @@ namespace FVMI_INSPECTION.Presenter
                 res2 = await process.ReadCommand("MR004");
             }
             while (!res.Contains("1") || !res.Contains("1"));
+            view.StartTimer();
             Tuple<string, Image>?[]? imageMonitor = await MonitorImageOutput( imgTask);
             //            await process.WriteCommand("MR303", 1);
 
-            view.StartTimer();
             /*ret[0] = await TopProcess();
             view.topUVImage = ret[0].Image;
             ret[1] = await BottomProcess();
