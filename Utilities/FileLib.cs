@@ -231,7 +231,7 @@ namespace FVMI_INSPECTION.Utilities
                 return string.Empty;
             }
         }
-        public void SaveParamImage(string model,string type,string area,string sFile)
+        public string SaveParamImage(string model,string type,string area,string sFile)
         {
             string path = Path.Combine(_savePath,"upload", model);
             if (!Directory.Exists(path))
@@ -241,6 +241,7 @@ namespace FVMI_INSPECTION.Utilities
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, $"{area}.{sFile.Split(".")[sFile.Split(".").Length - 1]}");
             File.Copy(sFile, path);
+            return path;
         }
         /*public async Task<string> GenerateLog(List<RecordInspectionModel> Records, string ScanCode)
         {

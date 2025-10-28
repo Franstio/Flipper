@@ -96,7 +96,7 @@ namespace FVMI_INSPECTION.Forms
             var dialog = openParamImageDialog.ShowDialog();
             if (dialog != DialogResult.OK)
                 return;
-            lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName);
+            ParameterImage = Image.FromFile(lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName));
             button3.Visible = false;
         }
     }
