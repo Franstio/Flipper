@@ -46,6 +46,8 @@ namespace FVMI_INSPECTION.Controls
             processTimeLabel = new Label();
             groupBox3 = new GroupBox();
             inspectionListGridTopUVView = new FVMIDataGridView();
+            AREA = new DataGridViewTextBoxColumn();
+            JUDGEMENT = new DataGridViewTextBoxColumn();
             label6 = new Label();
             statusLabel = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
@@ -59,10 +61,16 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox10 = new GroupBox();
             inspectionListGridBottomWhiteView = new FVMIDataGridView();
+            dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
             groupBox2 = new GroupBox();
             inspectionListGridTopWhiteView = new FVMIDataGridView();
+            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
             groupBox9 = new GroupBox();
             inspectionListGridBottomUVView = new FVMIDataGridView();
+            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             button1 = new Button();
             groupBox7 = new GroupBox();
             campointLabel = new Label();
@@ -113,14 +121,6 @@ namespace FVMI_INSPECTION.Controls
             resetCheckTimer = new System.Windows.Forms.Timer(components);
             groupBox12 = new GroupBox();
             uvLabel = new Label();
-            dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-            AREA = new DataGridViewTextBoxColumn();
-            JUDGEMENT = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
             groupBox1.SuspendLayout();
             panel6.SuspendLayout();
             tableLayoutPanel12.SuspendLayout();
@@ -359,6 +359,19 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridTopUVView.Tag = "TopUV";
             inspectionListGridTopUVView.CellDoubleClick += ShowNgPopup;
             // 
+            // AREA
+            // 
+            AREA.HeaderText = "AREA";
+            AREA.Name = "AREA";
+            AREA.ReadOnly = true;
+            // 
+            // JUDGEMENT
+            // 
+            JUDGEMENT.FillWeight = 20F;
+            JUDGEMENT.HeaderText = "RESULT";
+            JUDGEMENT.Name = "JUDGEMENT";
+            JUDGEMENT.ReadOnly = true;
+            // 
             // label6
             // 
             label6.BackColor = Color.LightGreen;
@@ -515,6 +528,19 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridBottomWhiteView.Tag = "BottomWhite";
             inspectionListGridBottomWhiteView.CellDoubleClick += ShowNgPopup;
             // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewTextBoxColumn5.HeaderText = "AREA";
+            dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            dataGridViewTextBoxColumn6.FillWeight = 20F;
+            dataGridViewTextBoxColumn6.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(inspectionListGridTopWhiteView);
@@ -550,6 +576,19 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridTopWhiteView.Tag = "TopWhite";
             inspectionListGridTopWhiteView.CellDoubleClick += ShowNgPopup;
             // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewTextBoxColumn3.HeaderText = "AREA";
+            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            dataGridViewTextBoxColumn4.FillWeight = 20F;
+            dataGridViewTextBoxColumn4.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
             // groupBox9
             // 
             groupBox9.Controls.Add(inspectionListGridBottomUVView);
@@ -584,6 +623,19 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridBottomUVView.TabIndex = 0;
             inspectionListGridBottomUVView.Tag = "BottomUV";
             inspectionListGridBottomUVView.CellDoubleClick += ShowNgPopup;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            dataGridViewTextBoxColumn1.HeaderText = "AREA";
+            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            dataGridViewTextBoxColumn2.FillWeight = 20F;
+            dataGridViewTextBoxColumn2.HeaderText = "RESULT";
+            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
             // button1
             // 
@@ -1255,58 +1307,6 @@ namespace FVMI_INSPECTION.Controls
             uvLabel.TabIndex = 0;
             uvLabel.Text = "-";
             uvLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            dataGridViewTextBoxColumn5.HeaderText = "AREA";
-            dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            dataGridViewTextBoxColumn5.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            dataGridViewTextBoxColumn6.FillWeight = 20F;
-            dataGridViewTextBoxColumn6.HeaderText = "RESULT";
-            dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            dataGridViewTextBoxColumn6.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            dataGridViewTextBoxColumn1.HeaderText = "AREA";
-            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            dataGridViewTextBoxColumn2.FillWeight = 20F;
-            dataGridViewTextBoxColumn2.HeaderText = "RESULT";
-            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // AREA
-            // 
-            AREA.HeaderText = "AREA";
-            AREA.Name = "AREA";
-            AREA.ReadOnly = true;
-            // 
-            // JUDGEMENT
-            // 
-            JUDGEMENT.FillWeight = 20F;
-            JUDGEMENT.HeaderText = "RESULT";
-            JUDGEMENT.Name = "JUDGEMENT";
-            JUDGEMENT.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            dataGridViewTextBoxColumn3.HeaderText = "AREA";
-            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            dataGridViewTextBoxColumn3.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            dataGridViewTextBoxColumn4.FillWeight = 20F;
-            dataGridViewTextBoxColumn4.HeaderText = "RESULT";
-            dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
             // DashboardControl
             // 

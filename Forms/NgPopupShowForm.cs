@@ -100,8 +100,8 @@ namespace FVMI_INSPECTION.Forms
                 return;
             ParameterImage = Image.FromFile(openParamImageDialog.FileName);
             button3.Visible = false;
-            button2.Enabled = true;
-            button3.Enabled = true;
+            button1.Enabled = ParameterImage is not null;
+            button2.Enabled = ParameterImage is not null;
         }
     }
 }
