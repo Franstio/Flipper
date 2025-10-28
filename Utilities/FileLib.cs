@@ -233,7 +233,7 @@ namespace FVMI_INSPECTION.Utilities
         }
         public void SaveParamImage(string model,string type,string area,string sFile)
         {
-            string path = Path.Combine(_filePath, model);
+            string path = Path.Combine(_savePath,"upload", model);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, type);
