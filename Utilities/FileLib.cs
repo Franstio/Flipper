@@ -240,6 +240,8 @@ namespace FVMI_INSPECTION.Utilities
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             path = Path.Combine(path, $"{area}.{sFile.Split(".")[sFile.Split(".").Length - 1]}");
+            if (File.Exists(path))
+                File.Delete(path);
             File.Copy(sFile, path);
             return path;
         }
