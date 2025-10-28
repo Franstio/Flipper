@@ -187,7 +187,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox1.BackColor = Color.FromArgb(28, 154, 220);
             groupBox1.Controls.Add(panel6);
             groupBox1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox1.Location = new Point(638, 327);
+            groupBox1.Location = new Point(494, 327);
             groupBox1.Margin = new Padding(3, 2, 3, 2);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 2, 3, 2);
@@ -332,7 +332,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox3.Location = new Point(8, 410);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 2, 3, 2);
-            groupBox3.Size = new Size(380, 195);
+            groupBox3.Size = new Size(524, 195);
             groupBox3.TabIndex = 4;
             groupBox3.TabStop = false;
             groupBox3.Text = "Top UV:";
@@ -354,7 +354,7 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridTopUVView.ReadOnly = true;
             inspectionListGridTopUVView.RowHeadersWidth = 51;
             inspectionListGridTopUVView.RowTemplate.Height = 29;
-            inspectionListGridTopUVView.Size = new Size(374, 169);
+            inspectionListGridTopUVView.Size = new Size(518, 169);
             inspectionListGridTopUVView.TabIndex = 0;
             inspectionListGridTopUVView.Tag = "TopUV";
             inspectionListGridTopUVView.CellDoubleClick += ShowNgPopup;
@@ -420,7 +420,7 @@ namespace FVMI_INSPECTION.Controls
             // 
             timeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             timeLabel.Font = new Font("Segoe UI", 10F);
-            timeLabel.Location = new Point(733, 725);
+            timeLabel.Location = new Point(589, 725);
             timeLabel.Name = "timeLabel";
             timeLabel.Size = new Size(220, 19);
             timeLabel.TabIndex = 14;
@@ -433,7 +433,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox6.BackColor = SystemColors.Control;
             groupBox6.Controls.Add(runningModel);
             groupBox6.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox6.Location = new Point(641, 98);
+            groupBox6.Location = new Point(497, 98);
             groupBox6.Name = "groupBox6";
             groupBox6.Size = new Size(312, 64);
             groupBox6.TabIndex = 15;
@@ -489,7 +489,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(396, 815);
+            tableLayoutPanel1.Size = new Size(540, 815);
             tableLayoutPanel1.TabIndex = 25;
             // 
             // groupBox10
@@ -500,7 +500,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox10.Location = new Point(8, 8);
             groupBox10.Name = "groupBox10";
             groupBox10.Padding = new Padding(3, 2, 3, 2);
-            groupBox10.Size = new Size(380, 195);
+            groupBox10.Size = new Size(524, 195);
             groupBox10.TabIndex = 9;
             groupBox10.TabStop = false;
             groupBox10.Text = "Bottom White:";
@@ -522,7 +522,7 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridBottomWhiteView.ReadOnly = true;
             inspectionListGridBottomWhiteView.RowHeadersWidth = 51;
             inspectionListGridBottomWhiteView.RowTemplate.Height = 29;
-            inspectionListGridBottomWhiteView.Size = new Size(374, 169);
+            inspectionListGridBottomWhiteView.Size = new Size(518, 169);
             inspectionListGridBottomWhiteView.TabIndex = 0;
             inspectionListGridBottomWhiteView.Tag = "BottomWhite";
             inspectionListGridBottomWhiteView.CellDoubleClick += ShowNgPopup;
@@ -547,7 +547,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox2.Location = new Point(8, 611);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 2, 3, 2);
-            groupBox2.Size = new Size(380, 196);
+            groupBox2.Size = new Size(524, 196);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "Top White:";
@@ -569,7 +569,7 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridTopWhiteView.ReadOnly = true;
             inspectionListGridTopWhiteView.RowHeadersWidth = 51;
             inspectionListGridTopWhiteView.RowTemplate.Height = 29;
-            inspectionListGridTopWhiteView.Size = new Size(374, 170);
+            inspectionListGridTopWhiteView.Size = new Size(518, 170);
             inspectionListGridTopWhiteView.TabIndex = 0;
             inspectionListGridTopWhiteView.Tag = "TopWhite";
             inspectionListGridTopWhiteView.CellDoubleClick += ShowNgPopup;
@@ -594,7 +594,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox9.Location = new Point(8, 209);
             groupBox9.Name = "groupBox9";
             groupBox9.Padding = new Padding(3, 2, 3, 2);
-            groupBox9.Size = new Size(380, 195);
+            groupBox9.Size = new Size(524, 195);
             groupBox9.TabIndex = 5;
             groupBox9.TabStop = false;
             groupBox9.Text = "Bottom UV:";
@@ -616,7 +616,7 @@ namespace FVMI_INSPECTION.Controls
             inspectionListGridBottomUVView.ReadOnly = true;
             inspectionListGridBottomUVView.RowHeadersWidth = 51;
             inspectionListGridBottomUVView.RowTemplate.Height = 29;
-            inspectionListGridBottomUVView.Size = new Size(374, 169);
+            inspectionListGridBottomUVView.Size = new Size(518, 169);
             inspectionListGridBottomUVView.TabIndex = 0;
             inspectionListGridBottomUVView.Tag = "BottomUV";
             inspectionListGridBottomUVView.CellDoubleClick += ShowNgPopup;
@@ -639,7 +639,7 @@ namespace FVMI_INSPECTION.Controls
             button1.BackColor = Color.Gray;
             button1.Enabled = false;
             button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            button1.Location = new Point(638, 793);
+            button1.Location = new Point(494, 793);
             button1.Name = "button1";
             button1.Size = new Size(315, 38);
             button1.TabIndex = 6;
@@ -653,7 +653,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox7.BackColor = SystemColors.Control;
             groupBox7.Controls.Add(campointLabel);
             groupBox7.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox7.Location = new Point(638, 238);
+            groupBox7.Location = new Point(494, 238);
             groupBox7.Name = "groupBox7";
             groupBox7.Size = new Size(315, 66);
             groupBox7.TabIndex = 16;
@@ -712,7 +712,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 82.89963F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 17.1003723F));
-            tableLayoutPanel2.Size = new Size(606, 343);
+            tableLayoutPanel2.Size = new Size(462, 343);
             tableLayoutPanel2.TabIndex = 20;
             // 
             // tableLayoutPanel3
@@ -727,7 +727,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(297, 55);
+            tableLayoutPanel3.Size = new Size(225, 55);
             tableLayoutPanel3.TabIndex = 6;
             // 
             // tableLayoutPanel6
@@ -737,12 +737,12 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel6.Dock = DockStyle.Fill;
-            tableLayoutPanel6.Location = new Point(306, 286);
+            tableLayoutPanel6.Location = new Point(234, 286);
             tableLayoutPanel6.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 1;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Size = new Size(297, 55);
+            tableLayoutPanel6.Size = new Size(225, 55);
             tableLayoutPanel6.TabIndex = 7;
             // 
             // panel7
@@ -752,7 +752,7 @@ namespace FVMI_INSPECTION.Controls
             panel7.Dock = DockStyle.Fill;
             panel7.Location = new Point(3, 3);
             panel7.Name = "panel7";
-            panel7.Size = new Size(297, 278);
+            panel7.Size = new Size(225, 278);
             panel7.TabIndex = 8;
             // 
             // topUVDecision
@@ -760,7 +760,7 @@ namespace FVMI_INSPECTION.Controls
             topUVDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             topUVDecision.BackColor = Color.Transparent;
             topUVDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            topUVDecision.Location = new Point(148, 3);
+            topUVDecision.Location = new Point(76, 3);
             topUVDecision.Margin = new Padding(0);
             topUVDecision.Name = "topUVDecision";
             topUVDecision.RightToLeft = RightToLeft.Yes;
@@ -783,7 +783,7 @@ namespace FVMI_INSPECTION.Controls
             topUV.Margin = new Padding(3, 2, 3, 2);
             topUV.MovPos = new Point(0, 0);
             topUV.Name = "topUV";
-            topUV.Size = new Size(297, 278);
+            topUV.Size = new Size(225, 278);
             topUV.SizeMode = PictureBoxSizeMode.StretchImage;
             topUV.StartPos = new Point(0, 0);
             topUV.TabIndex = 4;
@@ -796,9 +796,9 @@ namespace FVMI_INSPECTION.Controls
             panel9.Controls.Add(topWhiteDecision);
             panel9.Controls.Add(topWhite);
             panel9.Dock = DockStyle.Fill;
-            panel9.Location = new Point(306, 3);
+            panel9.Location = new Point(234, 3);
             panel9.Name = "panel9";
-            panel9.Size = new Size(297, 278);
+            panel9.Size = new Size(225, 278);
             panel9.TabIndex = 9;
             // 
             // topWhiteDecision
@@ -806,7 +806,7 @@ namespace FVMI_INSPECTION.Controls
             topWhiteDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             topWhiteDecision.BackColor = Color.Transparent;
             topWhiteDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            topWhiteDecision.Location = new Point(148, 3);
+            topWhiteDecision.Location = new Point(76, 3);
             topWhiteDecision.Margin = new Padding(0);
             topWhiteDecision.Name = "topWhiteDecision";
             topWhiteDecision.RightToLeft = RightToLeft.Yes;
@@ -829,7 +829,7 @@ namespace FVMI_INSPECTION.Controls
             topWhite.Margin = new Padding(3, 2, 3, 2);
             topWhite.MovPos = new Point(0, 0);
             topWhite.Name = "topWhite";
-            topWhite.Size = new Size(297, 278);
+            topWhite.Size = new Size(225, 278);
             topWhite.SizeMode = PictureBoxSizeMode.StretchImage;
             topWhite.StartPos = new Point(0, 0);
             topWhite.TabIndex = 5;
@@ -876,7 +876,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel7.RowCount = 1;
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel7.Size = new Size(606, 26);
+            tableLayoutPanel7.Size = new Size(462, 26);
             tableLayoutPanel7.TabIndex = 21;
             // 
             // label7
@@ -884,9 +884,9 @@ namespace FVMI_INSPECTION.Controls
             label7.AutoSize = true;
             label7.Dock = DockStyle.Fill;
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label7.Location = new Point(306, 0);
+            label7.Location = new Point(234, 0);
             label7.Name = "label7";
-            label7.Size = new Size(297, 26);
+            label7.Size = new Size(225, 26);
             label7.TabIndex = 1;
             label7.Text = "Top White";
             label7.TextAlign = ContentAlignment.MiddleCenter;
@@ -898,7 +898,7 @@ namespace FVMI_INSPECTION.Controls
             label5.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label5.Location = new Point(3, 0);
             label5.Name = "label5";
-            label5.Size = new Size(297, 26);
+            label5.Size = new Size(225, 26);
             label5.TabIndex = 0;
             label5.Text = "Top UV";
             label5.TextAlign = ContentAlignment.MiddleCenter;
@@ -908,7 +908,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             groupBox8.Controls.Add(tableLayoutPanel8);
             groupBox8.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox8.Location = new Point(635, 563);
+            groupBox8.Location = new Point(491, 563);
             groupBox8.Name = "groupBox8";
             groupBox8.Size = new Size(318, 48);
             groupBox8.TabIndex = 22;
@@ -1025,7 +1025,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel10.Size = new Size(606, 370);
+            tableLayoutPanel10.Size = new Size(462, 370);
             tableLayoutPanel10.TabIndex = 23;
             // 
             // panel4
@@ -1035,7 +1035,7 @@ namespace FVMI_INSPECTION.Controls
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(3, 40);
             panel4.Name = "panel4";
-            panel4.Size = new Size(297, 327);
+            panel4.Size = new Size(225, 327);
             panel4.TabIndex = 28;
             // 
             // bottomWhiteDecision
@@ -1043,7 +1043,7 @@ namespace FVMI_INSPECTION.Controls
             bottomWhiteDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bottomWhiteDecision.BackColor = Color.Transparent;
             bottomWhiteDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            bottomWhiteDecision.Location = new Point(148, 4);
+            bottomWhiteDecision.Location = new Point(76, 4);
             bottomWhiteDecision.Margin = new Padding(0);
             bottomWhiteDecision.Name = "bottomWhiteDecision";
             bottomWhiteDecision.RightToLeft = RightToLeft.Yes;
@@ -1065,7 +1065,7 @@ namespace FVMI_INSPECTION.Controls
             bottomWhite.Location = new Point(0, 0);
             bottomWhite.MovPos = new Point(0, 0);
             bottomWhite.Name = "bottomWhite";
-            bottomWhite.Size = new Size(297, 327);
+            bottomWhite.Size = new Size(225, 327);
             bottomWhite.SizeMode = PictureBoxSizeMode.StretchImage;
             bottomWhite.StartPos = new Point(0, 0);
             bottomWhite.TabIndex = 2;
@@ -1080,7 +1080,7 @@ namespace FVMI_INSPECTION.Controls
             label11.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label11.Location = new Point(3, 0);
             label11.Name = "label11";
-            label11.Size = new Size(297, 37);
+            label11.Size = new Size(225, 37);
             label11.TabIndex = 1;
             label11.Text = "Bottom White";
             label11.TextAlign = ContentAlignment.MiddleCenter;
@@ -1090,9 +1090,9 @@ namespace FVMI_INSPECTION.Controls
             label10.AutoSize = true;
             label10.Dock = DockStyle.Fill;
             label10.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            label10.Location = new Point(306, 0);
+            label10.Location = new Point(234, 0);
             label10.Name = "label10";
-            label10.Size = new Size(297, 37);
+            label10.Size = new Size(225, 37);
             label10.TabIndex = 0;
             label10.Text = "Bottom UV";
             label10.TextAlign = ContentAlignment.MiddleCenter;
@@ -1102,9 +1102,9 @@ namespace FVMI_INSPECTION.Controls
             panel5.Controls.Add(bottomUVDecision);
             panel5.Controls.Add(bottomUV);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(306, 40);
+            panel5.Location = new Point(234, 40);
             panel5.Name = "panel5";
-            panel5.Size = new Size(297, 327);
+            panel5.Size = new Size(225, 327);
             panel5.TabIndex = 29;
             // 
             // bottomUVDecision
@@ -1112,7 +1112,7 @@ namespace FVMI_INSPECTION.Controls
             bottomUVDecision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bottomUVDecision.BackColor = Color.Transparent;
             bottomUVDecision.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            bottomUVDecision.Location = new Point(148, 4);
+            bottomUVDecision.Location = new Point(76, 4);
             bottomUVDecision.Margin = new Padding(0);
             bottomUVDecision.Name = "bottomUVDecision";
             bottomUVDecision.RightToLeft = RightToLeft.Yes;
@@ -1134,7 +1134,7 @@ namespace FVMI_INSPECTION.Controls
             bottomUV.Location = new Point(0, 0);
             bottomUV.MovPos = new Point(0, 0);
             bottomUV.Name = "bottomUV";
-            bottomUV.Size = new Size(297, 327);
+            bottomUV.Size = new Size(225, 327);
             bottomUV.SizeMode = PictureBoxSizeMode.StretchImage;
             bottomUV.StartPos = new Point(0, 0);
             bottomUV.TabIndex = 3;
@@ -1149,7 +1149,7 @@ namespace FVMI_INSPECTION.Controls
             panel8.Dock = DockStyle.Fill;
             panel8.Location = new Point(3, 379);
             panel8.Name = "panel8";
-            panel8.Size = new Size(606, 371);
+            panel8.Size = new Size(462, 371);
             panel8.TabIndex = 24;
             // 
             // tableLayoutPanel11
@@ -1164,7 +1164,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel11.RowCount = 2;
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel11.Size = new Size(612, 753);
+            tableLayoutPanel11.Size = new Size(468, 753);
             tableLayoutPanel11.TabIndex = 26;
             tableLayoutPanel11.Paint += tableLayoutPanel11_Paint;
             // 
@@ -1173,9 +1173,9 @@ namespace FVMI_INSPECTION.Controls
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel2.AutoScroll = true;
             panel2.Controls.Add(tableLayoutPanel1);
-            panel2.Location = new Point(959, 110);
+            panel2.Location = new Point(815, 110);
             panel2.Name = "panel2";
-            panel2.Size = new Size(413, 745);
+            panel2.Size = new Size(557, 745);
             panel2.TabIndex = 27;
             // 
             // button2
@@ -1184,7 +1184,7 @@ namespace FVMI_INSPECTION.Controls
             button2.BackColor = Color.Yellow;
             button2.Enabled = false;
             button2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            button2.Location = new Point(638, 747);
+            button2.Location = new Point(494, 747);
             button2.Name = "button2";
             button2.Size = new Size(315, 34);
             button2.TabIndex = 28;
@@ -1202,7 +1202,7 @@ namespace FVMI_INSPECTION.Controls
             tableLayoutPanel13.Controls.Add(panel14, 0, 1);
             tableLayoutPanel13.Controls.Add(panel13, 0, 0);
             tableLayoutPanel13.Controls.Add(panel12, 1, 1);
-            tableLayoutPanel13.Location = new Point(638, 629);
+            tableLayoutPanel13.Location = new Point(494, 629);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
             tableLayoutPanel13.RowCount = 2;
             tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
@@ -1285,7 +1285,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox12.BackColor = SystemColors.Control;
             groupBox12.Controls.Add(uvLabel);
             groupBox12.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox12.Location = new Point(641, 168);
+            groupBox12.Location = new Point(497, 168);
             groupBox12.Name = "groupBox12";
             groupBox12.Size = new Size(312, 64);
             groupBox12.TabIndex = 16;
