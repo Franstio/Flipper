@@ -3,6 +3,7 @@ using FVMI_INSPECTION.Interfaces;
 using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Presenter;
 using FVMI_INSPECTION.Repositories;
+using FVMI_INSPECTION.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace FVMI_INSPECTION.Forms
         public RecordModel Model { get; set; }
         private FVMIPictureBox[] boxes;
         private ReasonRepository reasonRepo = new ReasonRepository();
-
+        private FileLib lib = new FileLib();
         public NgPopupShowForm(RecordModel model)
         {
             InitializeComponent();
@@ -29,20 +30,26 @@ namespace FVMI_INSPECTION.Forms
             boxes = [this.actualPictureBox, this.parameterPictureBox];
         }
 
-        public Image ActualImage { get => actualPictureBox.Image; 
-            set 
+        public Image ActualImage
+        {
+            get => actualPictureBox.Image;
+            set
             {
                 actualPictureBox.Image = value;
-            } 
+            }
         }
-        public Image ParameterImage { get => parameterPictureBox.Image;
+        public Image ParameterImage
+        {
+            get => parameterPictureBox.Image;
             set
             {
                 parameterPictureBox.Image = value;
             }
         }
-        public string Area { get => areaLabel.Text ; 
-            set 
+        public string Area
+        {
+            get => areaLabel.Text;
+            set
             {
                 areaLabel.Invoke(delegate { areaLabel.Text = value; });
             }
@@ -65,14 +72,14 @@ namespace FVMI_INSPECTION.Forms
             hoverBox.Invalidate();
         }
 
-        private async void UpdateStatus(object sender, EventArgs e) 
+        private async void UpdateStatus(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
             string result = "PASS";
             if (btn.Tag!.ToString() != "PASS")
             {
                 var reasons = await reasonRepo.GetReason();
-                SelectModalForm frm = new SelectModalForm("Confirm Result", "Reason", reasons.Select(x=>x.Reason).ToList());
+                SelectModalForm frm = new SelectModalForm("Confirm Result", "Reason", reasons.Select(x => x.Reason).ToList());
                 DialogResult res = frm.ShowDialog();
                 if (res != DialogResult.OK)
                     return;
@@ -84,5 +91,13 @@ namespace FVMI_INSPECTION.Forms
             return;
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var dialog = openParamImageDialog.ShowDialog();
+            if (dialog != DialogResult.OK)
+                return;
+            lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName);
+            button3.Visible = false;
+        }
     }
 }

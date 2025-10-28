@@ -30,7 +30,7 @@ namespace FVMI_INSPECTION.Presenter
             FileLib.FVMI_Type fType = rModel.Type.Contains("UV") ? FileLib.FVMI_Type.UV : FileLib.FVMI_Type.White;
             FileLib.FVMI_ProcessType pType = rModel.Type.Contains("Top") ? FileLib.FVMI_ProcessType.Top : FileLib.FVMI_ProcessType.Bottom;
             view.ActualImage = lib.ReadImage(rModel.ActualImage,fType,pType)!;
-            view.ParameterImage = lib.ReadImage(dModel.Image, true)!;
+//            view.ParameterImage = lib.ReadImage(dModel.Image, true)!;
             view.Area = rModel.Area;
         }
         public Task<RecordModel> UpdateResult(bool isPassed, string reason)

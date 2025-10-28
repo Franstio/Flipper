@@ -231,6 +231,16 @@ namespace FVMI_INSPECTION.Utilities
                 return string.Empty;
             }
         }
+        public void SaveParamImage(string model,string type,string area,string sFile)
+        {
+            string path = Path.Combine(_filePath, model);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, type);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            File.Copy(sFile, $"{area}.{sFile.Split(".")[sFile.Split(".").Length-1]}");
+        }
         /*public async Task<string> GenerateLog(List<RecordInspectionModel> Records, string ScanCode)
         {
             if (Records.Count < 1)

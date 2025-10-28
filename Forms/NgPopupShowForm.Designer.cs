@@ -35,10 +35,14 @@ namespace FVMI_INSPECTION.Forms
             button2 = new Button();
             actualPictureBox = new FVMIPictureBox();
             areaLabel = new Label();
-            parameterPictureBox = new FVMIPictureBox();
             button1 = new Button();
+            panel1 = new Panel();
+            button3 = new Button();
+            parameterPictureBox = new FVMIPictureBox();
+            openParamImageDialog = new OpenFileDialog();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)actualPictureBox).BeginInit();
+            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)parameterPictureBox).BeginInit();
             SuspendLayout();
             // 
@@ -50,8 +54,8 @@ namespace FVMI_INSPECTION.Forms
             tableLayoutPanel1.Controls.Add(button2, 1, 2);
             tableLayoutPanel1.Controls.Add(actualPictureBox, 1, 1);
             tableLayoutPanel1.Controls.Add(areaLabel, 0, 0);
-            tableLayoutPanel1.Controls.Add(parameterPictureBox, 0, 1);
             tableLayoutPanel1.Controls.Add(button1, 0, 2);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -79,13 +83,23 @@ namespace FVMI_INSPECTION.Forms
             // 
             // actualPictureBox
             // 
+            actualPictureBox.AllowPan = true;
+            actualPictureBox.AllowZoom = true;
+            actualPictureBox.BackgroundColor = Color.White;
             actualPictureBox.Dock = DockStyle.Fill;
+            actualPictureBox.isActive = false;
+            actualPictureBox.isHovering = false;
+            actualPictureBox.IsUV = true;
             actualPictureBox.Location = new Point(462, 100);
+            actualPictureBox.MovPos = new Point(0, 0);
             actualPictureBox.Name = "actualPictureBox";
             actualPictureBox.Size = new Size(453, 447);
             actualPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            actualPictureBox.StartPos = new Point(0, 0);
             actualPictureBox.TabIndex = 2;
             actualPictureBox.TabStop = false;
+            actualPictureBox.ZoomIncrement = 0.1F;
+            actualPictureBox.ZoomValue = 1F;
             // 
             // areaLabel
             // 
@@ -98,16 +112,6 @@ namespace FVMI_INSPECTION.Forms
             areaLabel.TabIndex = 0;
             areaLabel.Text = "Area: [Area Name]";
             areaLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // parameterPictureBox
-            // 
-            parameterPictureBox.Dock = DockStyle.Fill;
-            parameterPictureBox.Location = new Point(3, 100);
-            parameterPictureBox.Name = "parameterPictureBox";
-            parameterPictureBox.Size = new Size(453, 447);
-            parameterPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            parameterPictureBox.TabIndex = 1;
-            parameterPictureBox.TabStop = false;
             // 
             // button1
             // 
@@ -124,6 +128,54 @@ namespace FVMI_INSPECTION.Forms
             button1.UseVisualStyleBackColor = false;
             button1.Click += UpdateStatus;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(button3);
+            panel1.Controls.Add(parameterPictureBox);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(3, 100);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(453, 447);
+            panel1.TabIndex = 5;
+            // 
+            // button3
+            // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            button3.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold);
+            button3.Location = new Point(113, 110);
+            button3.Name = "button3";
+            button3.Size = new Size(224, 203);
+            button3.TabIndex = 3;
+            button3.Text = "Upload Image";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // parameterPictureBox
+            // 
+            parameterPictureBox.AllowPan = true;
+            parameterPictureBox.AllowZoom = true;
+            parameterPictureBox.BackgroundColor = Color.White;
+            parameterPictureBox.Dock = DockStyle.Fill;
+            parameterPictureBox.isActive = false;
+            parameterPictureBox.isHovering = false;
+            parameterPictureBox.IsUV = true;
+            parameterPictureBox.Location = new Point(0, 0);
+            parameterPictureBox.MovPos = new Point(0, 0);
+            parameterPictureBox.Name = "parameterPictureBox";
+            parameterPictureBox.Size = new Size(453, 447);
+            parameterPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            parameterPictureBox.StartPos = new Point(0, 0);
+            parameterPictureBox.TabIndex = 2;
+            parameterPictureBox.TabStop = false;
+            parameterPictureBox.ZoomIncrement = 0.1F;
+            parameterPictureBox.ZoomValue = 1F;
+            // 
+            // openParamImageDialog
+            // 
+            openParamImageDialog.FileName = "openFileDialog1";
+            openParamImageDialog.Filter = "*.jpg|*.jpeg|*.png|*.webp";
+            openParamImageDialog.Title = "Select Image";
+            // 
             // NgPopupShowForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -137,6 +189,7 @@ namespace FVMI_INSPECTION.Forms
             Load += NgPopupShowForm_Load;
             tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)actualPictureBox).EndInit();
+            panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)parameterPictureBox).EndInit();
             ResumeLayout(false);
         }
@@ -147,7 +200,10 @@ namespace FVMI_INSPECTION.Forms
         private Label areaLabel;
         private Button button2;
         private FVMIPictureBox actualPictureBox;
-        private FVMIPictureBox parameterPictureBox;
         private Button button1;
+        private Panel panel1;
+        private Button button3;
+        private FVMIPictureBox parameterPictureBox;
+        private OpenFileDialog openParamImageDialog;
     }
 }
