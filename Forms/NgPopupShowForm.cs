@@ -58,7 +58,8 @@ namespace FVMI_INSPECTION.Forms
         private async void NgPopupShowForm_Load(object sender, EventArgs e)
         {
             presenter = await NgPopUpPresenter.Build(this, Model);
-
+            button1.Enabled = false;
+            button2.Enabled = false;
         }
         protected override void OnMouseWheel(MouseEventArgs e)
         {
@@ -74,6 +75,7 @@ namespace FVMI_INSPECTION.Forms
 
         private async void UpdateStatus(object sender, EventArgs e)
         {
+            lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName);
             Button btn = (Button)sender;
             string result = "PASS";
             if (btn.Tag!.ToString() != "PASS")
@@ -96,8 +98,10 @@ namespace FVMI_INSPECTION.Forms
             var dialog = openParamImageDialog.ShowDialog();
             if (dialog != DialogResult.OK)
                 return;
-            ParameterImage = Image.FromFile(lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName));
+            ParameterImage = Image.FromFile(openParamImageDialog.FileName);
             button3.Visible = false;
+            button2.Enabled = ParameterImage is not null;
+            button3.Enabled = ParameterImage is not null;
         }
     }
 }
