@@ -173,7 +173,6 @@ namespace FVMI_INSPECTION.Forms
             // openParamImageDialog
             // 
             openParamImageDialog.FileName = "openFileDialog1";
-            openParamImageDialog.Filter = "*.jpg|*.jpeg|*.png|*.webp";
             openParamImageDialog.Title = "Select Image";
             // 
             // NgPopupShowForm
