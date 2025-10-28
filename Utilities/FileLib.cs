@@ -239,7 +239,8 @@ namespace FVMI_INSPECTION.Utilities
             path = Path.Combine(path, type);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            File.Copy(sFile, $"{area}.{sFile.Split(".")[sFile.Split(".").Length-1]}");
+            path = Path.Combine(path, $"{area}.{sFile.Split(".")[sFile.Split(".").Length - 1]}");
+            File.Copy(sFile, path);
         }
         /*public async Task<string> GenerateLog(List<RecordInspectionModel> Records, string ScanCode)
         {
