@@ -335,7 +335,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox3.Size = new Size(524, 195);
             groupBox3.TabIndex = 4;
             groupBox3.TabStop = false;
-            groupBox3.Text = "Top UV:";
+            groupBox3.Text = "Sequence UV:";
             // 
             // inspectionListGridTopUVView
             // 
@@ -504,7 +504,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox10.Size = new Size(524, 195);
             groupBox10.TabIndex = 9;
             groupBox10.TabStop = false;
-            groupBox10.Text = "Bottom White:";
+            groupBox10.Text = "Sequence White:";
             // 
             // inspectionListGridBottomWhiteView
             // 
@@ -552,7 +552,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox2.Size = new Size(524, 196);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Top White:";
+            groupBox2.Text = "Sequence White:";
             // 
             // inspectionListGridTopWhiteView
             // 
@@ -600,7 +600,7 @@ namespace FVMI_INSPECTION.Controls
             groupBox9.Size = new Size(524, 195);
             groupBox9.TabIndex = 5;
             groupBox9.TabStop = false;
-            groupBox9.Text = "Bottom UV:";
+            groupBox9.Text = "Sequence UV:";
             // 
             // inspectionListGridBottomUVView
             // 
@@ -892,7 +892,7 @@ namespace FVMI_INSPECTION.Controls
             label7.Name = "label7";
             label7.Size = new Size(225, 26);
             label7.TabIndex = 1;
-            label7.Text = "Top White";
+            label7.Text = "Sequence White";
             label7.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label5
@@ -904,7 +904,7 @@ namespace FVMI_INSPECTION.Controls
             label5.Name = "label5";
             label5.Size = new Size(225, 26);
             label5.TabIndex = 0;
-            label5.Text = "Top UV";
+            label5.Text = "Sequence UV";
             label5.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // groupBox8
@@ -1086,7 +1086,7 @@ namespace FVMI_INSPECTION.Controls
             label11.Name = "label11";
             label11.Size = new Size(225, 37);
             label11.TabIndex = 1;
-            label11.Text = "Bottom White";
+            label11.Text = "Sequence White";
             label11.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label10
@@ -1098,7 +1098,7 @@ namespace FVMI_INSPECTION.Controls
             label10.Name = "label10";
             label10.Size = new Size(225, 37);
             label10.TabIndex = 0;
-            label10.Text = "Bottom UV";
+            label10.Text = "Sequence UV";
             label10.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel5
