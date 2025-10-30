@@ -78,7 +78,7 @@ namespace FVMI_INSPECTION.Utilities
             Image img;
             try
             {
-                img = Image.FromFile(Path.Combine(manualPath is null ? (local ? _savePath : _ngSavePath) : manualPath, imageName));
+                img = new Bitmap(Path.Combine(manualPath is null ? (local ? _savePath : _ngSavePath) : manualPath, imageName));
                 return img;
             }
             catch (Exception ex)

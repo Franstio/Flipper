@@ -167,10 +167,50 @@ namespace FVMI_INSPECTION.Controls
         }
 
         public int CampPoint { get => int.Parse(campointLabel.Text); set { if (IsHandleCreated) Invoke(delegate { campointLabel.Text = value.ToString(); }); } }
-        public Image? bottomUVImage { get => bottomUV.Image; set { if (IsHandleCreated) Invoke(delegate { bottomUV.Image = value; }); } }
-        public Image? bottomWhiteImage { get => bottomWhite.Image; set { if (IsHandleCreated) Invoke(delegate { bottomWhite.Image = value; }); } }
-        public Image? topUVImage { get => topUV.Image; set { if (IsHandleCreated) Invoke(delegate { topUV.Image = value; }); } }
-        public Image? topWhiteImage { get => topWhite.Image; set { if (topWhite.IsHandleCreated) Invoke(delegate { topWhite.Image = value; }); } }
+        public Image? bottomUVImage { get => bottomUV.Image; set
+            {
+                if (IsHandleCreated) Invoke(
+                    delegate
+                    {
+                        if (value != bottomUV.Image)
+                            bottomUV.Image?.Dispose();
+                        bottomUV.Image = value;
+                    });
+            } 
+        }
+        public Image? bottomWhiteImage { get => bottomWhite.Image; set { 
+                if (IsHandleCreated) 
+                    Invoke(
+                        delegate 
+                        {
+                            if (value != bottomWhite.Image)
+                                bottomWhite.Image?.Dispose();
+                            bottomWhite.Image = value; 
+                        }); 
+            } 
+        }
+        public Image? topUVImage { get => topUV.Image; set { 
+                if (IsHandleCreated) 
+                    Invoke(
+                        delegate 
+                        {
+                            if (topUV.Image != value)
+                                topUV.Image?.Dispose();
+                            topUV.Image = value; 
+                        }); 
+            } 
+        }
+        public Image? topWhiteImage { get => topWhite.Image; set { 
+                if (topWhite.IsHandleCreated) 
+                    Invoke(
+                        delegate 
+                        {
+                            if (topWhite.Image != value)
+                                topWhite.Image?.Dispose();
+                            topWhite.Image = value; 
+                        }); 
+            } 
+        }
         private List<RecordModel> records = new List<RecordModel>();
         private List<ProcessRecordModel> _topRecord = new List<ProcessRecordModel>(), _bottomRecord = new List<ProcessRecordModel>(), _topWhiteRecord = new List<ProcessRecordModel>(), _bottomWhiteRecord = new List<ProcessRecordModel>();
         public List<ProcessRecordModel> TopUVRecord
