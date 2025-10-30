@@ -94,7 +94,6 @@ namespace FVMI_INSPECTION.Forms
             actualPictureBox.MovPos = new Point(0, 0);
             actualPictureBox.Name = "actualPictureBox";
             actualPictureBox.Size = new Size(453, 447);
-            actualPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             actualPictureBox.StartPos = new Point(0, 0);
             actualPictureBox.TabIndex = 2;
             actualPictureBox.TabStop = false;
@@ -163,7 +162,6 @@ namespace FVMI_INSPECTION.Forms
             parameterPictureBox.MovPos = new Point(0, 0);
             parameterPictureBox.Name = "parameterPictureBox";
             parameterPictureBox.Size = new Size(453, 447);
-            parameterPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             parameterPictureBox.StartPos = new Point(0, 0);
             parameterPictureBox.TabIndex = 2;
             parameterPictureBox.TabStop = false;
