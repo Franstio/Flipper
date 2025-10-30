@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,6 +40,8 @@ namespace FVMI_INSPECTION.Controls
         }
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             base.OnPaint(e);
             if (!IsUV)
             {
@@ -58,6 +61,8 @@ namespace FVMI_INSPECTION.Controls
             {
                 var image = new Bitmap(Image, GetDisplayedImageSize());
                 e.Graphics.Clear(BackgroundColor);
+                e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic; // smooth zoom for photos
+
                 if (ZoomValue != 0.00F && (isHovering && AllowZoom) )
                     e.Graphics.ScaleTransform(ZoomValue, ZoomValue);
                 if (AllowPan)
