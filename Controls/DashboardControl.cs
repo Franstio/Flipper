@@ -212,7 +212,7 @@ namespace FVMI_INSPECTION.Controls
             } 
         }
         private List<RecordModel> records = new List<RecordModel>();
-        private List<RecordModel> lockedRecords = new List<RecordModel>();
+        private RecordModel[] lockedRecords = [];
         private List<ProcessRecordModel> _topRecord = new List<ProcessRecordModel>(), _bottomRecord = new List<ProcessRecordModel>(), _topWhiteRecord = new List<ProcessRecordModel>(), _bottomWhiteRecord = new List<ProcessRecordModel>();
         public List<ProcessRecordModel> TopUVRecord
         {
@@ -375,14 +375,15 @@ namespace FVMI_INSPECTION.Controls
 
                         scanLabel.Text = "-";
                     });
-                    records = lockedRecords = new List<RecordModel>();
+                    records = new List<RecordModel>();
+                    lockedRecords = [];
                     return;
                 }
                 records = presenter.GenerateRecordModel(data[0], TopUVRecord.ToArray(), modelName, SerialNumber);
                 records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
                 records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
                 records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
-                lockedRecords = records;
+                records.CopyTo(lockedRecords);
                 autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
                 if (autoSave)
                 {
@@ -589,7 +590,7 @@ namespace FVMI_INSPECTION.Controls
             if (rst != DialogResult.Yes) return;
             try
             {
-                await presenter.WriteLog(lockedRecords, textBox1.Text);
+                await presenter.WriteLog(lockedRecords.ToList(), textBox1.Text);
                 Invoke(delegate
                 {
 
