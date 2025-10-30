@@ -59,14 +59,16 @@ namespace FVMI_INSPECTION.Controls
                 return;
             if ((isActive || isHovering) && (AllowZoom || AllowPan))
             {
-                var image = new Bitmap(Image, GetDisplayedImageSize());
                 e.Graphics.Clear(BackgroundColor);
                 e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic; // smooth zoom for photos
-
+                var imgSize = GetDisplayedImageSize();
                 if (ZoomValue != 0.00F && (isHovering && AllowZoom) )
                     e.Graphics.ScaleTransform(ZoomValue, ZoomValue);
                 if (AllowPan)
-                    e.Graphics.DrawImage(image, MovPos);
+                    e.Graphics.DrawImage(Image, MovPos.X,MovPos.Y,imgSize.Width,imgSize.Height);
+                else
+                    e.Graphics.DrawImage(Image,0,0,imgSize.Width,imgSize.Height);
+
             }
         }
         private Size GetDisplayedImageSize()
