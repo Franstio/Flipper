@@ -383,6 +383,7 @@ namespace FVMI_INSPECTION.Controls
                 records.AddRange(presenter.GenerateRecordModel(data[1], BottomUVRecord.ToArray(), modelName, SerialNumber));
                 records.AddRange(presenter.GenerateRecordModel(data[2], TopWhiteRecord.ToArray(), modelName, SerialNumber));
                 records.AddRange(presenter.GenerateRecordModel(data[3], BottomWhiteRecord.ToArray(), modelName, SerialNumber));
+                lockedRecords = new RecordModel[records.Count];
                 records.CopyTo(lockedRecords);
                 autoSave = !records.Any(x => x.Judgement == "NG" || x.Judgement == "FAIL");
                 if (autoSave)
