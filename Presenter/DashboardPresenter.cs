@@ -458,7 +458,7 @@ namespace FVMI_INSPECTION.Presenter
                         catch { }
                     }
                 };
-                await ss.WaitAsync(TimeSpan.FromSeconds(18));
+                await ss.WaitAsync(TimeSpan.FromSeconds(40));
                 if (f is null || fn is null)
                     return null;
                 int count = 1;
