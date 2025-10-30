@@ -606,7 +606,7 @@ namespace FVMI_INSPECTION.Controls
             {
                 for (int i = 0; i < records.Count; i++)
                 {
-                    lockedRecords[i].Reason = records[i].Reason;
+                    lockedRecords[i].Reason = records[i].Reason == "PASS" ? "NONE" :records[i].Reason;
                 }
                 await presenter.WriteLog(lockedRecords, textBox1.Text);
                 Invoke(delegate
