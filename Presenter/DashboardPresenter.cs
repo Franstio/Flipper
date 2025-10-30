@@ -382,6 +382,25 @@ namespace FVMI_INSPECTION.Presenter
                 return null;
             }
         }
+        bool IsFileLocked(string filepath)
+        {
+            FileStream? fs = null;
+            try
+            {
+                FileInfo f = new FileInfo(filepath);
+                fs = f.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException e)
+            {
+                return true;
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Close();
+            }
+            return false;
+        }
         private async Task<Tuple<string, Image>?> GetImageFVMI(FileLib.FVMI_ProcessType procType, FileLib.FVMI_Type fType,CancellationToken? cancel = null)
         {
             try
@@ -417,12 +436,14 @@ namespace FVMI_INSPECTION.Presenter
                 };
                 string? f = null;
                 string? fn = string.Empty;
-                watcher.Created += (s, e) =>
+                watcher.Created += async (s, e) =>
                 {
                     try
                     {
                         f = e.FullPath;
                         fn = e.Name;
+                        while (IsFileLocked(f))
+                            await Task.Delay(10);
                     }
                     catch (Exception ex)
                     {
