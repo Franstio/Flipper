@@ -489,6 +489,7 @@ namespace FVMI_INSPECTION.Controls
                 return;
             var index = records.IndexOf(record);
             records[index] = ngForm.Model;
+            records[index].Judgement = "NG";
             v[1, e.RowIndex].Value = ngForm.Model.Judgement;
             v[1, e.RowIndex].Style.ForeColor = ngForm.Model.Judgement == "PASS" ? ColorTranslator.FromHtml("#37fd12") : ColorTranslator.FromHtml("#FF0707");
             string tag = v.Tag!.ToString()!;
