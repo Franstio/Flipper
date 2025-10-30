@@ -672,7 +672,7 @@ namespace FVMI_INSPECTION.Presenter
             var grouped = dt.GroupBy(x => x.Type);
             var keys = grouped.Select(x => new KeyValuePair<string, string[]>(x.Key, x.Select(x => x.Area).ToArray()));
             Dictionary<string, string[]> data = new Dictionary<string, string[]>(keys);
-            var failures = dt.Where(x => x.Reason != null && x.Reason != "").Select(x => $"{x.Area}:{(x.Reason == "NONE" ? "" : x.Reason)}").ToArray();
+            var failures = dt.Where(x => x.Reason != null && x.Reason != "").Select(x => $"{x.Area}:{x.Reason}").ToArray();
             LogModel model = new LogModel()
             {
                 Model = view.modelName,
