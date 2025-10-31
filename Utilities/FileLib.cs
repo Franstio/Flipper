@@ -247,7 +247,7 @@ namespace FVMI_INSPECTION.Utilities
         }
         public Image? GetParamImage(string model,string type,string area)
         {
-            string path = Path.Combine(_savePath, model, type);
+            string path = Path.Combine(_savePath,"upload", model, type);
             if (!Directory.Exists(path))
                 return null;
             DirectoryInfo dirInfo = new DirectoryInfo(path);
