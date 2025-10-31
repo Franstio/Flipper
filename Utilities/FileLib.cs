@@ -245,6 +245,17 @@ namespace FVMI_INSPECTION.Utilities
             File.Copy(sFile, path);
             return path;
         }
+        public Image? GetParamImage(string model,string type,string area)
+        {
+            string path = Path.Combine(_savePath, model, type);
+            if (!Directory.Exists(path))
+                return null;
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            var files = dirInfo.GetFiles($"{area}.*");
+            if (files is null || files.Length < 1)
+                return null;
+            return new Bitmap(files[0].FullName);
+        }
         /*public async Task<string> GenerateLog(List<RecordInspectionModel> Records, string ScanCode)
         {
             if (Records.Count < 1)

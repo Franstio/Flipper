@@ -35,15 +35,18 @@ namespace FVMI_INSPECTION.Forms
             get => actualPictureBox.Image;
             set
             {
+                actualPictureBox.Image?.Dispose();
                 actualPictureBox.Image = value;
             }
         }
-        public Image ParameterImage
+        public Image? ParameterImage
         {
             get => parameterPictureBox.Image;
             set
             {
-                parameterPictureBox.Image = value;
+                parameterPictureBox.Image?.Dispose();
+                if (value is not null)
+                    parameterPictureBox.Image = value;
             }
         }
         public string Area
@@ -58,8 +61,9 @@ namespace FVMI_INSPECTION.Forms
         private async void NgPopupShowForm_Load(object sender, EventArgs e)
         {
             presenter = await NgPopUpPresenter.Build(this, Model);
-            button1.Enabled = false;
-            button2.Enabled = false;
+            button1.Enabled = ParameterImage is not null;
+            button2.Enabled = ParameterImage is not null;
+            button3.Visible = ParameterImage is null;
         }
         protected override void OnMouseWheel(MouseEventArgs e)
         {

@@ -12,7 +12,7 @@ namespace FVMI_INSPECTION.Interfaces
         public interface IView
         {
             Image ActualImage { get; set; }
-            Image ParameterImage { get; set; }
+            Image? ParameterImage { get; set; }
             string Area { get; set; }
         }
         public interface IPresenter
