@@ -245,6 +245,20 @@ namespace FVMI_INSPECTION.Utilities
             File.Copy(sFile, path);
             return path;
         }
+        public string SaveParamImage(string model, string type, string area, Image sImage)
+        {
+            string path = Path.Combine(_savePath, "upload", model);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, type);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            path = Path.Combine(path, $"{area}.png");
+            if (File.Exists(path))
+                File.Delete(path);
+            sImage.Save(path);
+            return path;
+        }
         public Image? GetParamImage(string model,string type,string area)
         {
             string path = Path.Combine(_savePath,"upload", model, type);

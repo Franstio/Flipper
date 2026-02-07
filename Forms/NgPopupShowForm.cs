@@ -79,7 +79,7 @@ namespace FVMI_INSPECTION.Forms
 
         private async void UpdateStatus(object sender, EventArgs e)
         {
-            lib.SaveParamImage(Model.Model, Model.Type, Model.Area, openParamImageDialog.FileName);
+            lib.SaveParamImage(Model.Model, Model.Type, Model.Area,  openParamImageDialog.FileName);
             Button btn = (Button)sender;
             string result = "PASS";
             if (btn.Tag!.ToString() != "PASS")
