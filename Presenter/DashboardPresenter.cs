@@ -403,6 +403,7 @@ namespace FVMI_INSPECTION.Presenter
         }
         private async Task<Tuple<string, Image>?> GetImageFVMI(FileLib.FVMI_ProcessType procType, FileLib.FVMI_Type fType,CancellationToken? cancel = null)
         {
+            FileSystemWatcher? watcher= null;
             try
             {
                 if (cancel is not null)
@@ -427,7 +428,7 @@ namespace FVMI_INSPECTION.Presenter
                     else if (procType == FileLib.FVMI_ProcessType.Bottom)
                         path = Path.Combine(path, config.WhiteBottomPrefix);
                 }
-                FileSystemWatcher watcher = new FileSystemWatcher(path)
+                watcher= new FileSystemWatcher(path)
                 {
                     EnableRaisingEvents = true,
                     NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime,
@@ -458,6 +459,7 @@ namespace FVMI_INSPECTION.Presenter
                         catch { }
                     }
                 };
+
                 await ss.WaitAsync(TimeSpan.FromSeconds(40));
                 if (f is null || fn is null)
                     return null;
@@ -482,6 +484,12 @@ namespace FVMI_INSPECTION.Presenter
                 Debug.Write(ex.Message);
                 return null;
             }
+            finally
+            {
+                if (watcher is not null)
+                    watcher.Dispose();
+            }
+
         }
         public List<RecordModel> GenerateRecordModel(ProcessResultModel resultModel, ProcessRecordModel[] pRecordModel, string modelName, string serial)
         {
