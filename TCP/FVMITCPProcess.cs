@@ -42,6 +42,8 @@ namespace FVMI_INSPECTION.TCP
         }
         public async Task SetupCamPoint()
         {
+            await Reconnect();
+            await Task.Delay(100);
             _ = await WriteCommand("W0FC", Model.CameraPoint);
 
             _= await PushCommand("MR401", 10, "1", "0");
