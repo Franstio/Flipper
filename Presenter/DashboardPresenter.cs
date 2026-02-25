@@ -276,25 +276,25 @@ namespace FVMI_INSPECTION.Presenter
                 //                await process.WriteCommand("MR303", 1);
                 if (view.TopUVDecision == "FAIL" && view.TopUVRecord.Count < 1)
                 {
-                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Top-UV-debug-{DateTime.Now.ToString("yyyy-MM-dd")}.log"), JsonSerializer.Serialize(record[0]));
+                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Top-UV-debug-{DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss")}.log"), JsonSerializer.Serialize(record[0]));
                     throw new Exception("Top UV Fail but no data detected");
                     
                 }
                 if (view.BottomUVDecision == "FAIL" && view.BottomUVRecord.Count < 1)
                 {
-                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Bottom-UV-debug-{DateTime.Now.ToString("yyyy-MM-dd")}.log"), JsonSerializer.Serialize(record[1]));
+                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Bottom-UV-debug-{DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss")}.log"), JsonSerializer.Serialize(record[1]));
                     throw new Exception("Bottom UV Fail but no data detected");
 
                 }
                 if (view.TopWhiteDecision == "FAIL" && view.TopWhiteRecord.Count < 1)
                 {
-                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Top-White-debug-{DateTime.Now.ToString("yyyy-MM-dd")}.log"), JsonSerializer.Serialize(record[2]));
+                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Top-White-debug-{DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss")}.log"), JsonSerializer.Serialize(record[2]));
                     throw new Exception("Top White Fail but no data detected");
 
                 }
                 if (view.BottomWhiteDecision == "FAIL" && view.BottomWhiteRecord.Count < 1)
                 {
-                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Bottom-White-debug-{DateTime.Now.ToString("yyyy-MM-dd")}.log"), JsonSerializer.Serialize(record[3]));
+                    await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Bottom-White-debug-{DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss")}.log"), JsonSerializer.Serialize(record[3]));
                     throw new Exception("Bottom Wihte Fail but no data detected");
 
                 }
