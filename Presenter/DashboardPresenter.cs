@@ -322,7 +322,7 @@ namespace FVMI_INSPECTION.Presenter
             string topUVResult = results?[2] ?? "";
             string topWhiteResult = results?[3] ?? "";
             Func<FVMI_ImageType, string?> getImage = (t) => Model.Details.Where(x => x.Type == t.ToString()).FirstOrDefault()?.Image;
-            view.topUVImage = !topUVResult.Contains("1") ? (getImage(FVMI_ImageType.TopUV) is not null ? lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? view.bottomWhiteImage : view.bottomWhiteImage) : topUvImgSet?.Item2;
+            view.topUVImage = !topUVResult.Contains("1") ? (getImage(FVMI_ImageType.TopUV) is not null ? lib.ReadImage(getImage(FVMI_ImageType.TopUV)!, true) ?? view.topUVImage : view.topUVImage) : topUvImgSet?.Item2;
             view.bottomUVImage = !bottomUVResult.Contains("1") ? (getImage(FVMI_ImageType.BottomUV) is not null ? lib.ReadImage(getImage(FVMI_ImageType.BottomUV)!, true) ?? view.bottomUVImage : view.bottomUVImage) : bottomUvImgSet?.Item2;
             view.topWhiteImage = !topWhiteResult.Contains("1") ? (getImage(FVMI_ImageType.TopWhite) is not null ? lib.ReadImage(getImage(FVMI_ImageType.TopWhite)!, true) ?? view.topWhiteImage : view.topWhiteImage) : topWhiteImgSet?.Item2;
             view.bottomWhiteImage = !bottomWhiteResult.Contains("1") ? (getImage(FVMI_ImageType.BottomWhite) is not null ? lib.ReadImage    (getImage(FVMI_ImageType.BottomWhite)!, true) ?? view.bottomWhiteImage : view.bottomWhiteImage) : bottomWhiteImgSet?.Item2;

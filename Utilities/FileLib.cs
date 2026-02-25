@@ -321,7 +321,7 @@ Failure{(model.Failure==string.Empty ? "" : ("="+model.Failure) )}";
         public async Task<string> WriteLog(string scanCode, string text, string judge)
         {
             string filename = $"log_{scanCode}_{judge}.txt";
-            string[] paths = [Path.Combine(_logPath, filename), Path.Combine(Settings.Default.BackupLogPath, filename)];
+            string[] paths = [Path.Combine(Settings.Default.LogPath,filename), Path.Combine(Settings.Default.BackupLogPath, filename)];
             foreach (string path in paths)
             {
                 if (File.Exists(path))
