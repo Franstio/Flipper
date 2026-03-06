@@ -295,7 +295,7 @@ namespace FVMI_INSPECTION.Presenter
                 if (view.BottomWhiteDecision == "FAIL" && view.BottomWhiteRecord.Count < 1)
                 {
                     await File.WriteAllTextAsync(Path.Combine(Settings.Default.DebugLogPath, $"Bottom-White-debug-{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}.log"), JsonSerializer.Serialize(record[3]));
-                    throw new Exception("Bottom Wihte Fail but no data detected");
+                    throw new Exception("Bottom White Fail but no data detected");
 
                 }
                 eventUpdate($"Completed... {(isFail ? "(Confirm Result and Click Generate Log)" : "")}");
@@ -659,6 +659,7 @@ namespace FVMI_INSPECTION.Presenter
                 }
                 string _path = paths[i]!;
                 List<ProcessRecordModel> list = new List<ProcessRecordModel>();
+                await Task.Delay(100);
                 using (var stream = new FileStream(_path, FileMode.Open))
                 {
                     using (var reader = new StreamReader(stream))
