@@ -696,6 +696,7 @@ namespace FVMI_INSPECTION.Presenter
                 bool check = checkResult[i];
                 readAllCsv.Add(Task.Run(async () => await CheckCsv(path,check)));
             }
+            await Task.WhenAll(readAllCsv);
             List<ProcessRecordModel>[] data = [await readAllCsv[0],await readAllCsv[1],await readAllCsv[2],await readAllCsv[3]];
             return data;
         }
