@@ -1,26 +1,27 @@
-﻿using FVMI_INSPECTION.Repositories;
-using FVMI_INSPECTION.Interfaces;
+﻿using FVMI_INSPECTION.Interfaces;
 using FVMI_INSPECTION.Models;
 using FVMI_INSPECTION.Models.ViewData;
+using FVMI_INSPECTION.Properties;
+using FVMI_INSPECTION.Repositories;
 using FVMI_INSPECTION.TCP;
 using FVMI_INSPECTION.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Collections;
-using System.Security.Policy;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using System.Security.Cryptography;
-using static FVMI_INSPECTION.Presenter.SettingParameterPresenter;
 using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
-using FVMI_INSPECTION.Properties;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+using static FVMI_INSPECTION.Presenter.SettingParameterPresenter;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace FVMI_INSPECTION.Presenter
 {
@@ -637,6 +638,45 @@ namespace FVMI_INSPECTION.Presenter
             return await Task.WhenAll(tasks);
 
         }
+        async Task<List<ProcessRecordModel>> CheckCsv(string? _path, bool checkresult)
+        {
+            if (checkresult || _path is null)
+            {
+                return [];
+            }
+            CancellationTokenSource _cts = new CancellationTokenSource();
+            _cts.CancelAfter(TimeSpan.FromSeconds(15));
+
+            List<ProcessRecordModel> list = new List<ProcessRecordModel>();
+            string[] textLines = [];
+            try
+            {
+                _cts.Token.ThrowIfCancellationRequested();
+                do
+                {
+                    try
+                    {
+                        textLines = File.ReadAllLines(_path);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Check CSV file exist error: {e.Message}");
+                        await Task.Delay(10);
+                    }
+                }
+                while (textLines.Length < 2);
+                string? text = textLines[0];
+                if (text is null) throw new Exception(_path + " Is empty");
+                string? row = textLines[1];
+                if (row is null) throw new Exception(_path + " 2nd Row Is empty");
+                return ReadRecord(text, row);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
         public async Task<List<ProcessRecordModel>[]> ReadCsv(string?[] paths)
         {
             List<ProcessRecordModel>[] mdl = [];
@@ -650,29 +690,13 @@ namespace FVMI_INSPECTION.Presenter
             //    Path.Combine(getConfig.WhiteCSVPath,getConfig.WhiteBottomPrefix)
             //};
             bool[] checkResult = [view.TopUVDecision == "PASS" || !Model.isUV, view.BottomUVDecision == "PASS" || !Model.isUV, view.TopWhiteDecision == "PASS", view.BottomWhiteDecision == "PASS"];
+            List<Task<List<ProcessRecordModel>>> readAllCsv = [];
             for (int i = 0; i < paths.Length; i++)
             {
-                if (checkResult[i] || paths[i] is null)
-                {
-                    mdl[i] = new List<ProcessRecordModel>();
-                    continue;
-                }
-                string _path = paths[i]!;
-                List<ProcessRecordModel> list = new List<ProcessRecordModel>();
-                await Task.Delay(100);
-                using (var stream = new FileStream(_path, FileMode.Open))
-                {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        string? text = await reader.ReadLineAsync();
-                        if (text is null) throw new Exception(_path + " Is empty");
-                        string? row = await reader.ReadLineAsync();
-                        if (row is null) throw new Exception(_path + " 2nd Row Is empty");
-                        list.AddRange(ReadRecord(text, row));
-                        mdl[i] = list;
-                    }
-                }
+                readAllCsv.Add(Task.Run(async () => await CheckCsv(paths[i], checkResult[i])));
             }
+            var data = await Task.WhenAll(readAllCsv);
+            mdl = data.ToArray();
             return mdl;
         }
         private List<ProcessRecordModel> ReadRecord(string col, string row)
