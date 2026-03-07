@@ -680,7 +680,6 @@ namespace FVMI_INSPECTION.Presenter
         public async Task<List<ProcessRecordModel>[]> ReadCsv(string?[] paths)
         {
             List<ProcessRecordModel>[] mdl = [];
-            mdl = new List<ProcessRecordModel>[4];
             var getConfig = Properties.Settings.Default;
             //string[] paths = new string[]
             //{
@@ -697,9 +696,8 @@ namespace FVMI_INSPECTION.Presenter
                 bool check = checkResult[i];
                 readAllCsv.Add(Task.Run(async () => await CheckCsv(path,check)));
             }
-            var data = await Task.WhenAll(readAllCsv);
-            mdl = data.ToArray();
-            return mdl;
+            List<ProcessRecordModel>[] data = [await readAllCsv[0],await readAllCsv[1],await readAllCsv[2],await readAllCsv[3]];
+            return data;
         }
         private List<ProcessRecordModel> ReadRecord(string col, string row)
         {
