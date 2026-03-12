@@ -372,7 +372,7 @@ namespace FVMI_INSPECTION.Presenter
                 eventUpdate("Waiting for process complete" + new string('.', loading));
                 loading = (loading + 1) % 6;
             }
-            while ((ret.Last() != '1' || ret1.Last() != '1') && !cMonitorTokenSource.IsCancellationRequested && !cTokenSource.IsCancellationRequested);
+            while ( (ret.LastOrDefault() != '1' || ret1.LastOrDefault() != '1') && !cMonitorTokenSource.IsCancellationRequested && !cTokenSource.IsCancellationRequested);
             if (cMonitorTokenSource.IsCancellationRequested || cTokenSource.IsCancellationRequested)
             {
                 cMonitorTokenSource = new CancellationTokenSource();
